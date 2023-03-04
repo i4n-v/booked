@@ -1,0 +1,17 @@
+{
+  "name": "booked",
+  "version": "1.0.0",
+  "scripts": {
+    "web-app": "cd web-app && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i4n-v/booked.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/i4n-v/booked/issues"
+  },
+  "homepage": "https://github.com/i4n-v/booked#readme"
+}
