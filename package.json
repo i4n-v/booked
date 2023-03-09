@@ -1,6 +1,7 @@
 {
   "name": "booked",
   "version": "1.0.0",
+  "description": "A app to publish your books",
   "scripts": {
     "web-app": "cd web-app && npm run start"
   },
