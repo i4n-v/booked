@@ -32,7 +32,7 @@ export default class Book extends Model {
   decription: string;
 
   @AllowNull(false)
-  @Column(DataType.NUMBER)
+  @Column(DataType.INTEGER)
   price: number;
 
   @AllowNull(false)
