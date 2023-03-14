@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Alert, AlertProps, Slide, SlideProps, Snackbar, SnackbarCloseReason, Stack } from "@mui/material";
 import { INotifierProps } from "./types";
-import { NotifierContext } from "../../context/NotifierContext";
-import { INotifierActionKind } from "../../context/NotifierContext/types";
+import { NotifierContext } from "../../contexts/NotifierContext";
+import { INotifierActionKind } from "../../contexts/NotifierContext/types";
 import { createPortal } from "react-dom";
 
 const ReferencedAlert = React.forwardRef((props: AlertProps, ref: ((instance: HTMLDivElement | null) => void) | React.RefObject<HTMLDivElement> | null | undefined) => (

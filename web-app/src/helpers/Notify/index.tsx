@@ -1,13 +1,13 @@
 import { AlertColor } from "@mui/material";
 import { useContext } from "react";
-import { NotifierContext } from "../../context/NotifierContext";
-import { INotifierActionKind } from "../../context/NotifierContext/types";
+import { NotifierContext } from "../../contexts/NotifierContext";
+import { INotifierActionKind } from "../../contexts/NotifierContext/types";
 
 
 function useNotifier() {
     const [, dispatch] = useContext(NotifierContext)
     let resolveCallback;
-    const notify = (message: string, severity: AlertColor) => {
+    const notify = (message: string, severity: AlertColor = 'success') => {
         dispatch({
             type: INotifierActionKind.SHOW_NOTIFICATION,
             payload: {
