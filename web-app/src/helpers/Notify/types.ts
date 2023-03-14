@@ -1,5 +1,5 @@
 import { AlertProps, SnackbarCloseReason } from "@mui/material";
-import { INotifier } from "../../context/NotifierContext/types";
+import { INotifier } from "../../contexts/NotifierContext/types";
 
 export type INotifierProps = INotifier & {
     close: () => void,
