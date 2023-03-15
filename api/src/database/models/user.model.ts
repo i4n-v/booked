@@ -1,5 +1,6 @@
 import {
   AllowNull,
+  BeforeCreate,
   BelongsToMany,
   Column,
   DataType,
@@ -8,12 +9,17 @@ import {
   PrimaryKey,
   Table,
   Unique,
+  BeforeValidate,
 } from 'sequelize-typescript';
+import UserDto from '../../dto/user/user.dto';
+import UserCreateDto from '../../dto/user/userCreate.dto';
+import userRepository from '../../repositories/user.repository';
+import { encrypt } from '../../utils';
 import Assessment from './assessment.model';
 import Book from './book.model';
 
 @Table
-export default class User extends Model {
+export default class User extends Model<UserDto, UserCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,
@@ -43,12 +49,9 @@ export default class User extends Model {
   @Column(DataType.DATE)
   birth_date: Date;
 
-  @Unique
-  @AllowNull(false)
   @Column(DataType.STRING)
   photo_url: string;
 
-  @AllowNull(false)
   @Column(DataType.STRING)
   description: string;
 
@@ -57,4 +60,18 @@ export default class User extends Model {
 
   @BelongsToMany(() => Book, () => Assessment, 'user_id')
   rated_books: Book[];
+
+  @BeforeValidate
+  static async createUserName(userCreateDto: UserCreateDto) {
+    console.log(userCreateDto);
+    const firstName = userCreateDto.name.split(' ')[0].toLocaleLowerCase();
+    const countUsers = await userRepository.countByUserName(firstName);
+    userCreateDto.user_name = `${firstName}#${countUsers}`;
+  }
+
+  @BeforeCreate
+  static async hashPassword(userCreateDto: UserCreateDto) {
+    const hashedPassword = await encrypt.hash(userCreateDto.password);
+    userCreateDto.password = hashedPassword;
+  }
 }
