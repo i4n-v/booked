@@ -28,7 +28,14 @@ export default class User extends Model<UserDto, UserCreateDto> {
   id: string;
 
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'O nome é requerido',
+      },
+    },
+  })
   name: string;
 
   @Unique
@@ -38,15 +45,43 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @Unique
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'O e-mail é requerido',
+      },
+      isEmail: {
+        msg: 'E-mail inválido',
+      },
+    },
+  })
   email: string;
 
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'A senha é requerida',
+      },
+    },
+  })
   password: string;
 
   @AllowNull(false)
-  @Column(DataType.DATE)
+  @Column({
+    type: DataType.DATE,
+    validate: {
+      notNull: {
+        msg: 'O e-mail é requerido',
+      },
+      isDate: {
+        args: true,
+        msg: 'Data de nascimento inválida.',
+      },
+    },
+  })
   birth_date: Date;
 
   @Column(DataType.STRING)
@@ -63,10 +98,11 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @BeforeValidate
   static async createUserName(userCreateDto: UserCreateDto) {
-    console.log(userCreateDto);
-    const firstName = userCreateDto.name.split(' ')[0].toLocaleLowerCase();
-    const countUsers = await userRepository.countByUserName(firstName);
-    userCreateDto.user_name = `${firstName}#${countUsers}`;
+    if (userCreateDto.name) {
+      const firstName = userCreateDto.name.split(' ')[0].toLocaleLowerCase();
+      const countUsers = await userRepository.countByUserName(firstName);
+      userCreateDto.user_name = `${firstName}#${countUsers}`;
+    }
   }
 
   @BeforeCreate
