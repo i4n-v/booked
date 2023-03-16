@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
+import {} from 'sequelize-typescript';
 
 function errorHandlerMidleWare(
   error: any,
@@ -7,7 +8,13 @@ function errorHandlerMidleWare(
   response: Response,
   next: NextFunction
 ) {
-  console.log(error);
+  if (error.name === 'SequelizeValidationError') {
+    response.status(400).json({
+      message: error.errors[0].message,
+    });
+  }
+
+  console.log('ERROR HANDLER: ', error);
   response.sendStatus(500);
 }
 
