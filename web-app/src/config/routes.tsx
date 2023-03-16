@@ -3,7 +3,7 @@ import Home from '../pages/Home';
 const routes: RouteObject[] = [
     {
         path: '',
-        element: <>Layout <Outlet /></>,
+        element:  <Outlet />,
         children: [
             {
                 index: true,
