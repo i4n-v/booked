@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Card from "../../components/Card";
 import Menu from "../../components/Menu";
 import Title from "../../components/Title/Title";
+import Teste from "./Teste";
 
 export default function Home() {
 
@@ -25,7 +26,7 @@ export default function Home() {
                 <Typography variant="h2" sx={{ color: "#121212", textAlign: 'left', margin: '20px 0 50px 0' }}>
                     Explore os <span style={{ color: "#9b51e0" }}>tops 10</span> livros melhores <br></br>avaliados na plataforma.
                 </Typography>
-                <Card></Card>
+                <Teste></Teste>
             </Box>
 
             <Box position="relative" sx={{ height: "85vh", display: 'flex'}}>
