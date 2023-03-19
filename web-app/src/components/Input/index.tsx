@@ -1,4 +1,4 @@
-import { SxProps, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { InputProps } from "./types";
 
@@ -15,6 +15,7 @@ export default function Input({ name ,label}: InputProps) {
       render={({ field }) => <TextField 
       {...field}
       label={label}
+      error = {!!errors}
       fullWidth
       />}
     />
