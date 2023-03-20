@@ -1,9 +1,31 @@
-import { Button } from "@mui/material";
+import { Button, Grid, } from "@mui/material";
+import { FormProvider, useForm } from "react-hook-form";
+import IAppBar from "../../components/AppBar";
+import Input from "../../components/Input";
+import useNotifier from "../../helpers/Notify";
 
 export default function Home() {
-    return <>
-        <Button variant="text" color="secondary">Text</Button>
-        <Button variant="contained" color="secondary">Contained</Button>
-        <Button variant="outlined">Outlined</Button>
-    </>
+    const methods = useForm({
+        defaultValues:{
+            name: ''
+        }
+    });
+  const onSubmit = (data: any) => console.log(data);
+
+  return (
+    <FormProvider {...methods} >
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <Grid container xs={12}>
+          <Grid item xs={6}>
+        <Input name={'name'} label={"Nome"} />
+          </Grid>
+          <Grid item xs={6}>
+        <input type="submit" />
+
+          </Grid>
+
+        </Grid>
+      </form>
+    </FormProvider>
+  );
 }

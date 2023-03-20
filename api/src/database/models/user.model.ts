@@ -107,7 +107,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @BeforeCreate
   static async hashPassword(userCreateDto: UserCreateDto) {
-    const hashedPassword = await encrypt.hash(userCreateDto.password);
+    const [hashedPassword, salt] = await encrypt.hash(userCreateDto.password);
     userCreateDto.password = hashedPassword;
   }
 }
