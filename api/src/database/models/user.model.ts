@@ -1,6 +1,5 @@
 import {
   AllowNull,
-  BeforeCreate,
   BelongsToMany,
   Column,
   DataType,
@@ -16,6 +15,7 @@ import UserCreateDto from '../../dto/user/userCreate.dto';
 import userRepository from '../../repositories/user.repository';
 import { encrypt } from '../../utils';
 import Assessment from './assessment.model';
+import Acquisition from './acquisition.model';
 import Book from './book.model';
 
 @Table
@@ -63,6 +63,17 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.STRING,
     validate: {
       notNull: {
+        msg: 'O salt é requerido',
+      },
+    },
+  })
+  salt: string;
+
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
         msg: 'A senha é requerida',
       },
     },
@@ -96,6 +107,9 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @BelongsToMany(() => Book, () => Assessment, 'user_id')
   rated_books: Book[];
 
+  @BelongsToMany(() => Book, () => Acquisition, 'user_id')
+  acquisitions: Acquisition[];
+
   @BeforeValidate
   static async createUserName(userCreateDto: UserCreateDto) {
     if (userCreateDto.name) {
@@ -105,9 +119,11 @@ export default class User extends Model<UserDto, UserCreateDto> {
     }
   }
 
-  @BeforeCreate
+  @BeforeValidate
   static async hashPassword(userCreateDto: UserCreateDto) {
     const [hashedPassword, salt] = await encrypt.hash(userCreateDto.password);
+
     userCreateDto.password = hashedPassword;
+    userCreateDto.salt = salt;
   }
 }

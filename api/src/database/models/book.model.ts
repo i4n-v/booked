@@ -9,6 +9,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import Acquisition from './acquisition.model';
 import Assessment from './assessment.model';
 import BookCategory from './bookCategory.model';
 import Category from './category.model';
@@ -56,4 +57,7 @@ export default class Book extends Model {
 
   @BelongsToMany(() => User, () => Assessment, 'book_id')
   user_raters: User[];
+
+  @BelongsToMany(() => User, () => Acquisition, 'book_id')
+  acquisitions: Acquisition[];
 }
