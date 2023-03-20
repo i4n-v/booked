@@ -7,11 +7,13 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import AcquisitionDto from '../../dto/acquisition/acquisition.dto';
+import AcquisitionCreateDto from '../../dto/acquisition/acquisitionCreate.dto';
 import Book from './book.model';
-import Category from './category.model';
+import User from './user.model';
 
 @Table
-export default class BookCategory extends Model {
+export default class Acquisition extends Model<AcquisitionDto, AcquisitionCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,
@@ -21,11 +23,11 @@ export default class BookCategory extends Model {
 
   @AllowNull(false)
   @Column(DataType.UUID)
-  @ForeignKey(() => Book)
-  book_id: string;
+  @ForeignKey(() => User)
+  user_id: string;
 
   @AllowNull(false)
   @Column(DataType.UUID)
-  @ForeignKey(() => Category)
-  category_id: string;
+  @ForeignKey(() => Book)
+  book_id: string;
 }

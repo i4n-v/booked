@@ -1,13 +1,15 @@
-import express from 'express';
 import 'dotenv/config';
-import routes from './routes';
+import express from 'express';
 import sequelizeConnection from './config/sequelizeConnection.config';
+import errorHandlerMidleWare from './midlewares/errorHandler.midleware';
+import initRoutes from './routes/init.routes';
 
 async function initApp() {
   const app = express();
 
   app.use(express.json());
-  app.use(routes);
+  initRoutes(app);
+  app.use(errorHandlerMidleWare);
 
   try {
     await sequelizeConnection();
