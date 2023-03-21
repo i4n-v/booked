@@ -15,7 +15,7 @@ export default function Input({ name ,label}: InputProps) {
       render={({ field }) => <TextField 
       {...field}
       label={label}
-      error = {!!errors}
+      error = {!errors}
       fullWidth
       />}
     />

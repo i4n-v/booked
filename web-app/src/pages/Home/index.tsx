@@ -1,8 +1,6 @@
-import { Button, Grid, } from "@mui/material";
+import { Grid, } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import IAppBar from "../../components/AppBar";
 import Input from "../../components/Input";
-import useNotifier from "../../helpers/Notify";
 
 export default function Home() {
     const methods = useForm({

@@ -7,8 +7,8 @@ import { Button } from "@mui/material";
 import { NavBarProps } from "./types";
 export default function NavBar({ logged }: NavBarProps) {
   return (
-    <AppBar position="sticky">
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+    <AppBar elevation={1} position="sticky">
+      <Toolbar disableGutters  sx={{ display: "flex", justifyContent: "space-between", padding: '0 5%' }}>
         <IconButton
           size="large"
           edge="start"
@@ -18,7 +18,7 @@ export default function NavBar({ logged }: NavBarProps) {
         >
           <DarkLogo />
         </IconButton>
-        <Box>
+        <Box display={'flex'} columnGap={3} >
           <Button
             sx={{
               font: (t) => t.font.xs,

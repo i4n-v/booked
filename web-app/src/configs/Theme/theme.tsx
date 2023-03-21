@@ -59,6 +59,7 @@ const include: ThemeOptions = {
         root: {
           height: "44px",
           paddding: 0,
+          background: theme.palette.secondary.light
         },
         input: {
           fontSize: theme.font.xs,
@@ -87,11 +88,12 @@ const include: ThemeOptions = {
         root: {
           color: theme.palette.primary.dark,
           font: theme.font.xs,
-          top: "-5px",
+          top: "0px",
         },
         outlined: {
           "&.MuiInputLabel-shrink": {
-            transform: "translate(14px, -3px) scale(0.75)",
+            transform: "translate(14px, -4px) scale(0.75)",
+            top: '-2px'
           },
         },
       },
