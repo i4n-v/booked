@@ -1,19 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material';
-import theme from './config/theme';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { GlobalNotifier } from "./helpers/Notify/Alert";
+import { NotifierContextProvider } from "./contexts/NotifierContext";
+import theme from "./configs/Theme/theme";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ThemeProvider>
+    <NotifierContextProvider>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <CssBaseline />
+          <GlobalNotifier />
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
+    </NotifierContextProvider>
   </React.StrictMode>
 );

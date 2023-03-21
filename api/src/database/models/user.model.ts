@@ -8,12 +8,18 @@ import {
   PrimaryKey,
   Table,
   Unique,
+  BeforeValidate,
 } from 'sequelize-typescript';
+import UserDto from '../../dto/user/user.dto';
+import UserCreateDto from '../../dto/user/userCreate.dto';
+import userRepository from '../../repositories/user.repository';
+import { encrypt } from '../../utils';
 import Assessment from './assessment.model';
+import Acquisition from './acquisition.model';
 import Book from './book.model';
 
 @Table
-export default class User extends Model {
+export default class User extends Model<UserDto, UserCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,
@@ -22,7 +28,14 @@ export default class User extends Model {
   id: string;
 
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'O nome é requerido',
+      },
+    },
+  })
   name: string;
 
   @Unique
@@ -32,23 +45,59 @@ export default class User extends Model {
 
   @Unique
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'O e-mail é requerido',
+      },
+      isEmail: {
+        msg: 'E-mail inválido',
+      },
+    },
+  })
   email: string;
 
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'O salt é requerido',
+      },
+    },
+  })
+  salt: string;
+
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+    validate: {
+      notNull: {
+        msg: 'A senha é requerida',
+      },
+    },
+  })
   password: string;
 
   @AllowNull(false)
-  @Column(DataType.DATE)
+  @Column({
+    type: DataType.DATE,
+    validate: {
+      notNull: {
+        msg: 'O e-mail é requerido',
+      },
+      isDate: {
+        args: true,
+        msg: 'Data de nascimento inválida.',
+      },
+    },
+  })
   birth_date: Date;
 
-  @Unique
-  @AllowNull(false)
   @Column(DataType.STRING)
   photo_url: string;
 
-  @AllowNull(false)
   @Column(DataType.STRING)
   description: string;
 
@@ -57,4 +106,24 @@ export default class User extends Model {
 
   @BelongsToMany(() => Book, () => Assessment, 'user_id')
   rated_books: Book[];
+
+  @BelongsToMany(() => Book, () => Acquisition, 'user_id')
+  acquisitions: Acquisition[];
+
+  @BeforeValidate
+  static async createUserName(userCreateDto: UserCreateDto) {
+    if (userCreateDto.name) {
+      const firstName = userCreateDto.name.split(' ')[0].toLocaleLowerCase();
+      const countUsers = await userRepository.countByUserName(firstName);
+      userCreateDto.user_name = `${firstName}#${countUsers}`;
+    }
+  }
+
+  @BeforeValidate
+  static async hashPassword(userCreateDto: UserCreateDto) {
+    const [hashedPassword, salt] = await encrypt.hash(userCreateDto.password);
+
+    userCreateDto.password = hashedPassword;
+    userCreateDto.salt = salt;
+  }
 }
