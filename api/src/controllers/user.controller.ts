@@ -5,15 +5,15 @@ import UserCreateDto from '../dto/user/userCreate.dto';
 class UserController {
   async store(request: Request, response: Response, next: NextFunction) {
     try {
-      const userCreateDto: UserCreateDto = request.body;
+      const userData: UserCreateDto = request.body;
 
-      if (userCreateDto.password !== userCreateDto.confirm_password) {
+      if (userData.password !== userData.confirm_password) {
         return response.status(400).json({
           message: 'As senhas não coincidem.',
         });
       }
 
-      await UserRepository.create(userCreateDto);
+      await UserRepository.create(userData);
 
       response.json({
         message: 'Usuário cadastrado com sucesso.',

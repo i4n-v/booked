@@ -12,7 +12,6 @@ import {
 } from 'sequelize-typescript';
 import UserDto from '../../dto/user/user.dto';
 import UserCreateDto from '../../dto/user/userCreate.dto';
-import userRepository from '../../repositories/user.repository';
 import { encrypt } from '../../utils';
 import Assessment from './assessment.model';
 import Acquisition from './acquisition.model';
@@ -111,19 +110,10 @@ export default class User extends Model<UserDto, UserCreateDto> {
   acquisitions: Acquisition[];
 
   @BeforeValidate
-  static async createUserName(userCreateDto: UserCreateDto) {
-    if (userCreateDto.name) {
-      const firstName = userCreateDto.name.split(' ')[0].toLocaleLowerCase();
-      const countUsers = await userRepository.countByUserName(firstName);
-      userCreateDto.user_name = `${firstName}#${countUsers}`;
-    }
-  }
+  static async hashPassword(user: UserCreateDto) {
+    const [hashedPassword, salt] = await encrypt.hash(user.password);
 
-  @BeforeValidate
-  static async hashPassword(userCreateDto: UserCreateDto) {
-    const [hashedPassword, salt] = await encrypt.hash(userCreateDto.password);
-
-    userCreateDto.password = hashedPassword;
-    userCreateDto.salt = salt;
+    user.password = hashedPassword;
+    user.salt = salt;
   }
 }

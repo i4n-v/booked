@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import sequelizeConnection from './config/sequelizeConnection.config';
+import { syncConnection } from './config/sequelizeConnection.config';
 import errorHandlerMidleWare from './midlewares/errorHandler.midleware';
 import initRoutes from './routes/init.routes';
 
@@ -12,7 +12,7 @@ async function initApp() {
   app.use(errorHandlerMidleWare);
 
   try {
-    await sequelizeConnection();
+    await syncConnection();
 
     app.listen(process.env.APP_PORT, () =>
       console.log(`🔥 Server started at http://localhost:${process.env.APP_PORT}`)
