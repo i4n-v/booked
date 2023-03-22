@@ -42,15 +42,6 @@ const PaginationWrapper = styled('div')({
   marginBottom: '1rem',
 });
 
-const PaginationContainer = styled('div')({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  width: '100%',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
-});
-
 const PageButton = styled(Button)(({ theme }) => ({
   minWidth: 0,
   padding: 0,
@@ -131,41 +122,24 @@ const Carousel = ({
   return (
     <Container minHeight={minHeight}>
       <Grid container spacing={2}
-    direction="row"
-    justifyContent="center"
-    alignItems="center"
-  >
-    {renderItems()}
-  </Grid>
-  {numPages > 1 && (
-    <PaginationWrapper>
-      <Pagination
-        count={numPages}
-        page={Math.floor(currentIndex / itemsPerPage) + 1}
-        onChange={handlePageChange}
-      />
-    </PaginationWrapper>
-  )}
-  {children.length > itemsPerPage && (
-    <PaginationContainer>
-      <PageButton
-        onClick={handlePrevClick}
-        disabled={currentIndex === 0}
-        variant="outlined"
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
       >
-        Prev
-      </PageButton>
-      <PageButton
-        onClick={handleNextClick}
-        disabled={currentIndex + itemsPerPage >= children.length}
-        variant="outlined"
-      >
-        Next
-      </PageButton>
-    </PaginationContainer>
-  )}
-</Container>
-);
+        {renderItems()}
+      </Grid>
+      {numPages > 1 && (
+        <PaginationWrapper>
+          <Pagination
+            count={numPages}
+            page={Math.floor(currentIndex / itemsPerPage) + 1}
+            onChange={handlePageChange}
+          />
+        </PaginationWrapper>
+      )}
+
+    </Container>
+  );
 };
 
 export default Carousel;
