@@ -1,6 +1,5 @@
 import { Button, Grid, Paper, Rating, Skeleton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { CarouselProps } from "react-material-ui-carousel/dist/components/types";
 import Carousel from "../Carousel";
 
 const items = [

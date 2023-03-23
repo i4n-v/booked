@@ -7,7 +7,7 @@ export default function Layout(){
     return (
         <>
         <NavBar />
-        <Container sx={{minHeight: '86vh'}}>
+        <Container maxWidth={false} disableGutters  sx={{minHeight: '86vh'}}>
             <Outlet/>
         </Container>
         <Footer />
