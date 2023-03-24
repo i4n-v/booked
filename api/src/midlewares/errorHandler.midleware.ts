@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import {} from 'sequelize-typescript';
 
 function errorHandlerMidleWare(
   error: any,
@@ -14,8 +13,8 @@ function errorHandlerMidleWare(
     });
   }
 
-  console.log('ERROR HANDLER: ', error);
-  response.sendStatus(500);
+  console.log('❗ ERROR HANDLER: ', error);
+  response.status(500).json({ message: 'Erro interno do servidor.' });
 }
 
 export default errorHandlerMidleWare;

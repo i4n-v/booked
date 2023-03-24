@@ -16,6 +16,7 @@ import { encrypt } from '../../utils';
 import Assessment from './assessment.model';
 import Acquisition from './acquisition.model';
 import Book from './book.model';
+import Authentication from './authentication.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -108,6 +109,9 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @BelongsToMany(() => Book, () => Acquisition, 'user_id')
   acquisitions: Acquisition[];
+
+  @HasMany(() => Authentication, { foreignKey: 'user_id', onDelete: 'CASCADE' })
+  authentications: Authentication[];
 
   @BeforeValidate
   static async hashPassword(user: UserCreateDto) {
