@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import Auth from '../interfaces/auth.interface';
-import AuthenticationRepository from '../repositories/authentication.repositoryl';
+import AuthenticationRepository from '../repositories/authentication.repository';
 
 async function authMidleware(request: Request, response: Response, next: NextFunction) {
   const token = request.headers['x-access-token'];
