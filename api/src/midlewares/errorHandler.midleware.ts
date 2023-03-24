@@ -13,7 +13,7 @@ function errorHandlerMidleWare(
     });
   }
 
-  console.log('ERROR HANDLER: ', error);
+  console.log('❗ ERROR HANDLER: ', error);
   response.status(500).json({ message: 'Erro interno do servidor.' });
 }
 

@@ -59,6 +59,14 @@ class AuthenticationController {
       next(error);
     }
   }
+
+  async verify(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.json({ message: 'Token válido', valid: true });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new AuthenticationController();
