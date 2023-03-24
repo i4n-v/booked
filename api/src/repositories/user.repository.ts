@@ -14,26 +14,30 @@ class UserRepository {
   async create(user: UserCreateDto) {
     if (user.name) {
       const firstName = user.name.split(' ')[0].toLocaleLowerCase();
-      const countUsers = await userRepository.countByName(firstName);
+      const countUsers = await this.countByName(firstName);
       user.user_name = `${firstName}#${countUsers}`;
     }
 
-    const createdUser = await this.repository.create(user);
-    return createdUser;
+    return await this.repository.create(user);
   }
 
   async countByName(name: string) {
-    const countUsers = await this.repository.count({
+    return await this.repository.count({
       where: {
         user_name: {
           [Op.like]: `${name}%`,
         },
       },
     });
-    return countUsers;
+  }
+
+  async findByCredentials(userName: string, email: string) {
+    return await this.repository.findOne({
+      where: {
+        [Op.or]: [{ user_name: userName }, { email }],
+      },
+    });
   }
 }
 
-const userRepository = new UserRepository();
-
-export default userRepository;
+export default new UserRepository();
