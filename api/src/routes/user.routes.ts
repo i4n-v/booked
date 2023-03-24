@@ -1,6 +1,6 @@
 import router from '../config/router.config';
-import userController from '../controllers/user.controller';
+import UserController from '../controllers/user.controller';
 
-router.post('/users', userController.store);
+router.post('/users', UserController.store);
 
 export default router;

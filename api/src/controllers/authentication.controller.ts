@@ -4,7 +4,7 @@ import UserRepository from '../repositories/user.repository';
 import { encrypt } from '../utils';
 import messages from '../config/messages.config';
 import jwt from 'jsonwebtoken';
-import AuthenticationRepository from '../repositories/authentication.repositoryl';
+import AuthenticationRepository from '../repositories/authentication.repository';
 import { add, hoursToSeconds } from 'date-fns';
 
 class AuthenticationController {
