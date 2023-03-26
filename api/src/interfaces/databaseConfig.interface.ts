@@ -9,6 +9,7 @@ export interface IDatabaseConfigAttributes {
   dialect?: Dialect;
   urlDatabase?: string;
   logging?: () => void;
+  repositoryMode?: boolean;
 }
 
 export interface IDatabaseConfig {

@@ -4,7 +4,7 @@ import databaseConfig from './database.config';
 
 import models from '../database/models';
 
-const sequelizeConnection = async () => {
+function createSequelizeConnection() {
   let config;
 
   switch (process.env.NODE_ENV) {
@@ -23,22 +23,27 @@ const sequelizeConnection = async () => {
   }
 
   config.logging = console.log;
+  config.repositoryMode = true;
 
   const sequelize = new Sequelize(config);
 
-  try {
-    sequelize.addModels(models);
+  sequelize.addModels(models);
 
-    await sequelize.sync({
-      force: process.env.RESET_DB_TABLES === 'true',
-    });
+  return sequelize;
+}
+
+const sequelizeConnection = createSequelizeConnection();
+
+async function syncConnection() {
+  try {
+    await sequelizeConnection.authenticate();
+    sequelizeConnection.sync({ force: process.env.RESET_DB_TABLES === 'true' });
 
     console.log('Connection has been established successfully');
-    return sequelize;
   } catch (error: any) {
     console.error('Unable to connect to the database:', error);
     throw new Error(error.message);
   }
-};
+}
 
-export default sequelizeConnection;
+export { sequelizeConnection, syncConnection };

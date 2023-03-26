@@ -1,9 +1,16 @@
 import Acquisition from '../database/models/acquisition.model';
-import UserCreateDto from '../dto/acquisition/acquisitionCreate.dto';
-
+import AcquisitionCreateDTO from '../dto/acquisition/acquisitionCreate.dto';
+import { sequelizeConnection } from '../config/sequelizeConnection.config';
+import { Repository } from 'sequelize-typescript';
 class AcquisitionRepository {
-  async create(acquisition: UserCreateDto) {
-    const createdAcquisition = await Acquisition.create(acquisition);
+  private repository: Repository<Acquisition>;
+
+  constructor() {
+    this.repository = sequelizeConnection.getRepository(Acquisition);
+  }
+
+  async create(acquisition: AcquisitionCreateDTO) {
+    const createdAcquisition = await this.repository.create(acquisition);
     return createdAcquisition;
   }
 }
