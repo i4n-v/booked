@@ -18,7 +18,7 @@ async function initApp() {
       console.log(`🔥 Server started at http://localhost:${process.env.APP_PORT}`)
     );
   } catch (error) {
-    console.log('The server cannot be started');
+    console.log('❗ The server cannot be started');
   }
 }
 

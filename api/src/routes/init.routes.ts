@@ -7,6 +7,6 @@ export default function initRoutes(app: Express) {
       app.use(route);
     });
   } catch (error: any) {
-    console.log('Routes could not be initialized', error);
+    console.log('❗ Routes could not be initialized', error);
   }
 }
