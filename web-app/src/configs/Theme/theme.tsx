@@ -48,8 +48,8 @@ let theme = createTheme({
     lg: "500 2.188rem/2.625rem 'Montserrat', sans-serif ",
     md: "400 1.25rem/1.625rem 'Montserrat', sans-serif ",
     sm: "400 1rem/1.25rem 'Montserrat', sans-serif",
-    xs: "400 0.875rem/1.125 'Montserrat', sans-serif ",
-    "xs-b": "bold 0.875rem/1.125 'Montserrat', sans-serif ",
+    xs: "400 0.8rem/1.125 'Montserrat', sans-serif ",
+    "xs-b": "bold 0.8rem/1.125 'Montserrat', sans-serif ",
   },
 });
 const include: ThemeOptions = {
@@ -62,7 +62,9 @@ const include: ThemeOptions = {
           background: theme.palette.secondary.light
         },
         input: {
-          fontSize: theme.font.xs,
+          font: theme.font.xs,
+          paddingLeft: "0.8rem",
+         
         },
       },
     },
@@ -79,7 +81,7 @@ const include: ThemeOptions = {
           "&::placeholder": {
             color: theme.palette.secondary.main,
           },
-          padding: 0,
+          
         },
       },
     },
@@ -92,11 +94,18 @@ const include: ThemeOptions = {
         },
         outlined: {
           "&.MuiInputLabel-shrink": {
-            transform: "translate(14px, -4px) scale(0.75)",
+            transform: "translate(19px, -4px) scale(0.75)",
             top: '-2px'
           },
         },
       },
+    },
+    MuiFormHelperText: {
+      styleOverrides:{
+        root:{
+          font: theme.font.xs
+        }
+      }
     },
     MuiAppBar: {
       styleOverrides: {

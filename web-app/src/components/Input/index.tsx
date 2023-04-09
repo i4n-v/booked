@@ -1,8 +1,9 @@
-import { TextField } from "@mui/material";
+import { Event } from "@mui/icons-material";
+import { InputAdornment, TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { InputProps } from "./types";
 
-export default function Input({ name ,label}: InputProps) {
+export default function Input({ name ,label,type}: InputProps) {
   const {
     control,
     formState: { errors },
@@ -15,7 +16,12 @@ export default function Input({ name ,label}: InputProps) {
       render={({ field }) => <TextField 
       {...field}
       label={label}
-      error = {!errors}
+      type={type}
+      error = {!!errors[name]}
+      helperText={errors[name]?.message as string}
+      InputLabelProps={{
+        shrink: true,
+      }}
       fullWidth
       />}
     />

@@ -5,20 +5,30 @@ import IconButton from "@mui/material/IconButton";
 import { DarkLogo } from "../../../assets/SVG";
 import { Button } from "@mui/material";
 import { NavBarProps } from "./types";
+import { Link } from "react-router-dom";
 export default function NavBar({ logged }: NavBarProps) {
   return (
     <AppBar elevation={1} position="sticky">
-      <Toolbar disableGutters  sx={{ display: "flex", justifyContent: "space-between", padding: '0 5%' }}>
+      <Toolbar
+        disableGutters
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "0 5%",
+        }}
+      >
         <IconButton
           size="large"
           edge="start"
           color="secondary"
           aria-label="menu"
           sx={{ mr: 2 }}
+          disableRipple
+          href="/"
         >
           <DarkLogo />
         </IconButton>
-        <Box display={'flex'} columnGap={3} >
+        <Box display={"flex"} columnGap={3}>
           <Button
             sx={{
               font: (t) => t.font.xs,
@@ -37,9 +47,11 @@ export default function NavBar({ logged }: NavBarProps) {
               >
                 Entrar
               </Button>
-              <Button variant="outlined" sx={{ font: (t) => t.font.xs }}>
-                Registre-se
-              </Button>
+              <Link to={"/register"}>
+                <Button variant="outlined" sx={{ font: (t) => t.font.xs }}>
+                  Registre-se
+                </Button>
+              </Link>
             </>
           ) : null}
         </Box>

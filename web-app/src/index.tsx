@@ -6,20 +6,15 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { GlobalNotifier } from "./helpers/Notify/Alert";
 import { NotifierContextProvider } from "./contexts/NotifierContext";
 import theme from "./configs/Theme/theme";
+import { QueryClientProvider, useQueryClient } from "react-query";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <NotifierContextProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <CssBaseline />
-          <GlobalNotifier />
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
-    </NotifierContextProvider>
+    <BrowserRouter>
+    <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
