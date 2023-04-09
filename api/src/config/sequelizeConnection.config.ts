@@ -22,7 +22,7 @@ function createSequelizeConnection() {
       break;
   }
 
-  config.logging = console.log;
+  config.logging = process.env.LOG_DB_QUERIES === 'true' ? console.log : undefined;
   config.repositoryMode = true;
 
   const sequelize = new Sequelize(config);
@@ -39,9 +39,9 @@ async function syncConnection() {
     await sequelizeConnection.authenticate();
     sequelizeConnection.sync({ force: process.env.RESET_DB_TABLES === 'true' });
 
-    console.log('Connection has been established successfully');
+    console.log('✅ Connection has been established successfully');
   } catch (error: any) {
-    console.error('Unable to connect to the database:', error);
+    console.error('❌ Unable to connect to the database:', error);
     throw new Error(error.message);
   }
 }

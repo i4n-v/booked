@@ -1,5 +1,5 @@
 import Acquisition from '../database/models/acquisition.model';
-import AcquisitionCreateDTO from '../dto/acquisition/acquisitionCreate.dto';
+import AcquisitionCreateDto from '../dto/acquisition/acquisitionCreate.dto';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
 class AcquisitionRepository {
@@ -9,12 +9,9 @@ class AcquisitionRepository {
     this.repository = sequelizeConnection.getRepository(Acquisition);
   }
 
-  async create(acquisition: AcquisitionCreateDTO) {
-    const createdAcquisition = await this.repository.create(acquisition);
-    return createdAcquisition;
+  async create(acquisition: AcquisitionCreateDto) {
+    return await this.repository.create(acquisition);
   }
 }
 
-const acquisitionRepository = new AcquisitionRepository();
-
-export default acquisitionRepository;
+export default new AcquisitionRepository();
