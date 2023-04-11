@@ -11,6 +11,10 @@ import Input from "../../components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { Search } from "@mui/icons-material";
 import introductionBg from "../../assets/IMG/introduction-bg.png"
+import imgBooks from "../../assets/SVG/img-books.svg"
+import help from "../../assets/SVG/help.svg"
+
+
 export default function Home() {
   const methods = useForm({
     defaultValues: {
@@ -30,14 +34,18 @@ export default function Home() {
               height="100vh"
               position="relative"
               display="flex"
-              justifyContent="left"
-              alignItems="center"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="left"
               overflow="hidden"
               sx={{
-                backgroundImage: `url(${introductionBg})`
+                backgroundImage: `url(${introductionBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '100vh',
               }}
             >
-              <Box display={"flex"} flexDirection="column" paddingLeft={"5%"}>
+              <Box paddingLeft={"68px"}>
                 <Typography
                   variant="h1"
                   sx={{
@@ -65,11 +73,11 @@ export default function Home() {
                   Publique seus <b style={{ color: "#9b51e0" }}>próprios</b>{" "}
                   livros!
                 </Typography>
-                <Box zIndex={100} width={'50%'}>
-                  <FormProvider {...methods}>
-                    <Input name="faq" label={"Buscar..."} icon={{right: <Search />}} />
-                  </FormProvider>
-                </Box>
+              </Box>
+              <Box width={'50%'} margin={'0 auto'} sx={{ mt: 6 }}>
+                <FormProvider {...methods}>
+                  <Input name="faq" label={"Buscar..."} icon={{ right: <Search style={{ color: '#9b51e0' }} /> }} />
+                </FormProvider>
               </Box>
             </Box>
           </Grid>
@@ -118,9 +126,9 @@ export default function Home() {
                     textAlign: "left",
                   }}
                 >
-                  Ainda não conhece a nossa{" "}
+                  Ainda não conhece a <br /> nossa{" "}
                   <span style={{ color: "#9b51e0" }}>
-                    <br></br>Comunidade?
+                    Comunidade?
                   </span>
                 </Typography>
                 <Typography
@@ -143,7 +151,7 @@ export default function Home() {
                 </Button>
               </Box>
               <div>
-                <img src="img-books.svg" alt="" />
+                <img src={imgBooks} alt="" />
               </div>
             </Box>
           </Grid>
@@ -159,7 +167,7 @@ export default function Home() {
             }}
           >
             <Box sx={{ width: "50%", pl: 28 }}>
-              <img src="help.svg" alt="Imagem" />
+              <img src={help} alt="Imagem" />
             </Box>
             <Box sx={{ width: "50%" }}>
               <Typography
