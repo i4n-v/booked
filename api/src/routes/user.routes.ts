@@ -9,11 +9,6 @@ import UserController from '../controllers/user.controller';
  *     description: This route create a user if not exists.
  *     tags:
  *       - Users
- *     parameters:
- *       - name:
- *         $ref: '#/components/parameters/access_token'
- *     security:
- *       - access_token: []
  *     requestBody:
  *       content:
  *         application/json:
@@ -34,6 +29,7 @@ import UserController from '../controllers/user.controller';
  *             send_payload:
  *               value:
  *                 name: Ana Carollina
+ *                 email: ana@email.com
  *                 birth_date: 2003-07-14
  *                 password: '12345678'
  *                 confirm_password: '12345678'
