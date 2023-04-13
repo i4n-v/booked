@@ -16,7 +16,7 @@ class Encrypt {
 
   async compare(hash: string, plain: string, salt: string) {
     const isValid = await new Promise((resolve) => {
-      bcrypt.hash(plain, salt).then((hashedPlain) => {
+      bcrypt.hash(String(plain), salt).then((hashedPlain) => {
         const isValid = hashedPlain === hash;
         resolve(isValid);
       });

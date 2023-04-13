@@ -14,8 +14,9 @@ async function authMidleware(request: Request, response: Response, next: NextFun
 
     if (!findedToken) return response.status(401).json({ message: 'Token não identificado.' });
 
-    if (!findedToken.valid)
+    if (!findedToken.valid) {
       return response.status(401).json({ message: 'Token inválido.', valid: false });
+    }
 
     const authData = jwt.verify(token as string, process.env.JWT_PRIVATE_KEY as string);
     const { id, user_name, email } = authData as Auth;
