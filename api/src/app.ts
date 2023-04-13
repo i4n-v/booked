@@ -2,7 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import { syncConnection } from './config/sequelizeConnection.config';
 import errorHandlerMidleWare from './midlewares/errorHandler.midleware';
-import initRoutes from './routes/init.routes';
+import routes from './routes/';
+import swagger from './config/swagger.config';
 import cors from 'cors';
 
 async function initApp() {
@@ -10,7 +11,9 @@ async function initApp() {
 
   app.use(express.json());
   app.use(cors());
-  initRoutes(app);
+  app.use('/public', express.static('public'));
+  swagger(app);
+  routes(app);
   app.use(errorHandlerMidleWare);
 
   try {
