@@ -39,14 +39,16 @@ export default function NavBar({ logged }: NavBarProps) {
           </Button>
           {!logged ? (
             <>
-              <Button
-                sx={{
-                  font: (t) => t.font.xs,
-                  color: (t) => t.palette.secondary.main,
-                }}
-              >
-                Entrar
-              </Button>
+              <Link to={"/login"}>
+                <Button
+                  sx={{
+                    font: (t) => t.font.xs,
+                    color: (t) => t.palette.secondary.main,
+                  }}
+                >
+                  Entrar
+                </Button>
+              </Link>
               <Link to={"/register"}>
                 <Button variant="outlined" sx={{ font: (t) => t.font.xs }}>
                   Registre-se

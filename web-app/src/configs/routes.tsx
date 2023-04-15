@@ -1,11 +1,12 @@
 import { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Home from '../pages/Home';
-import SignUp from '../pages/Signup';
+import SignUp from '../pages/SignUp';
+import SignIn from '../pages/SignIn';
 const routes: RouteObject[] = [
     {
         path: '',
-        element: <Layout/>,
+        element: <Layout />,
         children: [
             {
                 //index: true,
@@ -14,7 +15,7 @@ const routes: RouteObject[] = [
             },
             {
                 path: 'login',
-                element: <>login</>
+                element: <SignIn />
             },
             {
                 path: 'register',
