@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import registerBg from "../../assets/IMG/register-bg.png";
+import loginBg from "../../assets/IMG/login-bg.png";
 import Input from "../../components/Input";
 import useNotifier from "../../helpers/Notify";
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -38,7 +38,7 @@ export default function SignIn() {
             <Grid xs={6} item height="auto">
                 <Box height={'auto'} sx={{
                     minHeight: "100vh",
-                    backgroundImage: `url(${registerBg})`,
+                    backgroundImage: `url(${loginBg})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPositionY: "center",
