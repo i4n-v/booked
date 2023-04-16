@@ -1,4 +1,4 @@
-import { Button, Grid, Paper, Rating, Skeleton, Typography } from "@mui/material";
+import { Button, Grid, Rating, Skeleton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import Carousel from "../Carousel";
 
@@ -51,7 +51,7 @@ const items = [
 
 ];
 
-export default function Teste() {
+export default function Card() {
   return (
     <Carousel itemsPerPage={4} autoplay={true} autoplayDelay={1000}>
       {items.map((item) => (
@@ -74,13 +74,13 @@ function Item({ src, title, author, rating, ratingCount, price }: ItemProps) {
 
   return (
     <Grid sx={{
-            width: 430, height: 500, marginRight: 2, my: 5, borderRadius: '12px',
-            backgroundColor: (t) => t.palette.secondary[50],
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+      width: 430, height: 500, marginRight: 2, my: 5, borderRadius: '12px',
+      backgroundColor: (t) => t.palette.secondary[50],
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
       {items ? (
         <img style={{ width: 225, height: 310, paddingTop: 8, paddingBottom: 10 }}
           alt={title} src={src} />
