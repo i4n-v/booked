@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Teste from "../../components/Card";
+import Card from "../../components/Card";
 import Input from "../../components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { Search } from "@mui/icons-material";
@@ -104,7 +104,7 @@ export default function Home() {
               Explore os <span style={{ color: "#9b51e0" }}>tops 10</span>{" "}
               livros melhores <br></br>avaliados na plataforma.
             </Typography>
-            <Teste></Teste>
+            <Card></Card>
           </Grid>
 
           <Grid item xs={12} position="relative" sx={{ minHeight: "85vh" }}>

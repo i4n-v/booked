@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
+import { CarouselProps } from './types';
 
 const Container = styled('div')<{ minHeight: string }>(
   ({ theme, minHeight }) => ({
@@ -51,14 +52,6 @@ const PageButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-type CarouselProps = {
-  itemsPerPage?: number;
-  autoplay?: boolean;
-  autoplayDelay?: number;
-  minHeight?: string;
-  rollPerPage?: number;
-  children: React.ReactNode[];
-};
 
 const Carousel = ({
   itemsPerPage = 4,

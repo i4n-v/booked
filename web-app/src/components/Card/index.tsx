@@ -1,6 +1,7 @@
 import { Button, Grid, Rating, Skeleton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import Carousel from "../Carousel";
+import { ItemProps } from "./type";
 
 const items = [
   {
@@ -59,15 +60,6 @@ export default function Card() {
       ))}
     </Carousel>
   );
-}
-
-interface ItemProps {
-  src: string
-  title: string;
-  author: string,
-  rating: number,
-  ratingCount: number,
-  price: number,
 }
 
 function Item({ src, title, author, rating, ratingCount, price }: ItemProps) {
