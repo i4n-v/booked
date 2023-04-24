@@ -1,5 +1,6 @@
 import User from '../database/models/user.model';
 import UserCreateDto from '../dto/user/userCreate.dto';
+import UserUpdateDto from '../dto/user/userUpdate.dto';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
 import { Op } from 'sequelize';
@@ -21,6 +22,14 @@ class UserRepository {
     return await this.repository.create(user);
   }
 
+  async update(id: string, user: UserUpdateDto) {
+    return await this.repository.update(user, {
+      where: {
+        id,
+      },
+    });
+  }
+
   async countByName(name: string) {
     return await this.repository.count({
       where: {
@@ -29,6 +38,10 @@ class UserRepository {
         },
       },
     });
+  }
+
+  async findById(id: string) {
+    return await this.repository.findByPk(id);
   }
 
   async findByCredentials(userName: string, email: string) {
