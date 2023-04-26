@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
+import { uploadIdentifierError } from './upload.midleware';
 
 function errorHandlerMidleWare(
   error: any,
@@ -10,6 +11,12 @@ function errorHandlerMidleWare(
   if (error.name === 'SequelizeValidationError') {
     response.status(400).json({
       message: error.errors[0].message,
+    });
+  }
+
+  if (error.message.includes(uploadIdentifierError)) {
+    response.status(400).json({
+      message: error.message.replace(uploadIdentifierError, ''),
     });
   }
 
