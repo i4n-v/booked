@@ -1,13 +1,9 @@
-export default class UserCreateDto {
+export default class UserUpdateDto {
   name?: string;
   user_name?: string;
   birth_date?: Date;
   email?: string;
   description?: string;
-  photo?: string;
-  photo_url?: string;
-  previous_password?: string;
-  password?: string;
-  confirm_password?: string;
-  salt?: string;
+  photo_url?: string | null;
+  photo?: string | null;
 }
