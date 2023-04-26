@@ -38,6 +38,15 @@ const options: Options = {
             },
           },
         },
+        Image: {
+          type: 'string',
+          contentType: 'image/png, image/jpeg, image/pjpeg, image/webp',
+          format: 'binary',
+        },
+        File: {
+          type: 'string',
+          contentType: 'application/pdf',
+        },
       },
       parameters: {
         access_token: {
