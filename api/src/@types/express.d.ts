@@ -1,9 +1,9 @@
-import Auth from '../interfaces/auth.interface';
+import IAuth from '../interfaces/auth.interface';
 
 declare global {
   namespace Express {
     export interface Request {
-      auth: Auth;
+      auth: IAuth;
     }
   }
 }
