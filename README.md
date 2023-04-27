@@ -1,5 +1,6 @@
 # Booked
 
+
 > A platform where to read is a good dream. Publish your books for readers around the world! 📘
 
 ### Gif of web site >>> future
@@ -16,6 +17,8 @@ Follow the instructions to run project :)
 - [Technologies](#Technologies)
 
 ### Clone
+
+- Clone the repository in your computer : `https://github.com/i4n-v/Booked.git`
 
 - Clone the repository in your computer : `https://github.com/i4n-v/Booked.git`
 
@@ -36,6 +39,13 @@ Follow the instructions to run project :)
 - To start the api it is necessary install despendencies with this command: `yarn install`
 - Apply your credentials in `.env` file
 - After that, run the following command in the "api" directory: `yarn dev`
+
+> After install , go to Booked folder and exec this in the cmd or terminal :
+
+- in the frontend folder, run the following command to install the dependencies: `yarn install`
+- To start the application, run the following command int "web-app" directory: `yarn dev`
+- To start the api it is necessary install despendencies with this command: `yarn install`
+- After that, run the following command in the "api" directory: `yarn start`
 
 > After all things done, go to your browser and digit : `localhost:3000`.
 
