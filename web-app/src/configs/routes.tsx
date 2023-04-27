@@ -1,10 +1,12 @@
 import { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Home from '../pages/Home';
+import Questions from '../pages/Questions';
+
 const routes: RouteObject[] = [
     {
         path: '',
-        element: <Layout/>,
+        element: <Layout />,
         children: [
             {
                 //index: true,
@@ -15,6 +17,10 @@ const routes: RouteObject[] = [
                 path: 'login',
                 element: <>login</>
             },
+            {
+                path: 'questions',
+                element: <Questions />
+            }
         ]
     },
 ]
