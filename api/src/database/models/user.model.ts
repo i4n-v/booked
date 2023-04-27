@@ -16,6 +16,7 @@ import { encrypt } from '../../utils';
 import Assessment from './assessment.model';
 import Acquisition from './acquisition.model';
 import Book from './book.model';
+import Authentication from './authentication.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -31,7 +32,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.STRING,
     validate: {
       notNull: {
-        msg: 'O nome é requerido',
+        msg: 'O nome é requerido.',
       },
     },
   })
@@ -48,10 +49,10 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.STRING,
     validate: {
       notNull: {
-        msg: 'O e-mail é requerido',
+        msg: 'O e-mail é requerido.',
       },
       isEmail: {
-        msg: 'E-mail inválido',
+        msg: 'E-mail inválido.',
       },
     },
   })
@@ -62,7 +63,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.STRING,
     validate: {
       notNull: {
-        msg: 'O salt é requerido',
+        msg: 'O salt é requerido.',
       },
     },
   })
@@ -73,7 +74,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.STRING,
     validate: {
       notNull: {
-        msg: 'A senha é requerida',
+        msg: 'A senha é requerida.',
       },
     },
   })
@@ -84,7 +85,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.DATE,
     validate: {
       notNull: {
-        msg: 'O e-mail é requerido',
+        msg: 'A data de nascimento é requerida.',
       },
       isDate: {
         args: true,
@@ -109,11 +110,16 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @BelongsToMany(() => Book, () => Acquisition, 'user_id')
   acquisitions: Acquisition[];
 
+  @HasMany(() => Authentication, { foreignKey: 'user_id', onDelete: 'CASCADE' })
+  authentications: Authentication[];
+
   @BeforeValidate
   static async hashPassword(user: UserCreateDto) {
-    const [hashedPassword, salt] = await encrypt.hash(user.password);
+    if (user.password) {
+      const [hashedPassword, salt] = await encrypt.hash(user.password);
 
-    user.password = hashedPassword;
-    user.salt = salt;
+      user.password = hashedPassword;
+      user.salt = salt;
+    }
   }
 }

@@ -2,13 +2,18 @@ import 'dotenv/config';
 import express from 'express';
 import { syncConnection } from './config/sequelizeConnection.config';
 import errorHandlerMidleWare from './midlewares/errorHandler.midleware';
-import initRoutes from './routes/init.routes';
+import routes from './routes/';
+import swagger from './config/swagger.config';
+import cors from 'cors';
 
 async function initApp() {
   const app = express();
 
   app.use(express.json());
-  initRoutes(app);
+  app.use(cors());
+  app.use('/public', express.static('public'));
+  swagger(app);
+  routes(app);
   app.use(errorHandlerMidleWare);
 
   try {
@@ -18,7 +23,7 @@ async function initApp() {
       console.log(`🔥 Server started at http://localhost:${process.env.APP_PORT}`)
     );
   } catch (error) {
-    console.log('The server cannot be started');
+    console.log('❗ The server cannot be started');
   }
 }
 

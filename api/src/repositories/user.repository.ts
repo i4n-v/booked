@@ -1,8 +1,11 @@
 import User from '../database/models/user.model';
 import UserCreateDto from '../dto/user/userCreate.dto';
+import UserUpdateDto from '../dto/user/userUpdate.dto';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
+import userUpdatePasswordDto from '../dto/user/userUpdatePassword.dto';
+import UserDto from '../dto/user/user.dto';
 
 class UserRepository {
   private repository: Repository<User>;
@@ -14,26 +17,42 @@ class UserRepository {
   async create(user: UserCreateDto) {
     if (user.name) {
       const firstName = user.name.split(' ')[0].toLocaleLowerCase();
-      const countUsers = await userRepository.countByName(firstName);
+      const countUsers = await this.countByName(firstName);
       user.user_name = `${firstName}#${countUsers}`;
     }
 
-    const createdUser = await this.repository.create(user);
-    return createdUser;
+    return await this.repository.create(user);
+  }
+
+  async update(id: string, user: UserUpdateDto | userUpdatePasswordDto) {
+    return await this.repository.update(user, {
+      where: {
+        id,
+      },
+    });
   }
 
   async countByName(name: string) {
-    const countUsers = await this.repository.count({
+    return await this.repository.count({
       where: {
         user_name: {
           [Op.like]: `${name}%`,
         },
       },
     });
-    return countUsers;
+  }
+
+  async findById(id: string, options?: Omit<FindOptions<UserDto>, 'where'>) {
+    return await this.repository.findByPk(id, options);
+  }
+
+  async findByCredentials(userName: string, email: string) {
+    return await this.repository.findOne({
+      where: {
+        [Op.or]: [{ user_name: userName }, { email }],
+      },
+    });
   }
 }
 
-const userRepository = new UserRepository();
-
-export default userRepository;
+export default new UserRepository();

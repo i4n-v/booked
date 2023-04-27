@@ -13,6 +13,17 @@ class Encrypt {
 
     return encryptedValues;
   }
+
+  async compare(hash: string, plain: string, salt: string) {
+    const isValid = await new Promise((resolve) => {
+      bcrypt.hash(String(plain), salt).then((hashedPlain) => {
+        const isValid = hashedPlain === hash;
+        resolve(isValid);
+      });
+    });
+
+    return isValid;
+  }
 }
 
 const encrypt = new Encrypt();

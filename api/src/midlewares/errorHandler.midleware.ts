@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import {} from 'sequelize-typescript';
+import { uploadIdentifierError } from './upload.midleware';
 
 function errorHandlerMidleWare(
   error: any,
@@ -14,8 +14,14 @@ function errorHandlerMidleWare(
     });
   }
 
-  console.log('ERROR HANDLER: ', error);
-  response.sendStatus(500);
+  if (error.message.includes(uploadIdentifierError)) {
+    response.status(400).json({
+      message: error.message.replace(uploadIdentifierError, ''),
+    });
+  }
+
+  console.log('❗ ERROR HANDLER: ', error);
+  response.status(500).json({ message: 'Erro interno do servidor.' });
 }
 
 export default errorHandlerMidleWare;
