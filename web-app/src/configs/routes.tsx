@@ -9,8 +9,7 @@ const routes: RouteObject[] = [
         element: <Layout />,
         children: [
             {
-                //index: true,
-                path: 'home',
+                index: true,
                 element: <Home />
             },
             {
