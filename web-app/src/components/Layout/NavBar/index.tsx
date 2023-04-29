@@ -32,7 +32,9 @@ export default function NavBar({ logged }: NavBarProps) {
           <Button
             sx={{
               font: (t) => t.font.xs,
-              color: (t) => t.palette.secondary.main,
+              color: (t) => t.palette.secondary[800],
+              textTransform: 'none',
+              marginRight: '40px'
             }}
           >
             Explorar
@@ -43,14 +45,21 @@ export default function NavBar({ logged }: NavBarProps) {
                 <Button
                   sx={{
                     font: (t) => t.font.xs,
-                    color: (t) => t.palette.secondary.main,
+                    color: (t) => t.palette.secondary[800],
+                    textTransform: 'none',
+                    marginRight: '40px'
                   }}
                 >
                   Entrar
                 </Button>
               </Link>
               <Link to={"/register"}>
-                <Button variant="outlined" sx={{ font: (t) => t.font.xs }}>
+                <Button variant="outlined"
+                  sx={{
+                    font: (t) => t.font.xs,
+                    textTransform: 'none',
+                    marginRight: '40px'
+                  }}>
                   Registre-se
                 </Button>
               </Link>

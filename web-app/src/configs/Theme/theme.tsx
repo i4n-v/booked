@@ -64,7 +64,7 @@ const include: ThemeOptions = {
         input: {
           font: theme.font.xs,
           paddingLeft: "0.8rem",
-         
+
         },
       },
     },
@@ -81,7 +81,7 @@ const include: ThemeOptions = {
           "&::placeholder": {
             color: theme.palette.secondary.main,
           },
-          
+
         },
       },
     },
@@ -101,8 +101,8 @@ const include: ThemeOptions = {
       },
     },
     MuiFormHelperText: {
-      styleOverrides:{
-        root:{
+      styleOverrides: {
+        root: {
           font: theme.font.xs
         }
       }
