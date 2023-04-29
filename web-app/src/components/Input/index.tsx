@@ -1,26 +1,32 @@
-import { TextField } from "@mui/material";
+import { Event } from "@mui/icons-material";
+import { InputAdornment, TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { InputProps } from "./types";
 
-export default function Input({ name ,label,icon}: InputProps) {
+export default function Input({ name, label, type, icon, shrink = true }: InputProps) {
   const {
     control,
     formState: { errors },
   } = useFormContext();
-  
+
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field }) => <TextField 
-      {...field}
-      label={label}
-      error = {!errors}
-      InputProps={{
-        startAdornment: icon?.left,
-        endAdornment: icon?.right
-      }}
-      fullWidth
+      render={({ field }) => <TextField
+        {...field}
+        label={label}
+        type={type}
+        error={!errors[name]}
+        helperText={errors[name]?.message as string}
+        InputLabelProps={{
+          shrink
+        }}
+        InputProps={{
+          startAdornment: icon?.left,
+          endAdornment: icon?.right
+        }}
+        fullWidth
       />}
     />
   );

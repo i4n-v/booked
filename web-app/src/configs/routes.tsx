@@ -1,20 +1,25 @@
 import { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Home from '../pages/Home';
+import SignUp from '../pages/SignUp';
+import SignIn from '../pages/SignIn';
 const routes: RouteObject[] = [
     {
         path: '',
-        element: <Layout/>,
+        element: <Layout />,
         children: [
             {
-                //index: true,
-                path: 'home',
+                index: true,
                 element: <Home />
             },
             {
                 path: 'login',
-                element: <>login</>
+                element: <SignIn />
             },
+            {
+                path: 'register',
+                element: <SignUp />
+            }
         ]
     },
 ]

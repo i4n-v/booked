@@ -7,6 +7,7 @@ export default function Footer() {
   return (
     <Grid
       container
+      item
       xs={12}
       sx={{
         backgroundColor: (t) => t.palette.secondary.dark,
@@ -15,13 +16,24 @@ export default function Footer() {
         padding: "5%",
       }}
     >
-      <Grid xs={4} rowGap={"2rem"} display={"flex"} flexDirection={"column"}>
+      <Grid
+        item
+        xs={4}
+        rowGap={"2rem"}
+        display={"flex"}
+        flexDirection={"column"}
+      >
         <LightLogo />
-        <Typography component={"p"} paddingRight={'9rem'} color={(t) => t.palette.secondary[600]}>
+        <Typography
+          component={"p"}
+          paddingRight={"9rem"}
+          color={(t) => t.palette.secondary[600]}
+        >
           Booked, um universo repleto de mundos novos em cada livro.
         </Typography>
       </Grid>
       <Grid
+        item
         xs={4}
         display={"flex"}
         flexDirection={"column"}
@@ -53,6 +65,7 @@ export default function Footer() {
         </Box>
       </Grid>
       <Grid
+        item
         xs={4}
         display={"flex"}
         flexDirection={"column"}
@@ -68,7 +81,13 @@ export default function Footer() {
           <Typography>Termos e condições</Typography>
         </Box>
       </Grid>
-      <Grid xs={12} container alignItems={"end"} color={(t) => t.palette.secondary[800]}>
+      <Grid
+        item
+        xs={12}
+        container
+        alignItems={"end"}
+        color={(t) => t.palette.secondary[800]}
+      >
         Booked © alguns direitos reservados.
       </Grid>
     </Grid>
