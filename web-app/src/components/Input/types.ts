@@ -8,4 +8,5 @@ export type InputProps = {
     left: React.ReactNode;
     right: React.ReactNode;
   }>;
+  shrink?: boolean;
 };

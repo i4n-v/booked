@@ -1,3 +1,3 @@
 export type NavBarProps = {
-    logged?: boolean
-}
+  logged: boolean;
+};

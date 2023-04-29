@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
-  TextField,
   Typography,
 } from "@mui/material";
 import Card from "../../components/Card";
@@ -76,7 +74,7 @@ export default function Home() {
               </Box>
               <Box width={'50%'} margin={'0 auto'} sx={{ mt: 6 }}>
                 <FormProvider {...methods}>
-                  <Input name="faq" label={"Buscar..."} icon={{ right: <Search style={{ color: '#9b51e0' }} /> }} />
+                  <Input name="faq" label={"Buscar..."} shrink={false} icon={{ right: <Search style={{ color: '#9b51e0' }} /> }} />
                 </FormProvider>
               </Box>
             </Box>

@@ -3,7 +3,7 @@ import { InputAdornment, TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { InputProps } from "./types";
 
-export default function Input({ name, label, type, icon }: InputProps) {
+export default function Input({ name, label, type, icon, shrink = true }: InputProps) {
   const {
     control,
     formState: { errors },
@@ -20,7 +20,7 @@ export default function Input({ name, label, type, icon }: InputProps) {
         error={!errors[name]}
         helperText={errors[name]?.message as string}
         InputLabelProps={{
-          shrink: true,
+          shrink
         }}
         InputProps={{
           startAdornment: icon?.left,

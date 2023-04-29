@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 export default function Layout() {
   return (
     <Box >
-      <NavBar />
+      <NavBar logged={false} />
       <Container
         maxWidth={false}
         disableGutters
