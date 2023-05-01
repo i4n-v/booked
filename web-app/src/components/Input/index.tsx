@@ -17,7 +17,7 @@ export default function Input({ name, label, type, icon, shrink = true }: InputP
         {...field}
         label={label}
         type={type}
-        error={!errors[name]}
+        error={!!errors[name]}
         helperText={errors[name]?.message as string}
         InputLabelProps={{
           shrink

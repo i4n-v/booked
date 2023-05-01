@@ -8,7 +8,8 @@ import useUser from "../../services/useUser";
 import { yupResolver } from '@hookform/resolvers/yup'
 import schema from "./validation";
 import IUser from "../../commons/IUser";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export default function SignUp() {
   const methods = useForm<IUser<"CREATE">>({
@@ -21,12 +22,14 @@ export default function SignUp() {
     mutationFn: createUser,
     mutationKey: "Create User",
   });
+  const navigate = useNavigate();
 
   const onSubmit = methods.handleSubmit((value: IUser<"CREATE">) => {
     value.birth_date = new Date();
     createUserMutation.mutate(value, {
-      onSuccess: () => {
-        notify("Sucesso");
+      onSuccess: (data) => {
+        notify(data.message);
+        navigate('/login')
       },
       onError: (error: any) => {
         notify(error.message, 'error')

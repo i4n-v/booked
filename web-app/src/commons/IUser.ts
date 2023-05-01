@@ -21,9 +21,20 @@ interface User extends UserCommom {
 enum UserTypes {
   CREATE,
   LOGIN,
+  AUTHDATA,
+}
+interface UserAuthData extends UserCommom {
+  id: string;
+  token: string;
+  user_name: string;
 }
 
-export type IUser<T extends keyof typeof UserTypes | null = null> =
-  T extends "CREATE" ? UserCreate : T extends "LOGIN" ? UserLogin : User;
+type IUser<T extends keyof typeof UserTypes | null = null> = T extends "CREATE"
+  ? UserCreate
+  : T extends "LOGIN"
+  ? UserLogin
+  : T extends "AUTHDATA"
+  ? UserAuthData
+  : User;
 
 export default IUser;

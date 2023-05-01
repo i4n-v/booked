@@ -12,9 +12,9 @@ function App() {
     <NotifierContextProvider>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-            <CssBaseline />
-            <GlobalNotifier />
-            {useRoutes(routes)}
+          <CssBaseline />
+          <GlobalNotifier />
+          {useRoutes(routes)}
         </QueryClientProvider>
       </ThemeProvider>
     </NotifierContextProvider>

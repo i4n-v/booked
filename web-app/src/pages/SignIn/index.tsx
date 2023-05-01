@@ -8,7 +8,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import IUser from "../../commons/IUser";
 import useAuth from "../../services/useAuth";
 import schema from "./validation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import { AuthActionsKind } from "../../contexts/AuthContext/types";
 
 export default function SignIn() {
     const methods = useForm<IUser<"LOGIN">>({
@@ -21,11 +24,15 @@ export default function SignIn() {
         mutationFn: login,
         mutationKey: "Login",
     });
+    const [authData, authDispatch] = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const onSubmit = methods.handleSubmit((value: IUser<"LOGIN">) => {
         createUserMutation.mutate(value, {
-            onSuccess: () => {
+            onSuccess: (data) => {
                 notify("Sucesso");
+                authDispatch({ type: AuthActionsKind.SET_USER_DATA, payload: { userData: data } })
+                navigate('/')
             },
             onError: (err: any) => {
                 notify(err.message, 'error')

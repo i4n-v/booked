@@ -1,5 +1,6 @@
 import useApi from "../../hooks/useApi";
 import IUser from "../../commons/IUser";
+import { ResponseMessage } from "../../commons/ResponseMessage";
 
 export default function useUser() {
   const user = useApi("users");
@@ -14,7 +15,7 @@ export default function useUser() {
 
   async function createUser(data: IUser<"CREATE">) {
     try {
-      const result = await user.post<IUser<"CREATE">>(data);
+      const result = await user.post<ResponseMessage>(data);
       return result.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message);
