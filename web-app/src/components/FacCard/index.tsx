@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, IconButton } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-
-interface FaqCardProps {
-  question: string;
-  answer: string;
-  color?: string;
-}
+import { FaqCardProps } from './type';
 
 const FaqCard: React.FC<FaqCardProps> = ({ question, answer, color }) => {
   const [showAnswer, setShowAnswer] = useState(false);
