@@ -21,7 +21,7 @@ const routes: RouteObject[] = [
             {
                 path: 'register',
                 element: <SignUp />
-            }
+            },
             {
                 path: 'questions',
                 element: <Questions />
