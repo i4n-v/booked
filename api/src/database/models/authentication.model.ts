@@ -25,7 +25,7 @@ export default class Authentication extends Model<AuthenticationDto, Authenticat
   @AllowNull(false)
   @Unique(true)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(7000),
     validate: {
       notNull: {
         msg: 'O token é requerido',
