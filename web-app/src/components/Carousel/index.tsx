@@ -1,63 +1,14 @@
 import { useEffect, useRef } from "react";
 import CarouselProps from "./types";
-import { Box, styled } from "@mui/material";
-
-const CarouselContainer = styled(Box)(({ theme }) => ({
-  overflow: "hidden",
-  maxWidth: "1920px",
-  margin: "0 auto",
-  "& > div": {
-    display: "flex",
-    marginTop: "32px",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "8px",
-    "& > button": {
-      width: "16px",
-      height: "16px",
-      border: `2px solid ${theme.palette.primary[700]}`,
-      borderRadius: "100%",
-      cursor: "pointer",
-      transition: "0.3s",
-    },
-    "& .activeTab": {
-      background: `linear-gradient(180deg, ${theme.palette.primary[700]} 0%, ${theme.palette.primary[900]} 100%)`,
-    },
-  },
-  "& > ul": {
-    display: "flex",
-    gap: "40px",
-    padding: "0 20px",
-    listStyle: "none",
-    "&:hover": {
-      willChange: "transform",
-    },
-    "& > li": {
-      flexShrink: 0,
-      maxWidth: "fit-content",
-      opacity: 0.8,
-      transform: "scale(0.9)",
-      transition: "0.4s",
-    },
-  },
-  "& .active": {
-    opacity: 1,
-    transform: "scale(1)",
-  },
-  [theme.breakpoints.down("sm")]: {
-    "& > ul": {
-      gap: "20px",
-    },
-    "& > div": {
-      display: "flex",
-    },
-  },
-}));
+import { Box } from "@mui/material";
+import { CarouselContainer } from "./styles";
+import { isBoolean } from "lodash";
 
 export default function Carousel<T>({
   data,
   renderItem,
   keyExtractor,
+  timer = false,
 }: CarouselProps<T>) {
   const wrapper = useRef<HTMLDivElement>(null);
   const slide = useRef<HTMLUListElement>(null);
@@ -213,10 +164,29 @@ export default function Carousel<T>({
       });
     });
 
+    function changeSlideByTimer() {
+      if (activeSlideItem.current < mapedListItems.length - 1) {
+        activeSlideItem.current += 1;
+        changeSlideItem(activeSlideItem.current);
+      } else {
+        activeSlideItem.current = 0;
+        changeSlideItem(activeSlideItem.current);
+      }
+    }
+
     wrapper.current?.addEventListener("mousedown", onMouseStart);
     wrapper.current?.addEventListener("touchstart", onTouchStart);
     wrapper.current?.addEventListener("mouseup", onMouseEnd);
     wrapper.current?.addEventListener("touchend", onTouchEnd);
+
+    let interval: NodeJS.Timer;
+
+    if (timer) {
+      interval = setInterval(
+        changeSlideByTimer,
+        isBoolean(timer) ? 5000 : timer
+      );
+    }
 
     return () => {
       wrapper.current?.removeEventListener("mousedown", onMouseStart);
@@ -224,8 +194,9 @@ export default function Carousel<T>({
       wrapper.current?.removeEventListener("mouseup", onMouseEnd);
       // eslint-disable-next-line react-hooks/exhaustive-deps
       wrapper.current?.removeEventListener("touchend", onTouchEnd);
+      clearInterval(interval);
     };
-  }, []);
+  }, [timer]);
 
   return (
     <CarouselContainer ref={wrapper}>

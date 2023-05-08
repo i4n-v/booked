@@ -12,16 +12,13 @@ class AuthenticationController {
     try {
       const userData = request.body;
 
-      if (!userData.user_name && !userData.email) {
+      if (!userData.user_login) {
         return response.status(400).json({ message: 'Nome de usuário ou e-mail são requeridos.' });
       }
 
       if (!userData.password) return response.status(400).json({ messages: 'Senha requerida.' });
 
-      const user = await UserRepository.findByCredentials(
-        userData.user_name || null,
-        userData.email || null
-      );
+      const user = await UserRepository.findByCredentials(userData.user_login || null);
 
       if (!user) return response.status(404).json({ message: messages.unknown('Usuário') });
 

@@ -5,6 +5,10 @@ import { ReactComponent as Facebook } from "./facebook.svg";
 import { ReactComponent as Youtube } from "./youtube.svg";
 import { ReactComponent as BookBackground } from "./book-background.svg";
 import { ReactComponent as Menu } from "./menu.svg";
+import { ReactComponent as Account } from "./account.svg";
+import { ReactComponent as Config } from "./config.svg";
+import { ReactComponent as User } from "./user.svg";
+import { ReactComponent as Logout } from "./logout.svg";
 
 export {
   DarkLogo,
@@ -14,4 +18,8 @@ export {
   Youtube,
   BookBackground,
   Menu,
+  Account,
+  Config,
+  User,
+  Logout,
 };

@@ -1,3 +1,4 @@
+import { MenuProps } from "@mui/material";
 import { ReactNode } from "react";
 
 export type DropdownOptions = {
@@ -6,9 +7,11 @@ export type DropdownOptions = {
   handler?: () => void;
 };
 
-export type DropdownProps = {
+type Props = {
   anchorEl: null | HTMLElement;
   open: boolean;
   handleClose: () => void;
   options: DropdownOptions[];
 };
+
+export type DropdownProps = Props & MenuProps;

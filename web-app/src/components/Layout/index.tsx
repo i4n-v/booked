@@ -6,18 +6,23 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Layout() {
-
-  const [authData] = useContext(AuthContext)
+  const [authData] = useContext(AuthContext);
   return (
-    <Box >
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <NavBar logged={!!authData?.userData} />
       <Container
         maxWidth={false}
         disableGutters
         sx={{
-          minHeight: "86vh",
           backgroundColor: (t) => t.palette.secondary[100],
           padding: 0,
+          flex: 1,
         }}
       >
         <Outlet />

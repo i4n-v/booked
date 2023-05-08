@@ -1,5 +1,11 @@
 import React from "react";
-import { Menu, MenuItem, useTheme } from "@mui/material";
+import {
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  useTheme,
+} from "@mui/material";
 import { DropdownProps } from "./type";
 
 export default function Dropdown({
@@ -7,11 +13,13 @@ export default function Dropdown({
   open,
   handleClose,
   options,
+  ...props
 }: DropdownProps) {
   const theme = useTheme();
 
   return (
     <Menu
+      id="menu-dropdown"
       anchorEl={anchorEl}
       open={open}
       onClose={handleClose}
@@ -44,17 +52,25 @@ export default function Dropdown({
           key={label}
           sx={{
             minWidth: "260px",
-            font: theme.font.xs,
-            color: theme.palette.secondary.light,
             padding: "10px 20px",
             "&:hover": {
-              color: theme.palette.primary[700],
               background: theme.palette.secondary.A100,
             },
           }}
           onClick={handler}
         >
-          {icon} {label}
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText
+            sx={{
+              font: theme.font.xs,
+              color: theme.palette.secondary.light,
+              "&:hover": {
+                color: theme.palette.primary[700],
+              },
+            }}
+          >
+            {label}
+          </ListItemText>
         </MenuItem>
       ))}
     </Menu>

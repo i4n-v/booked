@@ -43,7 +43,10 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @Column(DataType.STRING)
   user_name: string;
 
-  @Unique
+  @Unique({
+    name: 'Users_email_key',
+    msg: 'E-mail já cadastrado.',
+  })
   @AllowNull(false)
   @Column({
     type: DataType.STRING,
@@ -95,6 +98,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
   })
   birth_date: Date;
 
+  @AllowNull(true)
   @Column(DataType.STRING)
   photo_url: string;
 

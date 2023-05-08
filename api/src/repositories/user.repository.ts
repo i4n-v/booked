@@ -46,10 +46,10 @@ class UserRepository {
     return await this.repository.findByPk(id, options);
   }
 
-  async findByCredentials(userName: string, email: string) {
+  async findByCredentials(userLogin: string) {
     return await this.repository.findOne({
       where: {
-        [Op.or]: [{ user_name: userName }, { email }],
+        [Op.or]: [{ user_name: userLogin }, { email: userLogin }],
       },
     });
   }
