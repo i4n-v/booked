@@ -1,6 +1,7 @@
+import { TextFieldProps } from "@mui/material";
 import { HTMLInputTypeAttribute } from "react";
 
-export type InputProps = {
+type Props = {
   name: string;
   label?: string;
   type?: HTMLInputTypeAttribute;
@@ -10,3 +11,5 @@ export type InputProps = {
   }>;
   shrink?: boolean;
 };
+
+export type InputProps = TextFieldProps & Props;
