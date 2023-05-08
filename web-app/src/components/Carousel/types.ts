@@ -1,8 +1,9 @@
-export type CarouselProps = {
-    itemsPerPage?: number;
-    autoplay?: boolean;
-    autoplayDelay?: number;
-    minHeight?: string;
-    rollPerPage?: number;
-    children: React.ReactNode[];
+import { ReactNode } from "react";
+
+type CarouselProps<T> = {
+  data: Array<T>;
+  renderItem?: (item: T) => ReactNode;
+  keyExtractor?: (item: T) => number | string;
 };
+
+export default CarouselProps;
