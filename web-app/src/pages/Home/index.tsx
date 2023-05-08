@@ -5,7 +5,7 @@ import { Search } from "@mui/icons-material";
 import introducitionBg from "../../assets/IMG/introduction-bg.png";
 import bookcase from "../../assets/IMG/bookcase.png";
 import help from "../../assets/SVG/help.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Carousel } from "../../components";
 import { BookCard } from "../../components/Cards";
 
@@ -300,6 +300,7 @@ const cards = [
 
 export default function Home() {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const methods = useForm({
     defaultValues: {
@@ -369,7 +370,9 @@ export default function Home() {
               conhecer um novo mundo em cada livro que lêmos, publicados por
               autores repletos de criatividade, vem fazer parte desse universo!
             </Typography>
-            <Button variant="outlined">Cadastre-se já</Button>
+            <Button variant="outlined" onClick={() => navigate("/register")}>
+              Cadastre-se já
+            </Button>
           </Box>
           <Box className="image">
             <img src={bookcase} alt="Uma estante de livros." />
