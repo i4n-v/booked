@@ -1,72 +1,109 @@
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import { DarkLogo } from "../../../assets/SVG";
-import { Button } from "@mui/material";
+import { DarkLogo, Menu } from "../../../assets/SVG";
+import { Button, IconButton, styled } from "@mui/material";
 import { NavBarProps } from "./types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Dropdown from "../../Dropdown";
+
+const MenuItem = styled(Button)(({ theme }) => ({
+  font: theme.font.sm,
+  color: theme.palette.secondary[700],
+  textTransform: "none",
+  transition: "0.3s",
+  "&:hover": {
+    color: theme.palette.primary[700],
+  },
+}));
+
+const NavigationContainer = styled(Toolbar)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+  maxWidth: "1400px",
+  "#burguer-menu": {
+    display: "none",
+    cursor: "pointer",
+  },
+  [theme.breakpoints.down("md")]: {
+    "#burguer-menu": {
+      display: "inline-flex",
+    },
+    "& > div": {
+      display: "none",
+    },
+  },
+}));
+
 export default function NavBar({ logged }: NavBarProps) {
+  const navigate = useNavigate();
+  const [navigationBurguer, setNavigationBurguer] =
+    useState<null | HTMLElement>(null);
+
+  const navigationOptions = [
+    {
+      label: "Entrar",
+      handler: () => navigate("/login"),
+    },
+    {
+      label: "Registrar",
+      handler: () => navigate("/register"),
+    },
+    {
+      label: "Explorar",
+      handler: () => navigate("/home"),
+    },
+  ];
+
   return (
-    <AppBar elevation={1} position="sticky">
-      <Toolbar
-        disableGutters
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "0 5%",
-        }}
-      >
-        <IconButton
-          size="large"
-          edge="start"
-          color="secondary"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-          disableRipple
-          href="/"
-        >
+    <AppBar
+      elevation={1}
+      position="sticky"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        px: "20px",
+        minHeight: "80px",
+      }}
+    >
+      <NavigationContainer disableGutters>
+        <Link to="/">
           <DarkLogo />
-        </IconButton>
+        </Link>
         <Box display={"flex"} columnGap={3}>
-          <Button
-            sx={{
-              font: (t) => t.font.xs,
-              color: (t) => t.palette.secondary[800],
-              textTransform: 'none',
-              marginRight: '40px'
-            }}
-          >
-            Explorar
-          </Button>
+          <MenuItem>Explorar</MenuItem>
           {!logged ? (
             <>
-              <Link to={"/login"}>
-                <Button
-                  sx={{
-                    font: (t) => t.font.xs,
-                    color: (t) => t.palette.secondary[800],
-                    textTransform: 'none',
-                    marginRight: '40px'
-                  }}
-                >
-                  Entrar
-                </Button>
-              </Link>
-              <Link to={"/register"}>
-                <Button variant="outlined"
-                  sx={{
-                    font: (t) => t.font.xs,
-                    textTransform: 'none',
-                    marginRight: '40px'
-                  }}>
-                  Registre-se
-                </Button>
-              </Link>
+              <MenuItem onClick={() => navigate("/login")}>Entrar</MenuItem>
+              <Button
+                variant="outlined"
+                sx={{
+                  font: (t) => t.font.sm,
+                  textTransform: "none",
+                }}
+                onClick={() => navigate("/register")}
+              >
+                Registre-se
+              </Button>
             </>
           ) : null}
         </Box>
-      </Toolbar>
+        <IconButton
+          id="burguer-menu"
+          onClick={({ currentTarget }) => setNavigationBurguer(currentTarget)}
+        >
+          <Menu />
+        </IconButton>
+        <Dropdown
+          open={!!navigationBurguer}
+          anchorEl={navigationBurguer}
+          options={navigationOptions}
+          handleClose={() => setNavigationBurguer(null)}
+        />
+      </NavigationContainer>
     </AppBar>
   );
 }
