@@ -2,6 +2,36 @@ import React from 'react';
 import { Container, Typography } from '@mui/material';
 import FaqCard from '../../components/FacCard';
 
+
+import { Box, styled } from "@mui/material";
+
+const FaqScreen = styled(Box)(({ theme }) => ({
+    overflowY: 'auto', // Adiciona scroll caso a altura dos cards ultrapasse a altura do elemento pai
+    padding: "10px 68px",
+    width: '100%',
+
+    "& > .title": {
+        maxWidth: "1400px",
+        font: theme.font.xl,
+        color: theme.palette.secondary.dark,
+        padding: '100px 0px 40px 0px',
+        justifyContent: 'flex-start',
+        zIndex: 2,
+    },
+    [theme.breakpoints.down("md")]: {
+        "& > .title": {
+            font: theme.font.lg,
+            maxWidth: "600px",
+        },
+    },
+    [theme.breakpoints.down("sm")]: {
+        "& > .title": {
+            font: theme.font.md,
+            maxWidth: "400px",
+        },
+    },
+}));
+
 const faqs = [
     {
         question: 'Como posso recuperar minha senha?',
@@ -16,8 +46,8 @@ const faqs = [
         answer: 'Nós garantimos a privacidade e segurança de seus dados. Eles serão utilizados apenas para fins de operação da plataforma e nunca serão compartilhados com terceiros sem sua autorização.',
     },
     {
-        question: 'Posso ler os livros diretamente na plataforma?',
-        answer: 'Sim, a plataforma possui um leitor de livros integrado, permitindo que você leia os livros sem precisar baixá-los ou abrir em outro aplicativo.',
+        question: 'Como aumentar a visibilidade dos meus livros publicados?',
+        answer: '...',
     },
     {
         question: 'Qualquer usuário pode ler meus livros?',
@@ -27,33 +57,30 @@ const faqs = [
         question: 'Como consigo lucrar com meus livros?',
         answer: 'Para lucrar com seus livros na plataforma, você pode optar por disponibilizá-los gratuitamente ou cobrar um valor determinado por você. ',
     },
+    {
+        question: 'Outro problema?',
+        answer: '...',
+    },
 ];
+
+
 
 const Questions: React.FC = () => {
     return (
         <div style={{
+            height: '976px',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '90vh',
-            width: '100vw',
-            /* backgroundColor: "grey" */
+            justifyContent: 'flex-start',
 
         }} >
-            <Container   >
-                <Typography variant="h4" component="h1"
-                    sx={{
-                        font: (t) => t.font.xl,
-                        color: (t) => t.palette.secondary.dark,
-                        mb: 4,
-                    }}>
+            <FaqScreen >
+                <Typography component="h1" className='title'>
                     Dúvidas frequentes
                 </Typography>
-
                 {faqs.map((faq, index) => (
                     <FaqCard key={index} question={faq.question} answer={faq.answer} color={index % 2 === 0 ? 'white' : 'grey.300'} />
                 ))}
-            </Container>
+            </FaqScreen>
         </div>
     );
 };
