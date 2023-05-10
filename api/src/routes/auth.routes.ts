@@ -16,18 +16,18 @@ import authMidleware from '../midlewares/auth.midleware';
  *           schema:
  *             type: object
  *             properties:
- *               pass_user:
+ *               user_login:
  *                 type: string
  *               password:
  *                 type: string
  *           examples:
  *             with_user:
  *               value:
- *                 pass_user: 'user#0'
+ *                 user_login: 'user#0'
  *                 password: '12345678'
  *             with_email:
  *               value:
- *                 pass_user: 'user@email.com'
+ *                 user_login: 'user@email.com'
  *                 password: '12345678'
  *     responses:
  *       200:
@@ -101,7 +101,7 @@ router.get('/login/verify', authMidleware, AuthenticationController.verify);
 /**
  * @openapi
  * /logout:
- *   get:
+ *   patch:
  *     summary: logout and invalidate token.
  *     description: This route checks and invalidate a auth token.
  *     tags:

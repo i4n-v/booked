@@ -74,7 +74,7 @@ class AuthenticationController {
         valid: false,
       });
 
-      return response.json({ message: 'Logout realizado com sucesso.', valid: true });
+      return response.json({ message: 'Logout realizado com sucesso.' });
     } catch (error) {
       next(error);
     }
