@@ -6,6 +6,7 @@ import messages from '../config/messages.config';
 import jwt from 'jsonwebtoken';
 import AuthenticationRepository from '../repositories/authentication.repository';
 import { add, hoursToSeconds } from 'date-fns';
+import authenticationRepository from '../repositories/authentication.repository';
 
 class AuthenticationController {
   async authenticate(request: Request, response: Response, next: NextFunction) {
@@ -60,6 +61,20 @@ class AuthenticationController {
   async verify(request: Request, response: Response, next: NextFunction) {
     try {
       return response.json({ message: 'Token válido', valid: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async logout(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { auth } = request;
+
+      await authenticationRepository.updateByUserId(auth.id, {
+        valid: false,
+      });
+
+      return response.json({ message: 'Logout realizado com sucesso.', valid: true });
     } catch (error) {
       next(error);
     }

@@ -16,14 +16,18 @@ import authMidleware from '../midlewares/auth.midleware';
  *           schema:
  *             type: object
  *             properties:
- *               user_name:
+ *               pass_user:
  *                 type: string
  *               password:
  *                 type: string
  *           examples:
- *             send_payload:
+ *             with_user:
  *               value:
- *                 user_name: user#0
+ *                 pass_user: 'user#0'
+ *                 password: '12345678'
+ *             with_email:
+ *               value:
+ *                 pass_user: 'user@email.com'
  *                 password: '12345678'
  *     responses:
  *       200:
@@ -93,5 +97,30 @@ router.post('/login', AuthenticationController.authenticate);
  *         $ref: '#/components/responses/error'
  */
 router.get('/login/verify', authMidleware, AuthenticationController.verify);
+
+/**
+ * @openapi
+ * /logout:
+ *   get:
+ *     summary: logout and invalidate token.
+ *     description: This route checks and invalidate a auth token.
+ *     tags:
+ *       - Login
+ *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
+ *     security:
+ *       - access_token: []
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/success'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ *       404:
+ *         $ref: '#/components/responses/error'
+ */
+router.patch('/logout', authMidleware, AuthenticationController.logout);
 
 export default router;
