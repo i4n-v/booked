@@ -26,8 +26,7 @@ export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
   const theme = useTheme();
   const [authData] = useContext(AuthContext);
-  const [navigationBurguer, setNavigationBurguer] =
-    useState<null | HTMLElement>(null);
+  const [dropdown, setDropdown] = useState(false);
 
   const MenuItem = styled(Button)(({ theme }) => ({
     font: theme.font.md,
@@ -137,21 +136,16 @@ export default function NavBar({ logged }: NavBarProps) {
             </>
           ) : (
             <IconButton
-              id="burguer-menu"
-              aria-controls={!!navigationBurguer ? "menu-dropdown" : undefined}
-              aria-haspopup="true"
-              aria-expanded={!!navigationBurguer ? "true" : undefined}
+              id="profile-menu"
               sx={{
                 display: "flex",
                 alignItems: "center",
                 columnGap: "8px",
                 "&:hover": {
-                  borderRadius: 0,
+                  background: "initial",
                 },
               }}
-              onClick={({ currentTarget }) =>
-                setNavigationBurguer(currentTarget)
-              }
+              onClick={() => setDropdown(true)}
             >
               <Typography
                 sx={{
@@ -165,23 +159,15 @@ export default function NavBar({ logged }: NavBarProps) {
             </IconButton>
           )}
           {!logged && (
-            <IconButton
-              id="burguer-menu"
-              onClick={({ currentTarget }) =>
-                setNavigationBurguer(currentTarget)
-              }
-              aria-controls={!!navigationBurguer ? "menu-dropdown" : undefined}
-              aria-haspopup="true"
-              aria-expanded={!!navigationBurguer ? "true" : undefined}
-            >
+            <IconButton id="burguer-menu" onClick={() => setDropdown(true)}>
               <Menu />
             </IconButton>
           )}
           <Dropdown
-            open={!!navigationBurguer}
-            anchorEl={navigationBurguer}
+            open={dropdown}
+            anchorId={logged ? "profile-menu" : "burguer-menu"}
             options={!logged ? navigationOptions : loggedNavigationOptions}
-            handleClose={() => setNavigationBurguer(null)}
+            handleClose={() => setDropdown(false)}
           />
         </Box>
       </NavigationContainer>

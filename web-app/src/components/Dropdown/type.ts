@@ -8,7 +8,7 @@ export type DropdownOptions = {
 };
 
 type Props = {
-  anchorEl: null | HTMLElement;
+  anchorId: string;
   open: boolean;
   handleClose: () => void;
   options: DropdownOptions[];

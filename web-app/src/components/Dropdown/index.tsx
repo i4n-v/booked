@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ListItemIcon,
   ListItemText,
@@ -9,13 +9,19 @@ import {
 import { DropdownProps } from "./type";
 
 export default function Dropdown({
-  anchorEl,
+  anchorId,
   open,
   handleClose,
   options,
   ...props
 }: DropdownProps) {
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById(anchorId);
+    setAnchorEl(element);
+  }, [anchorId]);
 
   return (
     <Menu
@@ -46,6 +52,7 @@ export default function Dropdown({
       }}
       transformOrigin={{ horizontal: "right", vertical: "top" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      {...props}
     >
       {options.map(({ icon, label, handler }) => (
         <MenuItem
@@ -55,6 +62,9 @@ export default function Dropdown({
             padding: "10px 20px",
             "&:hover": {
               background: theme.palette.secondary.A100,
+              "& span": {
+                color: theme.palette.primary[700],
+              },
             },
           }}
           onClick={handler}
@@ -64,9 +74,6 @@ export default function Dropdown({
             sx={{
               font: theme.font.xs,
               color: theme.palette.secondary.light,
-              "&:hover": {
-                color: theme.palette.primary[700],
-              },
             }}
           >
             {label}
