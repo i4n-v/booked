@@ -1,6 +1,5 @@
 import { createTheme, ThemeOptions } from "@mui/material";
 
-
 let theme = createTheme({
   palette: {
     primary: {
@@ -48,10 +47,22 @@ let theme = createTheme({
     lg: "500 2.188rem/2.625rem 'Montserrat', sans-serif ",
     md: "400 1.25rem/1.625rem 'Montserrat', sans-serif ",
     sm: "400 1rem/1.25rem 'Montserrat', sans-serif",
-    xs: "400 0.8rem/1.125 'Montserrat', sans-serif ",
-    "xs-b": "bold 0.8rem/1.125 'Montserrat', sans-serif ",
+    xs: "400 0.875rem/1.125rem 'Montserrat', sans-serif ",
+    "xs-b": "500 0.875rem/1.125rem 'Montserrat', sans-serif ",
+  },
+  breakpoints: {
+    values: {
+      xs: 320,
+      sm: 640,
+      md: 920,
+      lg: 1200,
+      xl: 1536,
+    },
   },
 });
+
+theme.shadows[1] = "0px 1px 2px rgba(0, 0, 0, 0.1)";
+
 const include: ThemeOptions = {
   components: {
     MuiInputBase: {
@@ -59,12 +70,11 @@ const include: ThemeOptions = {
         root: {
           height: "44px",
           paddding: 0,
-          background: theme.palette.secondary.light
+          background: theme.palette.secondary.light,
         },
         input: {
           font: theme.font.xs,
           paddingLeft: "0.8rem",
-
         },
       },
     },
@@ -81,21 +91,20 @@ const include: ThemeOptions = {
           "&::placeholder": {
             color: theme.palette.secondary.main,
           },
-
         },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: theme.palette.primary.dark,
-          font: theme.font.xs,
+          color: theme.palette.secondary[800],
+          font: theme.font["xs-b"],
           top: "0px",
         },
         outlined: {
           "&.MuiInputLabel-shrink": {
             transform: "translate(19px, -4px) scale(0.75)",
-            top: '-2px'
+            top: "-2px",
           },
         },
       },
@@ -103,9 +112,9 @@ const include: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          font: theme.font.xs
-        }
-      }
+          font: theme.font.xs,
+        },
+      },
     },
     MuiAppBar: {
       styleOverrides: {
@@ -118,7 +127,7 @@ const include: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          padding: "10px",
+          padding: "12px 24px",
         },
       },
     },

@@ -1,5 +1,5 @@
 interface UserCommom {
-  email: string;
+  email?: string;
 }
 
 interface UserCreate extends UserCommom {
@@ -9,7 +9,8 @@ interface UserCreate extends UserCommom {
   confirm_password: string;
 }
 
-interface UserLogin extends UserCommom {
+interface UserLogin {
+  user_login: string;
   password: string;
 }
 

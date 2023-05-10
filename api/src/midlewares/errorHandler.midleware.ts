@@ -8,7 +8,9 @@ function errorHandlerMidleWare(
   response: Response,
   next: NextFunction
 ) {
-  if (error.name === 'SequelizeValidationError') {
+  const sequelizeErrors = ['SequelizeUniqueConstraintError', 'SequelizeValidationError'];
+
+  if (sequelizeErrors.includes(error.name)) {
     response.status(400).json({
       message: error.errors[0].message,
     });

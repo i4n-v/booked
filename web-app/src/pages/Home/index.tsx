@@ -1,204 +1,208 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Typography,
-} from "@mui/material";
-import Card from "../../components/Card";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import Input from "../../components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { Search } from "@mui/icons-material";
-import introductionBg from "../../assets/IMG/introduction-bg.png"
-import imgBooks from "../../assets/SVG/img-books.svg"
-import help from "../../assets/SVG/help.svg"
+import bookcase from "../../assets/IMG/bookcase.png";
+import help from "../../assets/SVG/help.svg";
+import { Link, useNavigate } from "react-router-dom";
+import { Carousel } from "../../components";
+import { BookCard } from "../../components/Cards";
+import {
+  CallToActionContainer,
+  IntroductionContainer,
+  QuestionsContainer,
+  TopBooksContainer,
+} from "./styles";
 
+const cards = [
+  {
+    title: "Pequeno principe",
+    author: "Antoine de Saint-Exupéry",
+    price: 12.58,
+    rating: 3.2,
+    ratingQuantity: 832,
+    image:
+      "https://m.media-amazon.com/images/I/41GrIdsiEIL._SY344_BO1,204,203,200_QL70_ML2_.jpg",
+  },
+  {
+    title: "FRANKENSTEIN",
+    author: " MARY SHELLY",
+    price: null,
+    rating: 5,
+    ratingQuantity: 742,
+    image:
+      "https://bookmundo.pt/wp-content/uploads/2020/05/Screen-Shot-2020-05-18-at-3.39.35-PM-220x300.png",
+  },
+  {
+    title: "CEM ANOS DE SOLIDÃO",
+    author: "GABRIEL GARCÍA MÁRQUEZ",
+    price: 40.0,
+    rating: 2.8,
+    ratingQuantity: 22,
+    image:
+      "https://bookmundo.pt/wp-content/uploads/2020/05/cem-anos-201x300.jpeg",
+  },
+  {
+    title: "CRIME E CASTIGO",
+    author: "FIÓDOR DOSTOYEVSKI",
+    price: 23.0,
+    rating: 3.0,
+    ratingQuantity: 900,
+    image:
+      "https://bookmundo.pt/wp-content/uploads/2020/05/crime-e-castigo-197x300.jpg",
+  },
+  {
+    title: "ORGULHO E PRECONCEITO",
+    author: "JANE AUSTEN",
+    price: 56.32,
+    rating: 3.8,
+    ratingQuantity: 1001,
+    image: "https://bookmundo.pt/wp-content/uploads/2020/05/orgulho.jpeg",
+  },
+  {
+    title: "O SENHOR DOS ANÉIS",
+    author: "J.R.R. TOLKIEN",
+    price: 120.4,
+    rating: 5,
+    ratingQuantity: 2032,
+    image:
+      "https://bookmundo.pt/wp-content/uploads/2020/05/o-senhor-214x300.jpg",
+  },
+  {
+    title: "A ILÍADA",
+    author: "O SENHOR DOS ANÉIS",
+    price: 20.4,
+    rating: 5,
+    ratingQuantity: 232,
+    image:
+      "https://bookmundo.pt/wp-content/uploads/2020/05/Screen-Shot-2020-05-18-at-3.36.59-PM-213x300.png",
+  },
+  {
+    title: "DOM QUIXOTE DE LA MANCHA",
+    author: "MIGUEL DE CERVANTES",
+    price: 55.4,
+    rating: 5,
+    ratingQuantity: 532,
+    image:
+      "https://bookmundo.pt/wp-content/uploads/2020/05/dom-quixote-211x300.jpg",
+  },
+  {
+    title: "O GRANDE GATSBY",
+    author: "F. SCOTT FITZGERALD",
+    price: 80.4,
+    rating: 5,
+    ratingQuantity: 202,
+    image: "https://bookmundo.pt/wp-content/uploads/2020/05/gatsby-195x300.jpg",
+  },
+  {
+    title: "1994",
+    author: "GEORGE ORWELL",
+    price: 80.4,
+    rating: 5,
+    ratingQuantity: 898,
+    image: "https://bookmundo.pt/wp-content/uploads/2020/05/1984-190x300.png",
+  },
+];
 
 export default function Home() {
+  const theme = useTheme();
+  const navigate = useNavigate();
+
   const methods = useForm({
     defaultValues: {
-      faq: "",
+      search: "",
     },
   });
+
   return (
     <>
-      <>
-        <Grid
-          container
-          width={"100%"}
-          sx={{ backgroundColor: "secondary.light" }}
-        >
-          <Grid item xs={12}>
-            <Box
-              height="100vh"
-              position="relative"
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="left"
-              overflow="hidden"
-              sx={{
-                backgroundImage: `url(${introductionBg})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '100vh',
-              }}
-            >
-              <Box paddingLeft={"68px"}>
-                <Typography
-                  variant="h1"
-                  sx={{
-                    font: (t) => t.font.xxl,
-                    color: (t) => t.palette.secondary[50],
-                    zIndex: 1000,
-                  }}
-                >
-                  Conheça um{" "}
-                  <span style={{ color: "#9b51e0" }}>
-                    mundo
-                    <br />
-                    novo
-                  </span>{" "}
-                  em cada livro!
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    font: (t) => t.font.lg,
-                    color: (t) => t.palette.secondary.light,
-                    zIndex: 1000,
-                  }}
-                >
-                  Publique seus <b style={{ color: "#9b51e0" }}>próprios</b>{" "}
-                  livros!
-                </Typography>
-              </Box>
-              <Box width={'50%'} margin={'0 auto'} sx={{ mt: 6 }}>
-                <FormProvider {...methods}>
-                  <Input name="faq" label={"Buscar..."} shrink={false} icon={{ right: <Search style={{ color: '#9b51e0' }} /> }} />
-                </FormProvider>
-              </Box>
-            </Box>
-          </Grid>
-
-          <Grid
-            item
-            xs={12}
-            sx={{
-              minHeight: "95vh",
-              display: "flex",
-              flexDirection: "column",
-              pl: 8,
-              py: 10,
+      <IntroductionContainer>
+        <Box
+          sx={{
+            backgroundColor: theme.palette.secondary.dark,
+            opacity: 0.5,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+        />
+        <Box className="title">
+          <Typography component="h1">
+            Conheça um <Typography component="span">mundo novo</Typography> em
+            cada livro!
+          </Typography>
+          <Typography>
+            Publique seus <Typography component="span">próprios</Typography>{" "}
+            livros!
+          </Typography>
+        </Box>
+        <FormProvider {...methods}>
+          <Input
+            name="search"
+            placeholder="Buscar..."
+            icon={{
+              right: <Search style={{ color: theme.palette.primary[700] }} />,
             }}
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                color: (t) => t.palette.secondary.main,
-                font: (t) => t.font.xl,
-                textAlign: "left",
-              }}
-            >
-              Explore os <span style={{ color: "#9b51e0" }}>tops 10</span>{" "}
-              livros melhores <br></br>avaliados na plataforma.
+            sx={{
+              maxWidth: "680px",
+            }}
+          />
+        </FormProvider>
+      </IntroductionContainer>
+
+      <TopBooksContainer>
+        <Box className="header">
+          <Typography variant="h2">
+            Explore os <span>tops 10</span> livros melhores avaliados na
+            plataforma.
+          </Typography>
+        </Box>
+        <Carousel
+          data={cards}
+          timer
+          renderItem={(item) => <BookCard size="lg" {...item} />}
+        />
+      </TopBooksContainer>
+
+      <CallToActionContainer>
+        <Box>
+          <Box className="container">
+            <Typography component="h2">
+              Ainda não conhece a nossa <span>Comunidade?</span>
             </Typography>
-            <Card></Card>
-          </Grid>
+            <Typography>
+              Somos uma gigante comunidade de leitores cheios de vontade de
+              conhecer um novo mundo em cada livro que lêmos, publicados por
+              autores repletos de criatividade, vem fazer parte desse universo!
+            </Typography>
+            <Button variant="outlined" onClick={() => navigate("/register")}>
+              Cadastre-se já
+            </Button>
+          </Box>
+          <Box className="image">
+            <img src={bookcase} alt="Uma estante de livros." />
+          </Box>
+        </Box>
+      </CallToActionContainer>
 
-          <Grid item xs={12} position="relative" sx={{ minHeight: "85vh" }}>
-            <Box
-              sx={{
-                height: "80%",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: (t) => t.palette.secondary.main,
-              }}
-            >
-              <Box sx={{ padding: 8 }}>
-                <Typography
-                  variant="h2"
-                  sx={{
-                    color: (t) => t.palette.secondary[50],
-                    font: (t) => t.font.xl,
-                    textAlign: "left",
-                  }}
-                >
-                  Ainda não conhece a <br /> nossa{" "}
-                  <span style={{ color: "#9b51e0" }}>
-                    Comunidade?
-                  </span>
-                </Typography>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    font: (t) => t.font.md,
-                    color: (t) => t.palette.secondary[300],
-                  }}
-                >
-                  Somos uma gigante comunidade de leitores cheios de vontade de
-                  conhecer um novo mundo em cada livro que lêmos, publicados por
-                  autores repletos de criatividade, vem fazer parte desse
-                  universo!
-                </Typography>
-                <Button
-                  variant="outlined"
-                  sx={{ font: (t) => t.font.xs, mt: 4 }}
-                >
-                  Cadastre-se já
-                </Button>
-              </Box>
-              <div>
-                <img src={imgBooks} alt="" />
-              </div>
-            </Box>
-          </Grid>
-
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: "flex",
-              height: "85vh",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ width: "50%", pl: 28 }}>
-              <img src={help} alt="Imagem" />
-            </Box>
-            <Box sx={{ width: "50%" }}>
-              <Typography
-                variant="h2"
-                sx={{
-                  color: (t) => t.palette.secondary.main,
-                  font: (t) => t.font.xl,
-                  textAlign: "left",
-                }}
-              >
-                Você possui alguma{" "}
-                <span style={{ color: "#9b51e0" }}>
-                  <br></br>dúvida?
-                </span>
-              </Typography>
-              <Typography
-                variant="h5"
-                pb={8}
-                sx={{
-                  font: (t) => t.font.md,
-                  color: (t) => t.palette.secondary[800],
-                }}
-              >
-                Buscamos sanar toda e qualquer questão que você tiver, nossos
-                profissionáis estarão sempre a disposição para solucionar o seu
-                problema. Mas antes de nos contatar dê uma olhada nas{" "}
-                <b style={{ color: "#9b51e0" }}>dúvidas frequentes</b> dos
-                nossos usuários.
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-      </>
+      <QuestionsContainer>
+        <Box className="question-img">
+          <img src={help} alt="Ícone de dúvidas." />
+        </Box>
+        <Box className="container">
+          <Typography component="h2">
+            Você possui alguma <Typography component="span">dúvida?</Typography>
+          </Typography>
+          <Typography>
+            Buscamos sanar toda e qualquer questão que você tiver, nossos
+            profissionáis estarão sempre a disposição para solucionar o seu
+            problema. Mas antes de nos contatar dê uma olhada nas{" "}
+            <Link to="questions">dúvidas frequentes</Link> dos nossos usuários.
+          </Typography>
+        </Box>
+      </QuestionsContainer>
     </>
   );
 }

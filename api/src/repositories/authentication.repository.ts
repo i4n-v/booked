@@ -31,6 +31,14 @@ class AuthenticationRepository {
     });
   }
 
+  async updateByUserId(userId: string, data: AuthenticationUpdateDto) {
+    return await this.repository.update(data, {
+      where: {
+        user_id: userId,
+      },
+    });
+  }
+
   async findByUserId(userId: string) {
     return await this.repository.findOne({
       where: {

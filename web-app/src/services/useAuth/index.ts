@@ -6,7 +6,7 @@ export default function useAuth() {
 
   async function login(data: IUser<"LOGIN">) {
     try {
-      const result = await user.post<IUser<"LOGIN">>(data);
+      const result = await user.post<IUser<"AUTHDATA">>(data);
       return result.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message);

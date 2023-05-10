@@ -10,6 +10,7 @@ enum Message {
   DATE_REQUIRED = "Data é requerida.",
   DATE_INVALID = "Data é invalida.",
   DATE_FUTURE = "Data não pode ser maior que o dia atual.",
+  SUCCESS_LOGIN = "Login realizado com sucesso.",
 }
 
 export default Message;

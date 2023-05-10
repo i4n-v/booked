@@ -6,22 +6,20 @@ import messages from '../config/messages.config';
 import jwt from 'jsonwebtoken';
 import AuthenticationRepository from '../repositories/authentication.repository';
 import { add, hoursToSeconds } from 'date-fns';
+import authenticationRepository from '../repositories/authentication.repository';
 
 class AuthenticationController {
   async authenticate(request: Request, response: Response, next: NextFunction) {
     try {
       const userData = request.body;
 
-      if (!userData.user_name && !userData.email) {
+      if (!userData.user_login) {
         return response.status(400).json({ message: 'Nome de usuário ou e-mail são requeridos.' });
       }
 
       if (!userData.password) return response.status(400).json({ messages: 'Senha requerida.' });
 
-      const user = await UserRepository.findByCredentials(
-        userData.user_name || null,
-        userData.email || null
-      );
+      const user = await UserRepository.findByCredentials(userData.user_login || null);
 
       if (!user) return response.status(404).json({ message: messages.unknown('Usuário') });
 
@@ -63,6 +61,20 @@ class AuthenticationController {
   async verify(request: Request, response: Response, next: NextFunction) {
     try {
       return response.json({ message: 'Token válido', valid: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async logout(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { auth } = request;
+
+      await authenticationRepository.updateByUserId(auth.id, {
+        valid: false,
+      });
+
+      return response.json({ message: 'Logout realizado com sucesso.' });
     } catch (error) {
       next(error);
     }

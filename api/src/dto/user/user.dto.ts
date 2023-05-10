@@ -5,6 +5,6 @@ export default class UserDto {
   email: string;
   password: string;
   birth_date: Date;
-  photo_url: string;
+  photo_url: string | null;
   description: string;
 }

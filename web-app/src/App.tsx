@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import routes from "./configs/routes";
 import theme from "./configs/Theme/theme";
 import { NotifierContextProvider } from "./contexts/NotifierContext";
