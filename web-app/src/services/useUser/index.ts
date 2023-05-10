@@ -15,7 +15,7 @@ export default function useUser() {
 
   async function createUser(data: IUser<"CREATE">) {
     try {
-      const result = await user.post<ResponseMessage>(data);
+      const result = await user.post<ResponseMessage>("", data);
       return result.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message);

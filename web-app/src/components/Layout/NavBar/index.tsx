@@ -21,12 +21,18 @@ import { NavBarProps } from "./types";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "../../Dropdown";
 import { AuthContext } from "../../../contexts/AuthContext";
+import useAuth from "../../../services/useAuth";
+import { useMutation } from "react-query";
+import Cookies from 'js-cookie';
+import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [authData] = useContext(AuthContext);
+  const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
+  const { logout } = useAuth();
+  const logoutMutation = useMutation(logout);
 
   const MenuItem = styled(Button)(({ theme }) => ({
     font: theme.font.md,
@@ -87,7 +93,7 @@ export default function NavBar({ logged }: NavBarProps) {
     {
       label: "Condigurações",
       icon: <Config />,
-      handler: () => navigate("/settings"),
+      handler: () => navigate("profile/settings"),
     },
     {
       label: "Sair",
@@ -98,7 +104,17 @@ export default function NavBar({ logged }: NavBarProps) {
           }}
         />
       ),
-      handler: () => {},
+      handler: () => {
+        logoutMutation.mutate(undefined, {
+          onSuccess: () => {
+            localStorage.clear()
+            Cookies.remove('x-access-token')
+            authDispatch({ type: AuthActionsKind.SET_USER_DATA, payload: { userData: undefined } })
+            navigate('/login', { replace: true })
+
+          }
+        })
+      },
     },
   ];
 

@@ -17,6 +17,8 @@ interface UserLogin {
 interface User extends UserCommom {
   name: string;
   birth_date: Date;
+  id: string;
+  user_name: string;
 }
 
 enum UserTypes {
@@ -24,10 +26,8 @@ enum UserTypes {
   LOGIN,
   AUTHDATA,
 }
-interface UserAuthData extends UserCommom {
-  id: string;
+interface UserAuthData extends UserCommom, User {
   token: string;
-  user_name: string;
 }
 
 type IUser<T extends keyof typeof UserTypes | null = null> = T extends "CREATE"

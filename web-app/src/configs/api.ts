@@ -1,10 +1,28 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from "axios";
+import Cookies from "js-cookie";
 
+const getToken = () => {
+  return Cookies.get("x-access-token");
+};
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/', // Your API base URL
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-export default api
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    const token = getToken();
+    config.headers["x-access-token"] = token;
+    return config;
+  },
+  (error: any) => {
+    return Promise.reject(error);
+  }
+);
+
+export default api;

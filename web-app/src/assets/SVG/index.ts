@@ -9,6 +9,7 @@ import { ReactComponent as Account } from "./account.svg";
 import { ReactComponent as Config } from "./config.svg";
 import { ReactComponent as User } from "./user.svg";
 import { ReactComponent as Logout } from "./logout.svg";
+import { ReactComponent as Ellipse } from "./ellipse.svg";
 
 export {
   DarkLogo,
@@ -22,4 +23,5 @@ export {
   Config,
   User,
   Logout,
+  Ellipse,
 };

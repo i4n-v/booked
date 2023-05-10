@@ -13,6 +13,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { AuthActionsKind } from "../../contexts/AuthContext/types";
 import { AsideBackground, FormContainer, SignInContainer } from "./styles";
 import Message from "../../helpers/messages";
+import Cookies from "js-cookie";
 
 export default function SignIn() {
   const methods = useForm<IUser<"LOGIN">>({
@@ -25,17 +26,19 @@ export default function SignIn() {
     mutationFn: login,
     mutationKey: "Login",
   });
-  const [authData, authDispatch] = useContext(AuthContext);
+  const [, authDispatch] = useContext(AuthContext);
   const navigate = useNavigate();
 
   const onSubmit = methods.handleSubmit((value: IUser<"LOGIN">) => {
     createUserMutation.mutate(value, {
       onSuccess: (data) => {
         notify(Message.SUCCESS_LOGIN);
+        Cookies.set('x-access-token', data.token)
         authDispatch({
           type: AuthActionsKind.SET_USER_DATA,
           payload: { userData: data },
         });
+
         navigate("/");
       },
       onError: (err: any) => {
