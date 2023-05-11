@@ -1,8 +1,4 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 
 const getToken = () => {

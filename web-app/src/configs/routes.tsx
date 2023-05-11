@@ -1,6 +1,8 @@
 import { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Home from '../pages/Home';
+import Questions from '../pages/Questions';
+
 import SignUp from '../pages/SignUp';
 import SignIn from '../pages/SignIn';
 import ProfileSettings from '../pages/ProfileSettings';
@@ -29,6 +31,11 @@ const routes: RouteObject[] = [
                         element: <ProfileSettings />
                     }
                 ]
+
+            },
+            {
+                path: 'questions',
+                element: <Questions />
             }
         ]
     },
