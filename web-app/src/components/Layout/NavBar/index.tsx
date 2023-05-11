@@ -51,8 +51,10 @@ export default function NavBar({ logged }: NavBarProps) {
       "#burguer-menu": {
         display: "inline-flex",
       },
-      "& > div": {
-        display: logged ? "flex" : "none",
+      "& > #unlogged": {
+        display: "none",
+      },
+      "& > #logged": {
         "& > button": {
           display: "none",
         },
@@ -118,23 +120,24 @@ export default function NavBar({ logged }: NavBarProps) {
         <Link to="/">
           <DarkLogo />
         </Link>
-        <Box display={"flex"} columnGap={3}>
-          <MenuItem>Explorar</MenuItem>
-          {!logged ? (
-            <>
-              <MenuItem onClick={() => navigate("/login")}>Entrar</MenuItem>
-              <Button
-                variant="outlined"
-                sx={{
-                  font: (t) => t.font.sm,
-                  textTransform: "none",
-                }}
-                onClick={() => navigate("/register")}
-              >
-                Registre-se
-              </Button>
-            </>
-          ) : (
+        {!logged ? (
+          <Box id="unlogged" display={"flex"} columnGap={3}>
+            <MenuItem>Explorar</MenuItem>
+            <MenuItem onClick={() => navigate("/login")}>Entrar</MenuItem>
+            <Button
+              variant="outlined"
+              sx={{
+                font: (t) => t.font.sm,
+                textTransform: "none",
+              }}
+              onClick={() => navigate("/register")}
+            >
+              Registre-se
+            </Button>
+          </Box>
+        ) : (
+          <Box id="logged" display={"flex"} columnGap={3}>
+            <MenuItem>Explorar</MenuItem>
             <IconButton
               id="profile-menu"
               sx={{
@@ -157,19 +160,19 @@ export default function NavBar({ logged }: NavBarProps) {
               </Typography>
               <Account />
             </IconButton>
-          )}
-          {!logged && (
-            <IconButton id="burguer-menu" onClick={() => setDropdown(true)}>
-              <Menu />
-            </IconButton>
-          )}
-          <Dropdown
-            open={dropdown}
-            anchorId={logged ? "profile-menu" : "burguer-menu"}
-            options={!logged ? navigationOptions : loggedNavigationOptions}
-            handleClose={() => setDropdown(false)}
-          />
-        </Box>
+          </Box>
+        )}
+        {!logged && (
+          <IconButton id="burguer-menu" onClick={() => setDropdown(true)}>
+            <Menu />
+          </IconButton>
+        )}
+        <Dropdown
+          open={dropdown}
+          anchorId={logged ? "profile-menu" : "burguer-menu"}
+          options={!logged ? navigationOptions : loggedNavigationOptions}
+          handleClose={() => setDropdown(false)}
+        />
       </NavigationContainer>
     </AppBar>
   );
