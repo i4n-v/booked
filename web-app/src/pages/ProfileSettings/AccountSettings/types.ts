@@ -5,5 +5,5 @@ export interface InputAreaProps extends BoxProps {
 }
 
 export interface InputAreaItemProps extends BoxProps {
-  colsSpan?: number;
+  span?: number;
 }

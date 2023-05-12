@@ -1,4 +1,4 @@
-import React, { CSSProperties, ChangeEvent, useEffect } from 'react';
+import React, { CSSProperties, ChangeEvent, useEffect, useState } from 'react';
 import { Box, Button } from '@mui/material';
 import { SxProps, Theme, styled } from '@mui/material/styles';
 import { useFormContext, Controller } from 'react-hook-form';
@@ -14,7 +14,8 @@ interface ImageInputProps {
 }
 
 const ImageInput = ({ name }: ImageInputProps) => {
-    const { control, register, setValue } = useFormContext();
+    const { control, register, setValue, getValues } = useFormContext();
+    const [preview, setPreview] = useState<string | ArrayBuffer | null>()
 
     useEffect(() => {
         register(name);
@@ -22,11 +23,11 @@ const ImageInput = ({ name }: ImageInputProps) => {
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setValue(name, reader.result);
+                setPreview(reader.result)
+                setValue(name, file);
             };
             reader.readAsDataURL(file);
         } else {
@@ -56,7 +57,7 @@ const ImageInput = ({ name }: ImageInputProps) => {
                                 height: "100%",
                                 minWidth: '0',
                                 padding: '0',
-                                backgroundColor: field.value ? '#eee' : '#fff',
+                                backgroundColor: preview ? '#eee' : '#fff',
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -80,8 +81,8 @@ const ImageInput = ({ name }: ImageInputProps) => {
                                 },
                             }}
                         >
-                            {field.value ? (
-                                <img src={field.value} alt="Selected Preview" />
+                            {preview || field.value ? (
+                                <img src={preview || field.value} alt="Selected Preview" />
                             ) : <Ellipse />}
                         </Box>
                     </label>

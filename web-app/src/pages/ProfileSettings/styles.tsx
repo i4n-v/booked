@@ -3,12 +3,10 @@ import { Box, ListItemButton, ListItemText, styled } from "@mui/material";
 const Container = styled(Box)(({ theme }) => ({
     display: "grid",
     gridTemplateRows: "20% 1fr",
-    height: "100vh",
-    padding: "3%",
-    maxWidth: "100%",
-    [theme.breakpoints?.down("md")]: {
-        padding: '3px',
-    },
+    padding: '60px 20px 120px 20px',
+    maxWidth: "1400px",
+    width: '100%',
+    margin: '0 auto',
     "& > h1": {
         font: theme.font.xl,
         color: theme.palette.secondary.A200,
@@ -23,10 +21,10 @@ const ConfigContainer = styled(Box)(({ theme }) => ({
     background: theme.palette.secondary['light'],
     display: "grid",
     overflow: "hidden",
-    gridTemplateColumns: "20% 1fr",
+    gridTemplateColumns: "320px 1fr",
     [theme.breakpoints?.down("md")]: {
         gridTemplateColumns: "1fr",
-        gridTemplateRows: "15%",
+        gridTemplateRows: "auto",
         gridAutoRows: "1fr"
 
     },
@@ -43,8 +41,9 @@ const ConfigMenu = styled(Box)(({ theme }) => ({
 
 const ConfigContent = styled(Box)(({ theme }) => ({
     width: "100%",
-    padding: "4%",
-    paddingLeft: "7%"
+    padding: "60px",
+    maxWidth: "860px",
+    margin: '0 auto'
 }));
 
 

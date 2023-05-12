@@ -31,9 +31,9 @@ export default function SignIn() {
 
   const onSubmit = methods.handleSubmit((value: IUser<"LOGIN">) => {
     createUserMutation.mutate(value, {
-      onSuccess: (data) => {
+      onSuccess: ({ token, ...data }) => {
         notify(Message.SUCCESS_LOGIN);
-        Cookies.set('x-access-token', data.token)
+        Cookies.set('x-access-token', token)
         authDispatch({
           type: AuthActionsKind.SET_USER_DATA,
           payload: { userData: data },
