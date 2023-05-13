@@ -15,7 +15,7 @@ export default function Layout() {
         minHeight: "100vh",
       }}
     >
-      <NavBar logged={!!authData?.userData} />
+      <NavBar logged={!!authData?.valid} />
       <Container
         maxWidth={false}
         disableGutters

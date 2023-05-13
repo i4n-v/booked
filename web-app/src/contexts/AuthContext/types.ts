@@ -7,6 +7,7 @@ export enum AuthActionsKind {
 }
 
 export type AuthData = {
+  valid?: boolean;
   userData?: Partial<IUser>;
 };
 

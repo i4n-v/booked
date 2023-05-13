@@ -1,11 +1,13 @@
+import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
-import Home from '../pages/Home';
-import Questions from '../pages/Questions';
+const Home = lazy(() => import('../pages/Home'));
+const Questions = lazy(() => import('../pages/Questions'));
+const SignUp = lazy(() => import('../pages/SignUp'));
+const SignIn = lazy(() => import('../pages/SignIn'));
+const ProfileSettings = lazy(() => import('../pages/ProfileSettings'));
+const RequireAuth = lazy(() => import('./RequireAuth'));
 
-import SignUp from '../pages/SignUp';
-import SignIn from '../pages/SignIn';
-import ProfileSettings from '../pages/ProfileSettings';
 const routes: RouteObject[] = [
     {
         path: '',
@@ -28,7 +30,7 @@ const routes: RouteObject[] = [
                 children: [
                     {
                         path: 'settings',
-                        element: <ProfileSettings />
+                        element: <RequireAuth><ProfileSettings /></RequireAuth>
                     }
                 ]
 
