@@ -2,7 +2,7 @@ import { Migration } from 'sequelize-cli';
 
 const migration: Migration = {
   async up(queryInterface, Sequelize) {
-    queryInterface.createTable('Authentications', {
+    await queryInterface.createTable('Authentications', {
       id: {
         type: Sequelize.DataTypes.UUID,
         defaultValue: Sequelize.DataTypes.UUIDV4,
@@ -34,8 +34,8 @@ const migration: Migration = {
   },
 
   async down(queryInterface) {
-    queryInterface.dropTable('Authentications');
+    await queryInterface.dropTable('Authentications');
   },
 };
 
-export default migration;
+module.exports = migration;

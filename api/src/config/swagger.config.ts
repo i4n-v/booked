@@ -46,6 +46,7 @@ const options: Options = {
         File: {
           type: 'string',
           contentType: 'application/pdf',
+          format: 'binary',
         },
       },
       parameters: {

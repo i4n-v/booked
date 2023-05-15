@@ -4,33 +4,19 @@ import crypto from 'crypto';
 
 export const uploadIdentifierError = 'UPLOAD ERROR:';
 
-function uploadMidleware(type: 'file' | 'image') {
-  const uploadTypes = {
-    file: {
-      directory: 'files',
-      size: Infinity,
-      types: ['application/pdf'],
-    },
-    image: {
-      directory: 'images',
-      size: 512 * 1024 * 1024,
-      types: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
-    },
-  };
-
-  const destionationPath = path.resolve(
-    __dirname,
-    '..',
-    '..',
-    'public',
-    'uploads',
-    uploadTypes[type].directory
-  );
+function uploadMidleware() {
+  const allowedFileMimes = ['application/pdf'];
+  const allowedImageMimes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
 
   const multerInstance = multer({
-    dest: destionationPath,
     storage: multer.diskStorage({
-      destination: (request, file, callback) => callback(null, destionationPath),
+      destination: (request, file, callback) => {
+        if (allowedFileMimes.includes(file.mimetype)) {
+          callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'files'));
+        } else if (allowedImageMimes.includes(file.mimetype)) {
+          callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'images'));
+        }
+      },
       filename: (request, file, callback) => {
         crypto.randomBytes(16, (error, hash) => {
           if (error)
@@ -42,10 +28,12 @@ function uploadMidleware(type: 'file' | 'image') {
       },
     }),
     limits: {
-      fileSize: uploadTypes[type].size,
+      fileSize: 10 * 1024 * 1024 * 1024,
     },
     fileFilter: (request, file, callback) => {
-      if (uploadTypes[type].types.includes(file.mimetype)) {
+      const allowedMimes = [...allowedFileMimes, ...allowedImageMimes];
+
+      if (allowedMimes.includes(file.mimetype)) {
         callback(null, true);
       } else {
         callback(new Error(uploadIdentifierError + 'Formato de arquivo inválido.'));
@@ -56,4 +44,4 @@ function uploadMidleware(type: 'file' | 'image') {
   return multerInstance;
 }
 
-export default uploadMidleware;
+export default uploadMidleware();

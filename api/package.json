@@ -10,7 +10,8 @@
     "start:build": "node ./dist/app.js",
     "dev": "tsx watch ./src/app.ts",
     "build": "tsup ./src",
-    "db:migrate": "tsup ./src/config/database.config.ts ./src/database/migrations; sequelize db:migrate"
+    "db:migrate": "tsup ./src/config/database.config.ts ./src/database/migrations; npx sequelize db:migrate",
+    "db:migrate:undo": "tsup ./src/config/database.config.ts ./src/database/migrations; npx sequelize db:migrate:undo"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

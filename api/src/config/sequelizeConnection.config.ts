@@ -8,13 +8,13 @@ function createSequelizeConnection() {
   let config;
 
   switch (process.env.NODE_ENV) {
-    case 'DEVELOPMENT':
+    case 'development':
       config = databaseConfig.development;
       break;
-    case 'TEST':
+    case 'test':
       config = databaseConfig.test;
       break;
-    case 'PRODUCTION':
+    case 'production':
       config = databaseConfig.production;
       break;
     default:
