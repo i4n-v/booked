@@ -17,14 +17,8 @@ function App() {
   return (
 
     <NotifierContextProvider>
-
       <GlobalNotifier />
-      <Suspense fallback={
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <BookBackground />
-        </div>}>
-        {useRoutes(routes)}
-      </Suspense>
+      {useRoutes(routes)}
     </NotifierContextProvider>
 
   );

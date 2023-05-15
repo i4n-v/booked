@@ -2,8 +2,9 @@ import { Box, Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
-import { useContext } from "react";
+import { Suspense, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { BookBackground } from "../../assets/SVG";
 
 export default function Layout() {
   const [authData] = useContext(AuthContext);
@@ -25,7 +26,12 @@ export default function Layout() {
           flex: 1,
         }}
       >
-        <Outlet />
+        <Suspense fallback={
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <BookBackground />
+          </div>}>
+          <Outlet />
+        </Suspense>
       </Container>
       <Footer />
     </Box>

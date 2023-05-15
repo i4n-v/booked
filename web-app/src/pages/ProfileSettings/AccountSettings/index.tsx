@@ -12,13 +12,23 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { ResponseMessage } from "../../../commons/ResponseMessage";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
+import IsLoading from "../../../configs/IsLoading";
 
 export default function AccountSettings() {
     const { updateUser, getUser } = useUser();
     const updateMutation = useMutation(updateUser)
     const notify = useNotifier()
     const [authData, authDispatch] = useContext(AuthContext)
-    const form = useForm<IUser<"UPDATE">>()
+    const form = useForm<IUser<"UPDATE">>({
+        defaultValues: {
+            birth_date: new Date(),
+            description: '',
+            email: '',
+            name: '',
+            photo: undefined,
+            user_name: ''
+        }
+    })
     const user = useQuery('get-user', () => getUser(authData?.userData?.id), {
         onSuccess: ({ birth_date, photo_url, ...data }) => {
             form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url })
@@ -39,7 +49,6 @@ export default function AccountSettings() {
             }
         })
     })
-
     return (
         <FormProvider {...form}>
             <AccountSettingsContainer onSubmit={onSubmit}>
@@ -63,7 +72,7 @@ export default function AccountSettings() {
                         <Input name="email" label="E-mail" type="email" />
                     </InputAreaItem>
                     <InputAreaItem >
-                        <Input name="birth_date" defaultValue={'26/06/1996'} label="Data de nascimento" type="date" />
+                        <Input name="birth_date" label="Data de nascimento" type="date" />
                     </InputAreaItem>
                     <InputAreaItem span={2} >
                         <Input name="description" label="Bios" multiline maxRows={4} minRows={4} />
