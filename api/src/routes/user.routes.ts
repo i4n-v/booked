@@ -10,7 +10,7 @@ import uploadMidleware from '../midlewares/upload.midleware';
  *     summary: Create a user.
  *     description: This route create a user if not exists.
  *     tags:
- *       - Users
+ *       - User
  *     requestBody:
  *       content:
  *         application/json:
@@ -50,7 +50,7 @@ router.post('/users', UserController.store);
  *     summary: get a user data.
  *     description: This route return a specific user data by your id.
  *     tags:
- *       - Users
+ *       - User
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'
@@ -109,7 +109,7 @@ router.get('/users/:id', authMidleware, UserController.show);
  *     summary: Update user data.
  *     description: This route update the user data.
  *     tags:
- *       - Users
+ *       - User
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'
@@ -148,12 +148,7 @@ router.get('/users/:id', authMidleware, UserController.show);
  *       404:
  *         $ref: '#/components/responses/error'
  */
-router.patch(
-  '/users/:id',
-  authMidleware,
-  uploadMidleware('image').single('photo'),
-  UserController.update
-);
+router.patch('/users/:id', authMidleware, uploadMidleware.single('photo'), UserController.update);
 
 /**
  * @openapi
@@ -162,7 +157,7 @@ router.patch(
  *     summary: Update password
  *     description: This route update the user password.
  *     tags:
- *       - Users
+ *       - User
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'

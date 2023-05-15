@@ -65,6 +65,7 @@ class UserController {
       const id = params.id;
       const { name, email, user_name, birth_date, description, photo }: UserUpdateDto = body;
       let photo_url;
+      let emailToUpdate;
 
       if (id !== auth.id) {
         if (file) await fileSystem.removeFile(file.path);
@@ -86,9 +87,11 @@ class UserController {
         });
       }
 
+      if (user.email === email) emailToUpdate = email;
+
       await UserRepository.update(id, {
         name,
-        email,
+        email: emailToUpdate,
         user_name,
         birth_date,
         description,
