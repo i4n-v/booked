@@ -14,9 +14,11 @@ import Assessment from './assessment.model';
 import BookCategory from './bookCategory.model';
 import Category from './category.model';
 import User from './user.model';
+import BookDto from '../../dto/book/book.dto';
+import BookCreateDto from '../../dto/book/bookCreate.dto';
 
 @Table
-export default class Book extends Model {
+export default class Book extends Model<BookDto, BookCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,
@@ -30,10 +32,10 @@ export default class Book extends Model {
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  decription: string;
+  description: string;
 
   @AllowNull(false)
-  @Column(DataType.INTEGER)
+  @Column(DataType.DECIMAL(10, 2))
   price: number;
 
   @AllowNull(false)
@@ -42,7 +44,7 @@ export default class Book extends Model {
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  url: string;
+  file_url: string;
 
   @AllowNull(false)
   @Column(DataType.UUID)
