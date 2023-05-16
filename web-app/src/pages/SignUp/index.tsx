@@ -14,6 +14,13 @@ export default function SignUp() {
   const methods = useForm<IUser<"CREATE">>({
     resolver: yupResolver(schema),
     reValidateMode: "onSubmit",
+    defaultValues: {
+      birth_date: undefined,
+      confirm_password: '',
+      email: '',
+      name: '',
+      password: ''
+    }
   });
   const { createUser } = useUser();
   const notify = useNotifier();

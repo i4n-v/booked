@@ -3,12 +3,16 @@ import { ConfigContainer, ConfigContent, ConfigMenu, Container } from "./styles"
 import ListItems from "../../components/List";
 import AccountConfig from "./AccountSettings";
 import { useState } from "react";
+import SecuritySettings from "./SecuritySettings";
 
 export default function ProfileSettings() {
     const [active, setActive] = useState<number>(0)
     const ConfigContents = [
-        <AccountConfig />
+        <AccountConfig />,
+        <SecuritySettings />
     ]
+
+
     return (
         <Container>
             <Typography component={'h1'}>Configurações</Typography >

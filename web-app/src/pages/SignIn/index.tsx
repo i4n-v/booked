@@ -19,6 +19,10 @@ export default function SignIn() {
   const methods = useForm<IUser<"LOGIN">>({
     resolver: yupResolver(schema),
     reValidateMode: "onSubmit",
+    defaultValues: {
+      password: '',
+      user_login: ''
+    }
   });
   const { login } = useAuth();
   const notify = useNotifier();

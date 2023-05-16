@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { AccountSettingsContainer, InputArea, InputAreaItem, PhotoInputArea, PhotoInputContainer } from "./styles";
+import { PhotoInputArea, PhotoInputContainer } from "./styles";
 import { FormProvider, useForm } from "react-hook-form";
 import ImageInput from "../../../components/InputImage";
 import Input from "../../../components/Input";
@@ -8,11 +8,11 @@ import useUser from "../../../services/useUser";
 import { useMutation, useQuery } from "react-query";
 import useNotifier from "../../../helpers/Notify";
 import IUser from "../../../commons/IUser";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { ResponseMessage } from "../../../commons/ResponseMessage";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
-import IsLoading from "../../../configs/IsLoading";
+import { ContentContainer, InputArea, InputAreaItem } from "../styles";
 
 export default function AccountSettings() {
     const { updateUser, getUser } = useUser();
@@ -51,7 +51,7 @@ export default function AccountSettings() {
     })
     return (
         <FormProvider {...form}>
-            <AccountSettingsContainer onSubmit={onSubmit}>
+            <ContentContainer onSubmit={onSubmit}>
                 <PhotoInputContainer>
                     <PhotoInputArea>
                         <ImageInput name="photo" />
@@ -77,11 +77,11 @@ export default function AccountSettings() {
                     <InputAreaItem span={2} >
                         <Input name="description" label="Bios" multiline maxRows={4} minRows={4} />
                     </InputAreaItem>
-                    <Box width={'100px'}>
+                    <Box width={'106px'} height={"42px"}>
                         <Button type="submit" variant="contained">SALVAR</Button>
                     </Box>
                 </InputArea>
-            </AccountSettingsContainer>
+            </ContentContainer>
         </FormProvider>
     )
 }

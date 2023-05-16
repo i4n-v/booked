@@ -1,6 +1,7 @@
 import IUser from "../../commons/IUser";
 import { ResponseMessage } from "../../commons/ResponseMessage";
 import api from "../../configs/api";
+import { PasswordChange } from "../../pages/ProfileSettings/SecuritySettings/types";
 
 export default function useUser() {
   async function getUser(id: string = "") {
@@ -40,9 +41,28 @@ export default function useUser() {
     }
   }
 
+  async function passwordChange({
+    data,
+    id,
+  }: {
+    data: PasswordChange;
+    id: string;
+  }) {
+    try {
+      const response = await api.patch<ResponseMessage>(
+        `/users/${id}/password`,
+        data
+      );
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message);
+    }
+  }
+
   return {
     getUser,
     createUser,
     updateUser,
+    passwordChange,
   };
 }
