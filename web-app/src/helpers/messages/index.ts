@@ -11,6 +11,7 @@ enum Message {
   DATE_INVALID = "Data é invalida.",
   DATE_FUTURE = "Data não pode ser maior que o dia atual.",
   SUCCESS_LOGIN = "Login realizado com sucesso.",
+  SUCESS_UPDATE = "Atualização feita com sucesso.",
 }
 
 export default Message;

@@ -7,7 +7,8 @@ export enum AuthActionsKind {
 }
 
 export type AuthData = {
-  userData?: Partial<IUser<"AUTHDATA">>;
+  valid?: boolean;
+  userData?: Partial<IUser>;
 };
 
 export type AuthActions = ContextAction<AuthActionsKind, AuthData>;
