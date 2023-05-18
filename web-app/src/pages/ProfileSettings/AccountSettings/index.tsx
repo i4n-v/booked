@@ -13,6 +13,8 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { ResponseMessage } from "../../../commons/ResponseMessage";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { ContentContainer, InputArea, InputAreaItem } from "../styles";
+import { yupResolver } from "@hookform/resolvers/yup";
+import schema from "./validation";
 
 export default function AccountSettings() {
     const { updateUser, getUser } = useUser();
@@ -20,6 +22,8 @@ export default function AccountSettings() {
     const notify = useNotifier()
     const [authData, authDispatch] = useContext(AuthContext)
     const form = useForm<IUser<"UPDATE">>({
+        resolver: yupResolver(schema),
+        reValidateMode: "onSubmit",
         defaultValues: {
             birth_date: new Date(),
             description: '',
@@ -30,7 +34,7 @@ export default function AccountSettings() {
         }
     })
     const user = useQuery('get-user', () => getUser(authData?.userData?.id), {
-        onSuccess: ({ birth_date, photo_url, ...data }) => {
+        onSuccess: ({ birth_date, photo_url, description, ...data }) => {
             form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url })
         },
         retry: false,
