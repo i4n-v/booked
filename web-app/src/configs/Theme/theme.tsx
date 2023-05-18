@@ -76,6 +76,10 @@ const include: ThemeOptions = {
           font: theme.font.xs,
           paddingLeft: "0.8rem",
         },
+        multiline: {
+          height: 'auto',
+          minHeight: "44px"
+        }
       },
     },
     MuiOutlinedInput: {

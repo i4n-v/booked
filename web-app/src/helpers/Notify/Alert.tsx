@@ -14,7 +14,7 @@ export function Notifier({
   close,
   severity,
   message,
-  timeToClose = 4000,
+  timeToClose = 2000,
 }: INotifierProps) {
   const handleClose = (event: Event | React.SyntheticEvent<any, Event>, reason: SnackbarCloseReason) => {
     if (reason === "clickaway") {
@@ -23,9 +23,7 @@ export function Notifier({
 
     close();
   };
-  function SlideTransition(props: SlideProps) {
-    return <Slide {...props} direction="down" />;
-  }
+
 
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
@@ -34,7 +32,6 @@ export function Notifier({
         autoHideDuration={timeToClose}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
-        TransitionComponent={SlideTransition}
       >
         <ReferencedAlert
           onClose={handleClose as (event: React.SyntheticEvent<Element, Event>) => void}
@@ -58,10 +55,10 @@ export const GlobalNotifier = () => {
       type: INotifierActionKind.HIDE_NOTIFICATION,
     });
   };
-  const portalElement: HTMLElement = document.getElementById('notify') || document.createElement('div');
+  const portalElement: HTMLElement | null = document.getElementById('notify');
   const component = notifierState.show ? (
     <Notifier message={notifierState.message} show={notifierState.show} severity={notifierState.severity} close={closeNotify} />
   ) : null;
 
-  return createPortal(component, portalElement);
+  return createPortal(component, portalElement as HTMLElement);
 };

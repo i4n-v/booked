@@ -1,23 +1,26 @@
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { useRoutes } from "react-router-dom";
+import { useLocation, useRoutes } from "react-router-dom";
 import routes from "./configs/routes";
-import theme from "./configs/Theme/theme";
 import { NotifierContextProvider } from "./contexts/NotifierContext";
 import { GlobalNotifier } from "./helpers/Notify/Alert";
+import { Suspense, useContext, useEffect } from "react";
+import { AuthContext } from "./contexts/AuthContext";
+import { AuthActionsKind } from "./contexts/AuthContext/types";
+import { BookBackground } from "./assets/SVG";
 
 function App() {
-  const queryClient = new QueryClient();
+
+  const location = useLocation()
+  const [_, authDispach] = useContext(AuthContext)
+  useEffect(() => {
+    authDispach({ type: AuthActionsKind.VERIFY })
+  }, [location.pathname])
   return (
+
     <NotifierContextProvider>
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <CssBaseline />
-          <GlobalNotifier />
-          {useRoutes(routes)}
-        </QueryClientProvider>
-      </ThemeProvider>
+      <GlobalNotifier />
+      {useRoutes(routes)}
     </NotifierContextProvider>
+
   );
 }
 

@@ -51,7 +51,7 @@ class UserController {
         });
       }
 
-      user.photo_url = fileSystem.uploadedFilePath(request, user.photo_url);
+      if (!!user.photo_url) user.photo_url = fileSystem.uploadedFilePath(request, user.photo_url);
 
       return response.json(user);
     } catch (error) {

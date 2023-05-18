@@ -9,6 +9,7 @@ import { ReactComponent as Account } from "./account.svg";
 import { ReactComponent as Config } from "./config.svg";
 import { ReactComponent as User } from "./user.svg";
 import { ReactComponent as Logout } from "./logout.svg";
+import { ReactComponent as Ellipse } from "./ellipse.svg";
 import { ReactComponent as ArrowDown } from "./arrow-down.svg";
 import { ReactComponent as ArrowUp } from "./arrow-up.svg";
 
@@ -24,6 +25,7 @@ export {
   Config,
   User,
   Logout,
+  Ellipse,
   ArrowDown,
   ArrowUp,
 };

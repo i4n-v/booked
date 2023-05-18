@@ -23,6 +23,7 @@ export default function Dropdown({
     setAnchorEl(element);
   }, [anchorId]);
 
+  if (!anchorEl) return <></>
   return (
     <Menu
       id="menu-dropdown"
