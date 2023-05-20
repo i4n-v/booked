@@ -8,6 +8,8 @@ import { useMutation } from "react-query";
 import useUser from "../../../services/useUser";
 import { AuthContext } from "../../../contexts/AuthContext";
 import useNotifier from "../../../helpers/Notify";
+import { yupResolver } from "@hookform/resolvers/yup";
+import schema from "./validation";
 
 export default function SecuritySettings() {
     const { passwordChange } = useUser()
@@ -15,6 +17,8 @@ export default function SecuritySettings() {
     const notify = useNotifier()
     const passwordMutation = useMutation(passwordChange)
     const form = useForm<PasswordChange>({
+        resolver: yupResolver(schema),
+        reValidateMode: "onSubmit",
         defaultValues: {
             confirm_password: '',
             password: '',
