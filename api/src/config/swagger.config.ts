@@ -46,6 +46,7 @@ const options: Options = {
         File: {
           type: 'string',
           contentType: 'application/pdf',
+          format: 'binary',
         },
       },
       parameters: {
@@ -55,6 +56,22 @@ const options: Options = {
           in: 'header',
           schema: {
             type: 'string',
+          },
+        },
+        page: {
+          name: 'page',
+          description: 'page of paginated route.',
+          in: 'query',
+          schema: {
+            type: 'integer',
+          },
+        },
+        limit: {
+          name: 'limit',
+          description: 'limit of paginated route.',
+          in: 'query',
+          schema: {
+            type: 'integer',
           },
         },
       },

@@ -29,4 +29,4 @@ const databaseConfig: IDatabaseConfig = {
   },
 };
 
-export default databaseConfig;
+module.exports = databaseConfig;

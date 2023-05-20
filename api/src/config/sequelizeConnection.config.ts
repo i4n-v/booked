@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize-typescript';
 import 'dotenv/config';
-import databaseConfig from './database.config';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const databaseConfig = require('../config/database.config');
 
 import models from '../database/models';
 
@@ -8,13 +10,13 @@ function createSequelizeConnection() {
   let config;
 
   switch (process.env.NODE_ENV) {
-    case 'DEVELOPMENT':
+    case 'development':
       config = databaseConfig.development;
       break;
-    case 'TEST':
+    case 'test':
       config = databaseConfig.test;
       break;
-    case 'PRODUCTION':
+    case 'production':
       config = databaseConfig.production;
       break;
     default:
