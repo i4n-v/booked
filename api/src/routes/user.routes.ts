@@ -83,7 +83,7 @@ router.post('/users', UserController.store);
  *               createdAt:
  *                 type: string;
  *             examples:
- *               send_payload:
+ *               get_payload:
  *                 value:
  *                   name: Ana Carollina
  *                   user_name: ana#0

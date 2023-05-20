@@ -58,6 +58,22 @@ const options: Options = {
             type: 'string',
           },
         },
+        page: {
+          name: 'page',
+          description: 'page of paginated route.',
+          in: 'query',
+          schema: {
+            type: 'integer',
+          },
+        },
+        limit: {
+          name: 'limit',
+          description: 'limit of paginated route.',
+          in: 'query',
+          schema: {
+            type: 'integer',
+          },
+        },
       },
       responses: {
         success: {
