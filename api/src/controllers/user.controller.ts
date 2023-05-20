@@ -51,7 +51,7 @@ class UserController {
         });
       }
 
-      if (!!user.photo_url) user.photo_url = fileSystem.uploadedFilePath(request, user.photo_url);
+      if (user.photo_url) user.photo_url = fileSystem.uploadedFilePath(request, user.photo_url);
 
       return response.json(user);
     } catch (error) {
@@ -75,8 +75,6 @@ class UserController {
         });
       }
 
-      if (file) photo_url = fileSystem.filePathToUpload(file.path);
-
       if (photo === null) photo_url = null;
 
       const user = await UserRepository.findById(id);
@@ -85,6 +83,12 @@ class UserController {
         return response.status(404).json({
           message: messages.unknown('Usuário'),
         });
+      }
+
+      if (file) {
+        if (user.photo_url) fileSystem.removeFile(__dirname + '/../..' + user.photo_url);
+
+        photo_url = fileSystem.filePathToUpload(file.path);
       }
 
       if (user.email === email) emailToUpdate = email;
@@ -138,11 +142,7 @@ class UserController {
         });
       }
 
-      const pastPasswordIsValid = await encrypt.compare(
-        user.password,
-        previous_password,
-        user.salt
-      );
+      const pastPasswordIsValid = await encrypt.compare(user.password, previous_password);
 
       if (!pastPasswordIsValid) {
         return response.status(400).json({
@@ -150,7 +150,7 @@ class UserController {
         });
       }
 
-      const actualPasswordIsNotValid = await encrypt.compare(user.password, password, user.salt);
+      const actualPasswordIsNotValid = await encrypt.compare(user.password, password);
 
       if (actualPasswordIsNotValid) {
         return response.status(400).json({
