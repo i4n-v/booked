@@ -4,11 +4,14 @@ import messages from '../config/messages.config';
 import BookRepository from '../repositories/book.repository';
 import BookCreateDto from '../dto/book/bookCreate.dto';
 import paginationWrapper from '../utils/paginationWrapper';
+import BookUpdateDto from '../dto/book/bookUpdate.dto';
 
 interface MulterUploadedFiles {
   photo?: Express.Multer.File[];
   file?: Express.Multer.File[];
 }
+
+const relativePath = __dirname + '/../..';
 
 class BookController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -55,6 +58,59 @@ class BookController {
     }
   }
 
+  async update(request: Request, response: Response, next: NextFunction) {
+    try {
+      const {
+        auth,
+        body,
+        params: { id },
+      } = request;
+      const files = request.files as unknown as MulterUploadedFiles;
+      const { name, price, description }: BookUpdateDto = body;
+      let file_url;
+      let photo_url;
+
+      const book = await BookRepository.findById(id);
+
+      if (!book) return response.status(404).json({ message: messages.unknown('Livro') });
+
+      if (book.user.id !== auth.id) {
+        if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
+        if (files?.file) await fileSystem.removeFile(files.file[0].path);
+
+        return response.status(401).json({
+          message: messages.unauthorized(),
+        });
+      }
+
+      if (files?.['photo']) {
+        if (book.photo_url) fileSystem.removeFile(relativePath + book.photo_url);
+
+        photo_url = fileSystem.filePathToUpload(files.photo[0].path);
+      }
+
+      if (files?.['file']) {
+        if (book.file_url) fileSystem.removeFile(relativePath + book.file_url);
+
+        file_url = fileSystem.filePathToUpload(files.file[0].path);
+      }
+
+      await BookRepository.update(id, {
+        name,
+        price,
+        description,
+        photo_url,
+        file_url,
+      });
+
+      return response.json({
+        message: messages.update('Livro'),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async index(request: Request, response: Response, next: NextFunction) {
     try {
       const { query } = request;
@@ -89,14 +145,6 @@ class BookController {
     }
   }
 
-  async update(request: Request, response: Response, next: NextFunction) {
-    try {
-      console.log();
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async delete(request: Request, response: Response, next: NextFunction) {
     try {
       const {
@@ -117,8 +165,6 @@ class BookController {
       if (!isDeleted) {
         return response.status(400).json({ message: 'Não foi possível excluir o livro.' });
       }
-
-      const relativePath = __dirname + '/../..';
 
       if (book.photo_url) fileSystem.removeFile(relativePath + book.photo_url);
 

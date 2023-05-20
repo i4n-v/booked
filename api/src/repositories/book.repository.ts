@@ -2,6 +2,7 @@ import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
 import Book from '../database/models/book.model';
 import BookCreateDto from '../dto/book/bookCreate.dto';
+import BookUpdateDto from '../dto/book/bookUpdate.dto';
 
 class BookRepository {
   private repository: Repository<Book>;
@@ -12,6 +13,14 @@ class BookRepository {
 
   async create(book: BookCreateDto) {
     return await this.repository.create(book);
+  }
+
+  async update(id: string, book: BookUpdateDto) {
+    return await this.repository.update(book, {
+      where: {
+        id,
+      },
+    });
   }
 
   async findById(id: string) {
