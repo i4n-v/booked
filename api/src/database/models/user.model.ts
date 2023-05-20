@@ -66,17 +66,6 @@ export default class User extends Model<UserDto, UserCreateDto> {
     type: DataType.STRING,
     validate: {
       notNull: {
-        msg: 'O salt é requerido.',
-      },
-    },
-  })
-  salt: string;
-
-  @AllowNull(false)
-  @Column({
-    type: DataType.STRING,
-    validate: {
-      notNull: {
         msg: 'A senha é requerida.',
       },
     },
@@ -111,19 +100,17 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @BelongsToMany(() => Book, () => Assessment, 'user_id')
   rated_books: Book[];
 
-  @BelongsToMany(() => Book, () => Acquisition, 'user_id')
+  @BelongsToMany(() => Book, () => Acquisition, 'user_id', 'book_id')
   acquisitions: Acquisition[];
 
   @HasMany(() => Authentication, { foreignKey: 'user_id', onDelete: 'CASCADE' })
   authentications: Authentication[];
 
   @BeforeValidate
-  static async hashPassword(user: UserCreateDto) {
+  static async hashPasswordBeforeValidate(user: UserCreateDto) {
     if (user.password) {
-      const [hashedPassword, salt] = await encrypt.hash(user.password);
-
+      const hashedPassword = await encrypt.hash(user.password);
       user.password = hashedPassword;
-      user.salt = salt;
     }
   }
 }

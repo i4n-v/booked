@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize-typescript';
 import 'dotenv/config';
-import databaseConfig from './database.config';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const databaseConfig = require('../config/database.config');
 
 import models from '../database/models';
 
