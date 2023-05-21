@@ -3,6 +3,8 @@ import { Repository } from 'sequelize-typescript';
 import Book from '../database/models/book.model';
 import BookCreateDto from '../dto/book/bookCreate.dto';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
+import { WhereOptions } from 'sequelize';
+import BookDto from '../dto/book/book.dto';
 
 class BookRepository {
   private repository: Repository<Book>;
@@ -67,10 +69,12 @@ class BookRepository {
     });
   }
 
-  async findAndCountAll(page: number, limit: number) {
+  async findAndCountAll(page: number, limit: number, options?: WhereOptions<BookDto>) {
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
+      where: options,
+      order: [['rating', 'DESC']],
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [

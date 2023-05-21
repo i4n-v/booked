@@ -5,6 +5,7 @@ import BookRepository from '../repositories/book.repository';
 import BookCreateDto from '../dto/book/bookCreate.dto';
 import paginationWrapper from '../utils/paginationWrapper';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
+import { Op } from 'sequelize';
 
 interface MulterUploadedFiles {
   photo?: Express.Multer.File[];
@@ -116,8 +117,39 @@ class BookController {
       const { query } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.page ? parseInt(query.limit as unknown as string) : 75;
+      const { search, min_date, max_date, categories } = query;
+      let whereStatement: any = {};
 
-      const books = await BookRepository.findAndCountAll(page, limit);
+      if (search) {
+        whereStatement = {
+          [Op.or]: [
+            {
+              name: {
+                [Op.like]: `${search}%`,
+              },
+            },
+            {
+              '$user.name$': {
+                [Op.like]: `${search}%`,
+              },
+            },
+          ],
+        };
+      }
+
+      if (min_date && max_date) {
+        whereStatement['createdAt'] = {
+          [Op.between]: [min_date, max_date],
+        };
+      }
+
+      if (categories) {
+        whereStatement['$categories.id$'] = {
+          [Op.in]: categories,
+        };
+      }
+
+      const books = await BookRepository.findAndCountAll(page, limit, whereStatement);
 
       const wrappedBooks = paginationWrapper(books, page, limit);
 
