@@ -34,9 +34,9 @@ Follow the instructions to run project :)
 
 > After install , go to Booked folder and exec this in the cmd or terminal :
 
-- in the frontend folder, run the following command to install the dependencies: `yarn install`
+- in the "web-app" folder, run the following command to install the dependencies: `yarn install`
 - To start the application, run the following command int "web-app" directory: `yarn dev`
-- To start the api it is necessary install despendencies with this command: `yarn install`
+- To start the "api" it is necessary install despendencies with this command: `yarn install`
 - Apply your credentials in `.env` file
 - After that, run the following command in the "api" directory: `yarn dev`
 
