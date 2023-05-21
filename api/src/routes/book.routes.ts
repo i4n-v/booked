@@ -1,5 +1,5 @@
 import router from '../config/router.config';
-import bookController from '../controllers/book.controller';
+import BookController from '../controllers/book.controller';
 import authMidleware from '../midlewares/auth.midleware';
 import uploadMidleware from '../midlewares/upload.midleware';
 
@@ -58,7 +58,7 @@ router.post(
     { name: 'photo', maxCount: 1 },
     { name: 'file', maxCount: 1 },
   ]),
-  bookController.store
+  BookController.store
 );
 
 /**
@@ -118,7 +118,7 @@ router.put(
     { name: 'photo', maxCount: 1 },
     { name: 'file', maxCount: 1 },
   ]),
-  bookController.update
+  BookController.update
 );
 
 /**
@@ -181,7 +181,7 @@ router.put(
  *       404:
  *         $ref: '#/components/responses/error'
  */
-router.get('/books/:id', bookController.show);
+router.get('/books/:id', BookController.show);
 
 /**
  * @openapi
@@ -194,6 +194,30 @@ router.get('/books/:id', bookController.show);
  *     parameters:
  *       - $ref: '#/components/parameters/page'
  *       - $ref: '#/components/parameters/limit'
+ *       - name: search
+ *         description: Is the name of book or name of author
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: min_date
+ *         description: Min date of published books
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: max_date
+ *         description: Max date of published books
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: categories
+ *         description: A array of category ids
+ *         in: query
+ *         style: form
+ *         explode: true
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
  *     responses:
  *       200:
  *         description: Return the list of books.
@@ -236,7 +260,7 @@ router.get('/books/:id', bookController.show);
  *       401:
  *         $ref: '#/components/responses/error'
  */
-router.get('/books', bookController.index);
+router.get('/books', BookController.index);
 
 /**
  * @openapi
@@ -266,6 +290,6 @@ router.get('/books', bookController.index);
  *       404:
  *         $ref: '#/components/responses/error'
  */
-router.delete('/books/:id', authMidleware, bookController.delete);
+router.delete('/books/:id', authMidleware, BookController.delete);
 
 export default router;
