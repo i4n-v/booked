@@ -18,13 +18,10 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required(Message.PASSWORD_REQUIRED)
-    .matches(/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/, Message.PASSWORD_MIN_LENGTH),
+    .matches(/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/, Message.PASSWORD_SHAPE),
   confirm_password: yup
     .string()
-    .oneOf(
-      [yup.ref("password"), undefined],
-      Message.PASSWORD_CONFIRMATION_MATCH
-    )
+    .oneOf([yup.ref("password"), undefined], Message.PASSWORD_SHAPE)
     .required(Message.PASSWORD_CONFIRMATION_REQUIRED),
 });
 
