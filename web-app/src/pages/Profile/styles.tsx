@@ -53,7 +53,6 @@ export const BooksCardsContainer = styled(Box)(({ theme }) => ({
 export const BooksActions = styled(Box)(({ theme }) => ({
     background: theme.palette.secondary.light,
     height: '56px',
-    padding: '0px 10px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
@@ -68,11 +67,12 @@ export const ProfileImageBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const ProfileImage = styled('img')(({ theme }) => ({
+export const ProfileImage = styled('img')(({ theme, src }) => ({
     borderRadius: '50%',
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+    display: src ? 'initial' : 'none'
 }));
 
 export const UserProfileInfo = styled(Box)(({ theme }) => ({
