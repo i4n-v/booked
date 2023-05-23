@@ -35,7 +35,7 @@ export default function AccountSettings() {
     })
     const user = useQuery('get-user', () => getUser(authData?.userData?.id), {
         onSuccess: ({ birth_date, photo_url, description, ...data }) => {
-            form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url })
+            form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url as unknown as File, description })
         },
         retry: false,
         refetchOnWindowFocus: false

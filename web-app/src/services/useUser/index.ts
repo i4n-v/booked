@@ -4,7 +4,7 @@ import api from "../../configs/api";
 import { PasswordChange } from "../../pages/ProfileSettings/SecuritySettings/types";
 
 export default function useUser() {
-  async function getUser(id: string = "") {
+  async function getUser(id: string = ""): Promise<IUser> {
     try {
       const result = await api.get<IUser>(`users/${id}`);
       return result.data;

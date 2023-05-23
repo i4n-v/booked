@@ -14,7 +14,7 @@ import {
   TopBooksContainer,
 } from "./styles";
 
-const cards = [
+export const cards = [
   {
     title: "Pequeno principe",
     author: "Antoine de Saint-Exupéry",
