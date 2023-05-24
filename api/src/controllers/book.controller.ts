@@ -6,6 +6,10 @@ import BookCreateDto from '../dto/book/bookCreate.dto';
 import paginationWrapper from '../utils/paginationWrapper';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
 import { Op } from 'sequelize';
+import { sequelizeConnection } from '../config/sequelizeConnection.config';
+import BookCategoryRepository from '../repositories/bookCategory.repository';
+import BookCategoryCreateDto from '../dto/bookCategory/bookCategoryCreate.dto';
+import { endOfDay, parseISO, startOfDay } from 'date-fns';
 
 interface MulterUploadedFiles {
   photo?: Express.Multer.File[];
@@ -19,13 +23,17 @@ class BookController {
     try {
       const { auth, body } = request;
       const files = request.files as unknown as MulterUploadedFiles;
-      const { name, price, description, user_id }: BookCreateDto = body;
+      const { name, price, description, user_id, categories }: BookCreateDto = body;
       let file_url;
       let photo_url;
 
-      if (user_id !== auth.id) {
+      async function removeFiles() {
         if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
         if (files?.file) await fileSystem.removeFile(files.file[0].path);
+      }
+
+      if (user_id !== auth.id) {
+        await removeFiles();
 
         return response.status(401).json({
           message: messages.unauthorized(),
@@ -37,23 +45,59 @@ class BookController {
       if (files?.['file']) {
         file_url = fileSystem.filePathToUpload(files.file[0].path);
       } else {
+        await removeFiles();
+
         return response.status(400).json({
           message: 'O arquivo do livro é obrigatório.',
         });
       }
 
-      await BookRepository.create({
-        user_id,
-        name,
-        price,
-        description,
-        photo_url,
-        file_url,
-      });
+      if (!categories) {
+        await removeFiles();
 
-      return response.json({
-        message: messages.create('Livro'),
-      });
+        return response.status(400).json({
+          message: 'Ao menos uma categoria deve ser informada.',
+        });
+      }
+
+      const transaction = await sequelizeConnection.transaction();
+
+      try {
+        const book = await BookRepository.create(
+          {
+            user_id,
+            name,
+            price,
+            description,
+            photo_url,
+            file_url,
+          },
+          {
+            transaction,
+          }
+        );
+
+        const bookCategories = categories.map((id) => ({
+          book_id: book.id,
+          category_id: id,
+        }));
+
+        await BookCategoryRepository.bulkCreate(bookCategories, {
+          transaction,
+        });
+
+        await transaction.commit();
+
+        return response.json({
+          message: messages.create('Livro'),
+        });
+      } catch (error: any) {
+        await removeFiles();
+
+        await transaction.rollback();
+
+        throw new Error(error.message);
+      }
     } catch (error) {
       next(error);
     }
@@ -67,17 +111,25 @@ class BookController {
         params: { id },
       } = request;
       const files = request.files as unknown as MulterUploadedFiles;
-      const { name, price, description }: BookUpdateDto = body;
+      const { name, price, description, categories }: BookUpdateDto = body;
       let file_url;
       let photo_url;
 
-      const book = await BookRepository.findById(id);
-
-      if (!book) return response.status(404).json({ message: messages.unknown('Livro') });
-
-      if (book.user.id !== auth.id) {
+      async function removeFiles() {
         if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
         if (files?.file) await fileSystem.removeFile(files.file[0].path);
+      }
+
+      const book = await BookRepository.findById(id);
+
+      if (!book) {
+        await removeFiles();
+
+        return response.status(404).json({ message: messages.unknown('Livro') });
+      }
+
+      if (book.user.id !== auth.id) {
+        await removeFiles();
 
         return response.status(401).json({
           message: messages.unauthorized(),
@@ -96,17 +148,58 @@ class BookController {
         file_url = fileSystem.filePathToUpload(files.file[0].path);
       }
 
-      await BookRepository.update(id, {
-        name,
-        price,
-        description,
-        photo_url,
-        file_url,
-      });
+      if (categories) {
+        const transaction = await sequelizeConnection.transaction();
 
-      return response.json({
-        message: messages.update('Livro'),
-      });
+        try {
+          const categoriesIds = book.categories.map(({ id }) => id);
+          const categoriesToRemove: string[] = [];
+          const categoriesToAdd: BookCategoryCreateDto[] = [];
+
+          categories.forEach((id) => {
+            if (!categoriesIds.includes(id)) {
+              categoriesToAdd.push({
+                book_id: book.id,
+                category_id: id,
+              });
+            }
+          });
+
+          categoriesIds.forEach((id) => {
+            if (!categories.includes(id)) {
+              categoriesToRemove.push(id);
+            }
+          });
+
+          BookCategoryRepository.deleteByIds(book.id, categoriesToRemove, { transaction });
+
+          BookCategoryRepository.bulkCreate(categoriesToAdd, { transaction });
+
+          await BookRepository.update(
+            book.id,
+            {
+              name,
+              price,
+              description,
+              photo_url,
+              file_url,
+            },
+            transaction
+          );
+
+          transaction.commit();
+
+          return response.json({
+            message: messages.update('Livro'),
+          });
+        } catch (error: any) {
+          await removeFiles();
+
+          await transaction.rollback();
+
+          throw new Error(error.message);
+        }
+      }
     } catch (error) {
       next(error);
     }
@@ -125,12 +218,12 @@ class BookController {
           [Op.or]: [
             {
               name: {
-                [Op.like]: `${search}%`,
+                [Op.like]: `%${search}%`,
               },
             },
             {
               '$user.name$': {
-                [Op.like]: `${search}%`,
+                [Op.like]: `%${search}%`,
               },
             },
           ],
@@ -139,7 +232,8 @@ class BookController {
 
       if (min_date && max_date) {
         whereStatement['createdAt'] = {
-          [Op.between]: [min_date, max_date],
+          [Op.gte]: startOfDay(parseISO(min_date as string)),
+          [Op.lte]: endOfDay(parseISO(max_date as string)),
         };
       }
 

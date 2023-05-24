@@ -8,10 +8,12 @@ import {
   Table,
 } from 'sequelize-typescript';
 import Book from './book.model';
+import BookCategoryCreateDto from '../../dto/bookCategory/bookCategoryCreate.dto';
+import BookCategoryDto from '../../dto/bookCategory/bookCategory.dto';
 import Category from './category.model';
 
 @Table
-export default class BookCategory extends Model {
+export default class BookCategory extends Model<BookCategoryDto, BookCategoryCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,

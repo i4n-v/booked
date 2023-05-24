@@ -8,7 +8,11 @@ function errorHandlerMidleWare(
   response: Response,
   next: NextFunction
 ) {
-  const sequelizeErrors = ['SequelizeUniqueConstraintError', 'SequelizeValidationError'];
+  const sequelizeErrors = [
+    'SequelizeUniqueConstraintError',
+    'SequelizeValidationError',
+    'SequelizeForeignKeyConstraintError',
+  ];
 
   if (sequelizeErrors.includes(error.name)) {
     response.status(400).json({

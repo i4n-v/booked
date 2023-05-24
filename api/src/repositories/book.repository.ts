@@ -3,7 +3,7 @@ import { Repository } from 'sequelize-typescript';
 import Book from '../database/models/book.model';
 import BookCreateDto from '../dto/book/bookCreate.dto';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
-import { WhereOptions } from 'sequelize';
+import { CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
 
 class BookRepository {
@@ -13,15 +13,16 @@ class BookRepository {
     this.repository = sequelizeConnection.getRepository(Book);
   }
 
-  async create(book: BookCreateDto) {
-    return await this.repository.create(book);
+  async create(book: BookCreateDto, options?: CreateOptions) {
+    return await this.repository.create(book, options);
   }
 
-  async update(id: string, book: BookUpdateDto) {
+  async update(id: string, book: BookUpdateDto, transaction?: Transaction) {
     return await this.repository.update(book, {
       where: {
         id,
       },
+      transaction,
     });
   }
 
@@ -64,6 +65,8 @@ class BookRepository {
         },
         {
           model: sequelizeConnection.model('Category'),
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
         },
       ],
     });
@@ -74,7 +77,9 @@ class BookRepository {
       limit,
       offset: (page - 1) * limit,
       where: options,
-      order: [['rating', 'DESC']],
+      distinct: true,
+      subQuery: false,
+      order: [[sequelizeConnection.literal('rating'), 'DESC']],
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [
@@ -109,9 +114,16 @@ class BookRepository {
           model: sequelizeConnection.model('User'),
           as: 'user',
           attributes: ['id', 'name', 'user_name'],
+          // required: true,
+          // duplicating: false,
         },
         {
           model: sequelizeConnection.model('Category'),
+          as: 'categories',
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+          // required: true,
+          // duplicating: false,
         },
       ],
     });
