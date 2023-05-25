@@ -15,7 +15,8 @@
     "@typescript-eslint/no-explicit-any": "off",
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "no-inner-declarations": "off"
   },
   "ignorePatterns": ["**/node_modules/*", "**/dist/*"]
 }

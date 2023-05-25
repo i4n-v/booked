@@ -34,6 +34,14 @@ import uploadMidleware from '../midlewares/upload.midleware';
  *                 $ref: '#/components/schemas/Image'
  *               file:
  *                 $ref: '#/components/schemas/File'
+ *               categories:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *           encoding:
+ *             categories:
+ *               style: form
+ *               explode: true
  *           examples:
  *             send_payload:
  *               value:
@@ -95,6 +103,14 @@ router.post(
  *                 $ref: '#/components/schemas/Image'
  *               file:
  *                 $ref: '#/components/schemas/File'
+ *               categories:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *           encoding:
+ *             categories:
+ *               style: form
+ *               explode: true
  *           examples:
  *             send_payload:
  *               value:

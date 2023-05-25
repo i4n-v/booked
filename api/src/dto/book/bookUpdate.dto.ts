@@ -6,4 +6,5 @@ export default class BookUpdateDto {
   photo_url?: string;
   file?: string;
   file_url?: string;
+  categories?: string[];
 }

@@ -7,4 +7,5 @@ export default class BookCreateDto {
   file?: string;
   file_url: string;
   user_id: string;
+  categories?: string[];
 }

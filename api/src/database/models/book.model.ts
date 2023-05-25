@@ -38,7 +38,7 @@ export default class Book extends Model<BookDto, BookCreateDto> {
   @Column(DataType.DECIMAL(10, 2))
   price: number;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING)
   photo_url: string;
 
