@@ -210,7 +210,7 @@ class BookController {
       const { query } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.page ? parseInt(query.limit as unknown as string) : 75;
-      const { search, min_date, max_date, categories } = query;
+      const { search, min_date, max_date, min_price, max_price, free, categories } = query;
       let whereStatement: any = {};
 
       if (search) {
@@ -235,6 +235,25 @@ class BookController {
           [Op.gte]: startOfDay(parseISO(min_date as string)),
           [Op.lte]: endOfDay(parseISO(max_date as string)),
         };
+      }
+
+      if (free === 'true') {
+        whereStatement['price'] = 0;
+      } else if (min_price || max_price) {
+        whereStatement['price'] = {};
+
+        if (min_price) {
+          whereStatement['price'] = {
+            [Op.gte]: min_price,
+          };
+        }
+
+        if (max_price) {
+          whereStatement['price'] = {
+            ...whereStatement['price'],
+            [Op.lte]: max_price,
+          };
+        }
       }
 
       if (categories) {

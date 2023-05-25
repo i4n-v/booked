@@ -12,6 +12,11 @@ import CategoryController from '../controllers/category.controller';
  *     parameters:
  *       - $ref: '#/components/parameters/page'
  *       - $ref: '#/components/parameters/limit'
+ *       - name: name
+ *         description: Name of category
+ *         in: query
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Return the list of categories.
