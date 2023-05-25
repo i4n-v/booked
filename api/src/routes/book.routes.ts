@@ -225,6 +225,21 @@ router.get('/books/:id', BookController.show);
  *         in: query
  *         schema:
  *           type: string
+ *       - name: free
+ *         description: Free published books
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: min_price
+ *         description: Min price of published books
+ *         in: query
+ *         schema:
+ *           type: float
+ *       - name: max_price
+ *         description: Max price of published books
+ *         in: query
+ *         schema:
+ *           type: float
  *       - name: categories
  *         description: A array of category ids
  *         in: query
