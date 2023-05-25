@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Alert, AlertProps, Slide, SlideProps, Snackbar, SnackbarCloseReason, Stack } from "@mui/material";
+import { Alert, AlertProps, Snackbar, SnackbarCloseReason, Stack } from "@mui/material";
 import { INotifierProps } from "./types";
 import { NotifierContext } from "../../contexts/NotifierContext";
 import { INotifierActionKind } from "../../contexts/NotifierContext/types";

@@ -1,9 +1,9 @@
-import React, { CSSProperties, ChangeEvent, useEffect, useState } from 'react';
-import { Box, Button } from '@mui/material';
-import { SxProps, Theme, styled } from '@mui/material/styles';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Box, Button, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Add, AddCircleOutline, AddRoadOutlined, AddRounded } from '@mui/icons-material';
-import { Ellipse } from '../../assets/SVG';
+import { Ellipse } from '../../../assets/SVG';
+import { CloudUpload } from '@mui/icons-material';
 
 const Input = styled('input')({
     display: 'none',
@@ -11,10 +11,13 @@ const Input = styled('input')({
 
 interface ImageInputProps {
     name: string;
+    button?: boolean
+    accept?: 'application/pdf' | 'image/*'
+    label?: string
 }
 
-const ImageInput = ({ name }: ImageInputProps) => {
-    const { control, register, setValue, getValues } = useFormContext();
+const ImageInput = ({ name, button, accept = 'image/*', label }: ImageInputProps) => {
+    const { control, register, setValue } = useFormContext();
     const [preview, setPreview] = useState<string | ArrayBuffer | null>()
 
     useEffect(() => {
@@ -43,13 +46,13 @@ const ImageInput = ({ name }: ImageInputProps) => {
             render={({ field }) => (
                 <>
                     <Input
-                        accept="image/*"
+                        accept={accept}
                         id={name}
                         type="file"
                         onChange={handleFileChange}
                     />
                     <label htmlFor={name} style={{ borderRadius: "50%" }}>
-                        <Box
+                        {!button ? <Box
                             component="div"
                             sx={{
                                 borderRadius: '50%',
@@ -84,7 +87,24 @@ const ImageInput = ({ name }: ImageInputProps) => {
                             {preview || field.value ? (
                                 <img src={preview || field.value} alt="Selected Preview" />
                             ) : <Ellipse />}
-                        </Box>
+                        </Box> :
+                            <Box>
+                                <Button
+                                    component="span"
+                                    sx={{
+                                        height: '48px',
+                                        userSelect: 'none',
+                                        font: t => t.font.xs,
+                                        width: '100%',
+                                        maxWidth: '100%'
+                                    }}
+                                    variant={field.value ? 'contained' : 'outlined'}
+                                    endIcon={<CloudUpload />}>
+                                    {label}
+                                </Button>
+                                {field.value ? <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis', font: t => t.font.xs, paddingTop: '4px', color: t => t.palette.secondary[800] }}>{field.value.name}</Typography> : null}
+                            </Box>
+                        }
                     </label>
                 </>
             )}

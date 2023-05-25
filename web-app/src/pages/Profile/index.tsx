@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import useUser from "../../services/useUser";
 import { BooksActions, BooksCardsContainer, BooksContainer, Container, IdentityInfo, InfoContainer, LibraryInfo, LibraryInfoBadge, ProfileImage, ProfileImageBox, UserProfileInfo } from "./styles";
@@ -7,6 +7,7 @@ import { Button, Divider } from "@mui/material";
 import { Tune } from "@mui/icons-material";
 import { BookCard } from "../../components/Cards";
 import { cards } from "../Home";
+import BooksForm from "../Books/Form";
 
 export default function Profile() {
     const { getUser } = useUser();
@@ -15,8 +16,12 @@ export default function Profile() {
         retry: false,
         refetchOnWindowFocus: false
     })
+
+    const [open, handleOpen] = useState(false)
+
     return (
         <Container>
+            <BooksForm open={open} handleClose={handleOpen} />
             <InfoContainer>
                 <ProfileImageBox>
                     <ProfileImage src={user?.photo_url} />
@@ -36,8 +41,18 @@ export default function Profile() {
             </InfoContainer>
             <BooksContainer >
                 <BooksActions>
-                    <Button sx={{ height: '42px', color: (t) => t.palette.secondary.main, display: 'flex', columnGap: '8px' }}><Tune color="primary" fontSize={'large'} /> Filtros</Button>
-                    <Button sx={{ height: '42px' }} variant="contained">Publicar</Button>
+                    <Button sx={{
+                        height: '42px',
+                        color: (t) => t.palette.secondary.main,
+                        display: 'flex',
+                        font: (t) => t.font.xs,
+                        columnGap: '8px',
+                        padding: '1px'
+                    }}>
+                        <Tune color="primary" fontSize={'large'} />
+                        Filtros
+                    </Button>
+                    <Button sx={{ height: '42px' }} onClick={() => handleOpen(true)} variant="contained">Publicar</Button>
                 </BooksActions>
                 <Divider />
                 <BooksCardsContainer>

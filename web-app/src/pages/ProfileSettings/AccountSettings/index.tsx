@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { PhotoInputArea, PhotoInputContainer } from "./styles";
 import { FormProvider, useForm } from "react-hook-form";
-import ImageInput from "../../../components/InputImage";
+import ImageInput from "../../../components/Input/Image";
 import Input from "../../../components/Input";
 import { User } from "../../../assets/SVG";
 import useUser from "../../../services/useUser";
@@ -33,7 +33,7 @@ export default function AccountSettings() {
             user_name: ''
         }
     })
-    const user = useQuery('get-user', () => getUser(authData?.userData?.id), {
+    useQuery('get-user', () => getUser(authData?.userData?.id), {
         onSuccess: ({ birth_date, photo_url, description, ...data }) => {
             form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url as unknown as File, description })
         },
