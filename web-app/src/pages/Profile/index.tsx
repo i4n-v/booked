@@ -12,7 +12,7 @@ import BooksForm from "../Books/Form";
 export default function Profile() {
     const { getUser } = useUser();
     const [authData] = useContext(AuthContext)
-    const { data: user } = useQuery('getUser', () => getUser(authData?.userData?.id), {
+    const { data: user } = useQuery('getUser', () => getUser(authData?.userData?.id as string), {
         retry: false,
         refetchOnWindowFocus: false
     })
@@ -21,7 +21,7 @@ export default function Profile() {
 
     return (
         <Container>
-            <BooksForm open={open} handleClose={handleOpen} />
+            <BooksForm open={true} handleClose={handleOpen} />
             <InfoContainer>
                 <ProfileImageBox>
                     <ProfileImage src={user?.photo_url} />

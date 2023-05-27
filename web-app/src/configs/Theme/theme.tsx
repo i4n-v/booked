@@ -71,6 +71,7 @@ const include: ThemeOptions = {
           height: "44px",
           paddding: 0,
           background: theme.palette.secondary.light,
+          
         },
         input: {
           font: theme.font.xs,
@@ -79,7 +80,8 @@ const include: ThemeOptions = {
         multiline: {
           height: 'auto',
           minHeight: "44px"
-        }
+        },
+        
       },
     },
     MuiOutlinedInput: {
@@ -110,6 +112,9 @@ const include: ThemeOptions = {
             transform: "translate(19px, -4px) scale(0.75)",
             top: "-2px",
           },
+          '&.MuiInputLabel-root': {
+            top:'-3px'
+          }
         },
       },
     },
@@ -135,6 +140,27 @@ const include: ThemeOptions = {
         },
       },
     },
+
+    MuiChip:{
+      styleOverrides:{
+        root:{
+          height: 'auto'
+        }
+      }
+    },
+    MuiAutocomplete:{
+      styleOverrides:{
+        input:{
+          height: '100%',
+        },
+        root:{
+          '& .MuiOutlinedInput-root .MuiAutocomplete-input,.MuiOutlinedInput-root': {
+            padding: '0 0 0 9px',
+          },
+          
+        }
+      }
+    }
   },
 };
 theme = createTheme(theme, include);

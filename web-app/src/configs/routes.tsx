@@ -5,7 +5,7 @@ const Home = lazy(() => import('../pages/Home'));
 const Questions = lazy(() => import('../pages/Questions'));
 const SignUp = lazy(() => import('../pages/SignUp'));
 const SignIn = lazy(() => import('../pages/SignIn'));
-const ProfileSettings = lazy(() => import('../pages/ProfileSettings'));
+const ProfileSettings = lazy(() => import('../pages/Profile/Settings'));
 const Profile = lazy(() => import('../pages/Profile'));
 const RequireAuth = lazy(() => import('./RequireAuth'));
 

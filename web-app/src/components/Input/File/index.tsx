@@ -4,19 +4,13 @@ import { styled } from '@mui/material/styles';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Ellipse } from '../../../assets/SVG';
 import { CloudUpload } from '@mui/icons-material';
+import { InputFileProps } from './types';
 
 const Input = styled('input')({
     display: 'none',
 });
 
-interface ImageInputProps {
-    name: string;
-    button?: boolean
-    accept?: 'application/pdf' | 'image/*'
-    label?: string
-}
-
-const ImageInput = ({ name, button, accept = 'image/*', label }: ImageInputProps) => {
+const InputFile = ({ name, button, accept = 'image/*', label }: InputFileProps) => {
     const { control, register, setValue } = useFormContext();
     const [preview, setPreview] = useState<string | ArrayBuffer | null>()
 
@@ -112,4 +106,4 @@ const ImageInput = ({ name, button, accept = 'image/*', label }: ImageInputProps
     );
 };
 
-export default ImageInput;
+export default InputFile;

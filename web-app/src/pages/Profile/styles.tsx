@@ -51,7 +51,6 @@ export const BooksCardsContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const BooksActions = styled(Box)(({ theme }) => ({
-    background: theme.palette.secondary.light,
     height: '56px',
     display: 'flex',
     justifyContent: 'space-between',

@@ -82,12 +82,6 @@ const seeder: Migration = {
         updatedAt: '2023-05-21',
       },
       {
-        id: '7d55f0d1-1f4c-4045-97ee-bcf91ab82947',
-        name: 'Autoajuda',
-        createdAt: '2023-05-21',
-        updatedAt: '2023-05-21',
-      },
-      {
         id: 'a5496dcd-880d-453f-baa2-46ef0cdd39e7',
         name: 'Ficção Histórica',
         createdAt: '2023-05-21',
@@ -286,12 +280,6 @@ const seeder: Migration = {
         updatedAt: '2023-05-21',
       },
       {
-        id: 'c4134a3b-7b55-4de9-8b5a-013458f4b0c2',
-        name: 'Literatura Estrangeira',
-        createdAt: '2023-05-21',
-        updatedAt: '2023-05-21',
-      },
-      {
         id: '478f93f6-362f-4ce4-bcb2-066098d1e032',
         name: 'Crônicas',
         createdAt: '2023-05-21',
@@ -372,12 +360,6 @@ const seeder: Migration = {
       {
         id: 'a24370a0-2973-4e0f-bc7c-67c2b1a6eeff',
         name: 'Ciência e Tecnologia',
-        createdAt: '2023-05-21',
-        updatedAt: '2023-05-21',
-      },
-      {
-        id: 'edf169aa-102d-493a-90a0-9764b273a9b7',
-        name: 'Psicologia',
         createdAt: '2023-05-21',
         updatedAt: '2023-05-21',
       },

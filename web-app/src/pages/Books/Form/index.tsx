@@ -6,11 +6,14 @@ import { BooksFormProps } from "./types";
 import Page from "../../../components/Dialog";
 import Input from "../../../components/Input";
 import InputRadio from "../../../components/Input/Radio";
-import ImageInput from "../../../components/Input/Image";
+import InputFile from "../../../components/Input/File";
+import InputSelect from "../../../components/Input/Select";
+import useCategory from "../../../services/useCategory";
+import { useQuery } from "react-query";
 
 export default function BooksForm({ handleClose, open }: BooksFormProps) {
     const form = useForm<{ test: boolean }>({})
-
+    const {getCategories} = useCategory()
     const onSubmit = form.handleSubmit((value) => {
         console.log((value))
     })
@@ -29,22 +32,22 @@ export default function BooksForm({ handleClose, open }: BooksFormProps) {
                             <Input name="name" label={"Nome"} />
                         </Grid>
                         <Grid item xs={2} justifyContent={'center'} display={'flex'}>
-                            <InputRadio name="test" options={[{ label: 'Sim', value: true }, { label: 'Não', value: false }]} description={"O livro é gratuito ?"} />
+                            <InputRadio name="free" options={[{ label: 'Sim', value: true }, { label: 'Não', value: false }]} description={"O livro é gratuito ?"} />
                         </Grid>
                         <Grid item xs={3.5}>
-                            <Input name="name" label={"Preço"} />
+                            <Input name="price" label={"Preço"} />
                         </Grid>
                         <Grid item xs={12}>
-                            <Input name="name" label={"Categorias"} />
+                            <InputSelect service={getCategories}  name="category" optionLabel={'name'} label="Categorias" multiple  />
                         </Grid>
                         <Grid item xs={12}>
-                            <Input name="name" label={"Descrição"} maxRows={6} minRows={6} multiline />
+                            <Input name="description" label={"Descrição"} maxRows={6} minRows={6} multiline />
                         </Grid>
                         <Grid item xs={5}>
-                            <ImageInput name="cover" button label={'SELECIONE A IMAGEM DE CAPA'} />
+                            <InputFile name="cover" button label={'SELECIONE A IMAGEM DE CAPA'} />
                         </Grid>
                         <Grid item xs={5}>
-                            <ImageInput name="book" button label={'SELECIONE O ARQUIVO DO LIVRO'} accept="application/pdf" />
+                            <InputFile name="book" button label={'SELECIONE O ARQUIVO DO LIVRO'} accept="application/pdf" />
                         </Grid>
                         <Grid item xs={2}>
                             <Button sx={{ height: '42px' }} type="submit" variant="contained">PUBLICAR</Button>

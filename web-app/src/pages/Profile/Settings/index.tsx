@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
 import { ConfigContainer, ConfigContent, ConfigMenu, Container } from "./styles";
-import ListItems from "../../components/List";
-import AccountConfig from "./AccountSettings";
+import ListItems from "../../../components/List";
+import AccountConfig from "./Account";
 import { useState } from "react";
-import SecuritySettings from "./SecuritySettings";
+import SecuritySettings from "./Security";
 
 export default function ProfileSettings() {
     const [active, setActive] = useState<number>(0)
