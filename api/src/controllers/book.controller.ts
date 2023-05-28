@@ -210,7 +210,7 @@ class BookController {
       const { query } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.page ? parseInt(query.limit as unknown as string) : 75;
-      const { search, min_date, max_date, min_price, max_price, free, categories } = query;
+      const { search, user_id, min_date, max_date, min_price, max_price, free, categories } = query;
       let whereStatement: any = {};
 
       if (search) {
@@ -229,6 +229,8 @@ class BookController {
           ],
         };
       }
+
+      if (user_id) whereStatement['user_id'] = user_id;
 
       if (min_date && max_date) {
         whereStatement['createdAt'] = {
@@ -262,7 +264,7 @@ class BookController {
         };
       }
 
-      const books = await BookRepository.findAndCountAll(page, limit, whereStatement);
+      const books = await BookRepository.findAndCountAll(page, limit, request, whereStatement);
 
       const wrappedBooks = paginationWrapper(books, page, limit);
 
@@ -281,6 +283,8 @@ class BookController {
       const book = await BookRepository.findById(id);
 
       if (!book) return response.status(404).json({ message: messages.unknown('Livro') });
+
+      if (book.photo_url) book.photo_url = fileSystem.uploadedFilePath(request, book.photo_url);
 
       if (book.file_url) book.file_url = fileSystem.uploadedFilePath(request, book.file_url);
 
