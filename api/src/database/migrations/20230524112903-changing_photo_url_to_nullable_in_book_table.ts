@@ -2,17 +2,25 @@ import { Migration } from 'sequelize-cli';
 
 const migration: Migration = {
   async up(queryInterface, sequelize) {
-    await queryInterface.changeColumn('Books', 'photo_url', {
-      type: sequelize.STRING,
-      allowNull: true,
-    });
+    try {
+      await queryInterface.changeColumn('Books', 'photo_url', {
+        type: sequelize.STRING,
+        allowNull: true,
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
   },
 
   async down(queryInterface, sequelize) {
-    await queryInterface.changeColumn('Books', 'photo_url', {
-      type: sequelize.STRING,
-      allowNull: false,
-    });
+    try {
+      await queryInterface.changeColumn('Books', 'photo_url', {
+        type: sequelize.STRING,
+        allowNull: false,
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
   },
 };
 

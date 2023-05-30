@@ -2,14 +2,22 @@ import { Migration } from 'sequelize-cli';
 
 const migration: Migration = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('Users', 'salt', {
-      type: Sequelize.DataTypes.STRING,
-      allowNull: false,
-    });
+    try {
+      await queryInterface.addColumn('Users', 'salt', {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
   },
 
   async down(queryInterface) {
-    await queryInterface.removeColumn('Users', 'salt');
+    try {
+      await queryInterface.removeColumn('Users', 'salt');
+    } catch (error: any) {
+      console.log(error);
+    }
   },
 };
 
