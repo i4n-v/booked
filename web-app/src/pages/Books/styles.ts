@@ -11,7 +11,7 @@ export const BooksCardsContainer = styled(Box)(({ theme }) => ({
   gridTemplateColumns: "repeat(4, min-content)",
   columnGap: "80px",
   paddingTop: "40px",
-  justifyContent: "center",
+  justifyContent: "space-evelyn",
   rowGap: "40px",
   [theme.breakpoints.down("lg")]: {
     display: "grid",
