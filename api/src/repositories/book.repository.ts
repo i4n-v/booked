@@ -5,6 +5,7 @@ import BookCreateDto from '../dto/book/bookCreate.dto';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
 import { CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
+import { Request } from 'express';
 
 class BookRepository {
   private repository: Repository<Book>;
@@ -72,7 +73,17 @@ class BookRepository {
     });
   }
 
-  async findAndCountAll(page: number, limit: number, options?: WhereOptions<BookDto>) {
+  async findAndCountAll(
+    page: number,
+    limit: number,
+    request: Request,
+    options?: WhereOptions<BookDto>
+  ) {
+    const {
+      protocol,
+      headers: { host },
+    } = request;
+
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
@@ -83,6 +94,17 @@ class BookRepository {
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', "Book".photo_url)
+                ELSE "Book".photo_url
+              END
+          `),
+            'photo_url',
+          ],
           [
             sequelizeConnection.literal(
               `(
@@ -114,16 +136,12 @@ class BookRepository {
           model: sequelizeConnection.model('User'),
           as: 'user',
           attributes: ['id', 'name', 'user_name'],
-          // required: true,
-          // duplicating: false,
         },
         {
           model: sequelizeConnection.model('Category'),
           as: 'categories',
           attributes: ['id', 'name'],
           through: { attributes: [] },
-          // required: true,
-          // duplicating: false,
         },
       ],
     });

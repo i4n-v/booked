@@ -215,6 +215,11 @@ router.get('/books/:id', BookController.show);
  *         in: query
  *         schema:
  *           type: string
+ *       - name: user_id
+ *         description: Is the id of author
+ *         in: query
+ *         schema:
+ *           type: string
  *       - name: min_date
  *         description: Min date of published books
  *         in: query
