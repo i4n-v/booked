@@ -55,7 +55,7 @@ export default function SignUp() {
         <FormProvider {...methods}>
           <form onSubmit={onSubmit}>
             <Input name="name" label="Nome" />
-            <Input name="birth_date" type={"date"} label="Data" />
+            <Input name="birth_date" shrink type={"date"} label="Data" />
             <Input name="email" label="E-mail" />
             <Input name="password" type={"password"} label="Senha" />
             <Input

@@ -4,8 +4,7 @@ import api from "../../configs/api";
 import { PasswordChange } from "../../pages/Profile/Settings/Security/types";
 
 export default function useUser() {
-
-  const DPath = 'users';
+  const DPath = "users";
 
   async function getUser(id: string): Promise<IUser> {
     try {
@@ -16,7 +15,7 @@ export default function useUser() {
     }
   }
 
-  async function createUser(data: IUser<"CREATE">) {
+  async function createUser(data: IUser<"CREATE">): Promise<ResponseMessage> {
     try {
       const result = await api.post<ResponseMessage>(DPath, data);
       return result.data;
@@ -25,7 +24,7 @@ export default function useUser() {
     }
   }
 
-  async function updateUser(data: IUser<"UPDATE">) {
+  async function updateUser(data: IUser<"UPDATE">): Promise<ResponseMessage> {
     try {
       const formData = new FormData();
       formData.append("photo", data.photo);
@@ -50,7 +49,7 @@ export default function useUser() {
   }: {
     data: PasswordChange;
     id: string;
-  }) {
+  }): Promise<ResponseMessage> {
     try {
       const response = await api.patch<ResponseMessage>(
         `/${DPath}/${id}/password`,

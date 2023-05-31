@@ -1,1 +1,3 @@
-export type Params = {[key:string]: string | boolean | number}
+export type Params = {
+  [key: string]: Partial<string | boolean | number | undefined>;
+};

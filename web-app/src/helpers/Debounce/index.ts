@@ -1,6 +1,9 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 
-export default function useDebounce(fn: (...args: any[]) => any, delay: number) {
+export default function useDebounce(
+  fn: (...args: any[]) => any,
+  delay: number
+) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   function debouncedFn(...args: any[]) {
@@ -11,4 +14,3 @@ export default function useDebounce(fn: (...args: any[]) => any, delay: number) 
   }
   return debouncedFn;
 }
-

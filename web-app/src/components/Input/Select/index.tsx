@@ -1,29 +1,28 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import Input from "..";
-import { ChangeEvent, useEffect, useState } from "react";
-import { InputSelectProps } from "./type";
+import { useCallback, useEffect, useState } from "react";
+import { InputSelectProps, InputSelectServiceFilter } from "./type";
 import { useQuery } from "react-query";
 import { IWrapper } from "../../../commons/IWrapper";
 import useDebounce from "../../../helpers/Debounce";
 
 export default function InputSelect<T>({ name, options, optionLabel, label, multiple, service }: InputSelectProps<T>) {
-    const { control, register, setValue } = useFormContext();
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(12);
-    const [optionsFromService,setOptionsFromService] = useState<T[]>([]);
-    const debouncedRefetch = useDebounce(() => Service.refetch(), 200)
+    const { control, register, setValue, formState: { errors } } = useFormContext();
+    const [filter, setFilter] = useState<InputSelectServiceFilter>({ limit: 10, page: 0 })
+    const [optionsFromService, setOptionsFromService] = useState<T[]>([]);
+    const debouncedRefetch = useCallback(useDebounce(() => Service.refetch(), 200), [filter])
     const Service = useQuery(
         `select-${name}`,
-        () => service ? service({ page, limit }) : null,
+        () => service && filter.page ? service(filter) : null,
         {
             retry: false,
             refetchOnWindowFocus: false,
-            onSuccess: ({items}: IWrapper<T>) => {
-                page == 1 
-                ? setOptionsFromService(items)
-                : setOptionsFromService( curr => [...curr, ...items])
-            }
+            onSuccess: (data: IWrapper<T>) => {
+                data?.current === 1
+                    ? setOptionsFromService(data?.items)
+                    : setOptionsFromService(curr => [...curr, ...data?.items || []])
+            },
         }
     )
 
@@ -35,20 +34,30 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
         setValue(name, value)
     };
 
-    const handleScroll = (target : EventTarget & HTMLUListElement) => {
+    const handleScroll = useCallback((target: EventTarget & HTMLUListElement) => {
         if (target.scrollTop + target.clientHeight >= target.scrollHeight - 2) {
-            if (page < (Service.data?.totalPages || 0) && !Service.isFetching) {
-                setPage(page + 1);
+            if (filter.page < (Service.data?.totalPages || 0) && !Service.isFetching) {
+                setFilter({ ...filter, page: (filter.page + 1) });
             }
         }
-    };
+    }, [optionsFromService]);
+
+    const handleFilter: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> | undefined = useDebounce(({ target }) => {
+        setFilter(curr => ({ ...curr, [optionLabel]: target.value, page: 1 }))
+    }, 200)
+
+    const onOpen = useCallback(() => {
+        setOptionsFromService([])
+        setFilter(curr => ({ limit: curr.limit, page: 1 }))
+    }, [filter.page])
+
     useEffect(() => {
         debouncedRefetch()
-    },[page])
+    }, [filter, debouncedRefetch])
 
     const config = {
         multiple,
-        options: options || Service.data?.items || [],
+        options: options || optionsFromService || [],
     }
     return (
         <Controller control={control} name={name} render={({ field }) => (
@@ -57,14 +66,14 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
                 {...config}
                 ListboxProps={{
                     style: { maxHeight: "200px" },
-                    onScrollCapture: ({currentTarget}) => handleScroll(currentTarget),
+                    onScrollCapture: ({ currentTarget }) => handleScroll(currentTarget),
                 }}
-                onClose={() => setPage(1)}
-                onOpen={() => debouncedRefetch()}
+                onOpen={onOpen}
                 getOptionLabel={(option) => option[optionLabel] as string}
+                noOptionsText={Service.isFetching ? `Solicitando ${label}...` : `Nenhum (a) ${label} encontradas(os)`}
                 onChange={handleChange}
                 renderInput={(params) => (
-                    <Input  {...params} variant="outlined" name={name} label={label} />
+                    <Input error={!!errors[name]}  {...params} onChange={handleFilter} variant="outlined" name={name} label={label} />
                 )}
             />
         )} />

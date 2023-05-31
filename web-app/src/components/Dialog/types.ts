@@ -1,15 +1,14 @@
-import { DialogProps } from "@mui/material";
+import { BoxProps, DialogProps } from "@mui/material";
 
-export interface iBookedDialogContainer {
-  width: string | number;
-  height: string | number;
-}
-
-export interface iBookedDialog extends DialogProps, iBookedDialogContainer {
+export interface iBookedDialog extends DialogProps {
   onClose:
     | ((
         event?: any,
         reason?: "backdropClick" | "escapeKeyDown" | "closeButton"
       ) => void)
     | (() => void);
+  height?: string | number;
+  width?: string | number;
+  minWidth?: string | number;
+  minHeight?: string | number;
 }

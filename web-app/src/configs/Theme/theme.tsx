@@ -71,7 +71,7 @@ const include: ThemeOptions = {
           height: "44px",
           paddding: 0,
           background: theme.palette.secondary.light,
-          
+          font: theme.font.xs,
         },
         input: {
           font: theme.font.xs,
@@ -81,7 +81,6 @@ const include: ThemeOptions = {
           height: 'auto',
           minHeight: "44px"
         },
-        
       },
     },
     MuiOutlinedInput: {
@@ -113,7 +112,7 @@ const include: ThemeOptions = {
             top: "-2px",
           },
           '&.MuiInputLabel-root': {
-            top:'-3px'
+            top: '-3px'
           }
         },
       },
@@ -141,23 +140,23 @@ const include: ThemeOptions = {
       },
     },
 
-    MuiChip:{
-      styleOverrides:{
-        root:{
+    MuiChip: {
+      styleOverrides: {
+        root: {
           height: 'auto'
         }
       }
     },
-    MuiAutocomplete:{
-      styleOverrides:{
-        input:{
+    MuiAutocomplete: {
+      styleOverrides: {
+        input: {
           height: '100%',
         },
-        root:{
+        root: {
           '& .MuiOutlinedInput-root .MuiAutocomplete-input,.MuiOutlinedInput-root': {
             padding: '0 0 0 9px',
           },
-          
+
         }
       }
     }

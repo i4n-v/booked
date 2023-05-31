@@ -3,7 +3,7 @@ import { DialogContainer } from "./styles";
 import { iBookedDialog } from "./types";
 import { Close } from "@mui/icons-material";
 
-export default function Page({ width, height, onClose, ...props }: iBookedDialog) {
+export default function Page({ width, height, minHeight, minWidth, onClose, ...props }: iBookedDialog) {
 
     return (
         <Dialog {...props} maxWidth={'lg'} onClose={onClose} >
@@ -22,7 +22,7 @@ export default function Page({ width, height, onClose, ...props }: iBookedDialog
                 </IconButton>
             </DialogTitle>
             <Divider />
-            <DialogContainer width={width} height={height}>
+            <DialogContainer width={width} minHeight={minHeight} minWidth={minWidth} height={height}>
                 {props.children}
             </DialogContainer>
         </Dialog>

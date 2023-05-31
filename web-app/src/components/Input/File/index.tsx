@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, FormHelperText, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Ellipse } from '../../../assets/SVG';
@@ -11,7 +11,7 @@ const Input = styled('input')({
 });
 
 const InputFile = ({ name, button, accept = 'image/*', label }: InputFileProps) => {
-    const { control, register, setValue } = useFormContext();
+    const { control, register, setValue, formState: { errors } } = useFormContext();
     const [preview, setPreview] = useState<string | ArrayBuffer | null>()
 
     useEffect(() => {
@@ -92,6 +92,7 @@ const InputFile = ({ name, button, accept = 'image/*', label }: InputFileProps) 
                                         width: '100%',
                                         maxWidth: '100%'
                                     }}
+                                    color={!!errors[name] ? 'error' : 'primary'}
                                     variant={field.value ? 'contained' : 'outlined'}
                                     endIcon={<CloudUpload />}>
                                     {label}
@@ -100,6 +101,7 @@ const InputFile = ({ name, button, accept = 'image/*', label }: InputFileProps) 
                             </Box>
                         }
                     </label>
+                    <FormHelperText sx={{ textAlign: 'center' }} error={!!errors[name]}><>{errors[name]?.message}</></FormHelperText>
                 </>
             )}
         />

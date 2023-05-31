@@ -1,22 +1,15 @@
 import { Box, styled } from "@mui/material";
-export const Container = styled(Box)(({ theme }) => ({
+import Content from "../../components/Layout/Content/styles";
+export const ContainerProfile = styled(Content)(({ theme }) => ({
     display: "grid",
     gridTemplateRows: "260px 1fr",
     padding: '0px 20px 120px 20px',
-    maxWidth: "1400px",
-    width: '100%',
-    rowGap: '40px',
-    margin: '0 auto',
-    "& > h1": {
-        font: theme.font.xl,
-        color: theme.palette.secondary.A200,
-        marginBottom: "60px",
-        alignSelf: "center"
-    },
     [theme.breakpoints?.down("md")]: {
         gridTemplateRows: "400px 1fr",
     },
 }));
+
+
 export const InfoContainer = styled(Box)(({ theme }) => ({
     minHeight: '260px',
     display: 'flex',
@@ -28,34 +21,8 @@ export const InfoContainer = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const BooksContainer = styled(Box)(({ theme }) => ({
-    minHeight: '960px',
-    display: 'flex',
-    flexDirection: 'column',
-    rowGap: '40px'
-}));
 
-export const BooksCardsContainer = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr',
-    columnGap: '80px',
-    rowGap: '40px',
-    [theme.breakpoints.down("md")]: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        columnGap: '40px',
-        rowGap: '30px',
-    },
 
-}));
-
-export const BooksActions = styled(Box)(({ theme }) => ({
-    height: '56px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-}));
 
 export const ProfileImageBox = styled(Box)(({ theme }) => ({
     width: '160px',

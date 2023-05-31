@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
+import BooksExplore from '../pages/Books/Explore';
 const Home = lazy(() => import('../pages/Home'));
 const Questions = lazy(() => import('../pages/Questions'));
 const SignUp = lazy(() => import('../pages/SignUp'));
@@ -39,6 +40,10 @@ const routes: RouteObject[] = [
                     }
                 ]
 
+            },
+            {
+                path: 'explore/:search?',
+                element: <BooksExplore />,
             },
             {
                 path: 'questions',

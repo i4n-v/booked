@@ -1,8 +1,9 @@
 import React from "react";
 import { BookCardProps } from "./types";
-import { Box, Rating, Typography, styled, useTheme } from "@mui/material";
+import { Box, IconButton, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
+import { MoreVert } from "@mui/icons-material";
 
 export default function BookCard({
   size,
@@ -82,6 +83,9 @@ export default function BookCard({
 
   return (
     <BookContainer>
+      <IconButton sx={{ zIndex: 2, position: 'absolute' }}>
+        <MoreVert />
+      </IconButton>
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />
       </BookImage>
@@ -112,7 +116,7 @@ export default function BookCard({
           <Typography component="span">({ratingQuantity})</Typography>
         </Box>
         <Typography component="span">
-          {price ? toBRL(price) : "Gratuito"}
+          {parseInt(price as unknown as string) ? toBRL(parseInt(price as unknown as string)) : "Gratuito"}
         </Typography>
       </InteractiveContainer>
     </BookContainer>

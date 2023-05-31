@@ -79,7 +79,7 @@ export default function AccountSettings() {
                         <Input name="birth_date" label="Data de nascimento" type="date" />
                     </InputAreaItem>
                     <InputAreaItem span={2} >
-                        <Input name="description" label="Bios" multiline maxRows={4} minRows={4} />
+                        <Input name="description" label="Sobre você" multiline maxRows={4} minRows={4} />
                     </InputAreaItem>
                     <Box width={'106px'} height={"42px"}>
                         <Button type="submit" variant="contained">SALVAR</Button>
