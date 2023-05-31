@@ -8,16 +8,25 @@ export const BooksActions = styled(Box)(({ theme }) => ({
 
 export const BooksCardsContainer = styled(Box)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 1fr 1fr 1fr",
+  gridTemplateColumns: "repeat(4, min-content)",
   columnGap: "80px",
   paddingTop: "40px",
+  justifyContent: "center",
   rowGap: "40px",
+  [theme.breakpoints.down("lg")]: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, min-content)",
+    justifyContent: "center",
+  },
   [theme.breakpoints.down("md")]: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    columnGap: "40px",
-    rowGap: "30px",
+    display: "grid",
+    gridTemplateColumns: "repeat(2, min-content)",
+    justifyContent: "center",
+  },
+  [theme.breakpoints.down("sm")]: {
+    display: "grid",
+    gridTemplateColumns: "repeat(1, min-content)",
+    justifyContent: "center",
   },
 }));
 
