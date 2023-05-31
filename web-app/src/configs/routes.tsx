@@ -42,7 +42,7 @@ const routes: RouteObject[] = [
 
             },
             {
-                path: 'explore/:search?',
+                path: 'explore',
                 element: <BooksExplore />,
             },
             {

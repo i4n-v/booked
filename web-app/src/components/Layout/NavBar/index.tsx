@@ -135,7 +135,7 @@ export default function NavBar({ logged }: NavBarProps) {
   })
 
   const search = form.handleSubmit(({ search }) => {
-    navigate(`/explore/${search}`, { replace: true })
+    navigate(`/explore`, { replace: true, state: search })
   })
 
   return (
