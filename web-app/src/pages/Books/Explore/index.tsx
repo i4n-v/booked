@@ -6,12 +6,12 @@ import { BookCard } from "../../../components/Cards";
 import IBook from "../../../commons/IBook";
 import { useQuery } from "react-query";
 import useBook from "../../../services/useBook";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function BooksExplore() {
     const { getBooks } = useBook()
-    const { search } = useParams();
-    const { data: books } = useQuery(['getBooks', search], () => getBooks({ search }))
+    const { state } = useLocation();
+    const { data: books } = useQuery(['getBooks', state], () => getBooks({ search: state }))
     return (
         <Content >
             <Typography component={'h1'}>Resultados</Typography >
