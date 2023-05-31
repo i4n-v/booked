@@ -40,6 +40,7 @@ export default function BookCard({
     borderRadius: "8px",
     transition: "0.3s",
     cursor: "pointer",
+    position: "relative",
     "& > h6": {
       font: theme.font[size === "lg" ? "md" : "sm"],
       color: theme.palette.secondary.A200,
@@ -83,9 +84,11 @@ export default function BookCard({
 
   return (
     <BookContainer>
-      <IconButton sx={{ zIndex: 2, position: 'absolute' }}>
-        <MoreVert />
-      </IconButton>
+      <Box sx={{ position: 'absolute', right: 0 }}>
+        <IconButton color="primary">
+          <MoreVert />
+        </IconButton>
+      </Box>
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />
       </BookImage>
