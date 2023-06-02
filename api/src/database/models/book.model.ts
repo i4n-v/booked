@@ -5,6 +5,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -16,6 +17,7 @@ import Category from './category.model';
 import User from './user.model';
 import BookDto from '../../dto/book/book.dto';
 import BookCreateDto from '../../dto/book/bookCreate.dto';
+import Comment from './comment.model';
 
 @Table
 export default class Book extends Model<BookDto, BookCreateDto> {
@@ -62,4 +64,7 @@ export default class Book extends Model<BookDto, BookCreateDto> {
 
   @BelongsToMany(() => User, () => Acquisition, 'book_id')
   acquisitions: Acquisition[];
+
+  @HasMany(() => Comment)
+  comments: Comment[];
 }

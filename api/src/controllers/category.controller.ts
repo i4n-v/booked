@@ -8,7 +8,7 @@ class BookController {
     try {
       const { query } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
-      const limit = query.page ? parseInt(query.limit as unknown as string) : 75;
+      const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
       const whereStatement: any = {};
 
       if (query.name) {
