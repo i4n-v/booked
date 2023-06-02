@@ -209,7 +209,7 @@ class BookController {
     try {
       const { query } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
-      const limit = query.page ? parseInt(query.limit as unknown as string) : 75;
+      const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
       const { search, user_id, min_date, max_date, min_price, max_price, free, categories } = query;
       let whereStatement: any = {};
 
@@ -319,7 +319,7 @@ class BookController {
 
       if (book.file_url) fileSystem.removeFile(relativePath + book.file_url);
 
-      return response.json({ message: 'Livro excluido com sucesso.' });
+      return response.json({ message: messages.delete('Livro') });
     } catch (error) {
       next(error);
     }
