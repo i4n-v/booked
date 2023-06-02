@@ -19,9 +19,9 @@ async function initApp() {
   try {
     await syncConnection();
 
-    app.listen(process.env.APP_PORT, () =>
-      console.log(`🔥 Server started at http://localhost:${process.env.APP_PORT}`)
-    );
+    app.listen(process.env.APP_PORT, () => {
+      console.log(`🔥 Server started at http://localhost:${process.env.APP_PORT}`);
+    });
   } catch (error) {
     console.log('❗ The server cannot be started');
   }

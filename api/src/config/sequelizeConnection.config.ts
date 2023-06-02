@@ -1,5 +1,7 @@
-import { Sequelize } from 'sequelize-typescript';
 import 'dotenv/config';
+import { Sequelize } from 'sequelize-typescript';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('pg').defaults.parseInt8 = true;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const databaseConfig = require('../config/database.config');
