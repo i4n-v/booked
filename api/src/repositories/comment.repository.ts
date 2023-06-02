@@ -4,6 +4,7 @@ import Comment from '../database/models/comment.model';
 import CommentCreateDto from '../dto/comment/commentCreate.dto';
 import CommentUpdateDto from '../dto/comment/commentUpdate.dto';
 import { WhereOptions } from 'sequelize';
+import { Request } from 'express';
 
 class CommentRepository {
   private repository: Repository<Comment>;
@@ -36,12 +37,41 @@ class CommentRepository {
     });
   }
 
-  async findAndCountAll(page: number, limit: number, options?: WhereOptions<Comment>) {
+  async findAndCountAll(
+    page: number,
+    limit: number,
+    request: Request,
+    options?: WhereOptions<Comment>
+  ) {
+    const {
+      protocol,
+      headers: { host },
+    } = request;
+
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
       order: [['createdAt', 'ASC']],
       where: options,
+      include: {
+        model: sequelizeConnection.model('User'),
+        attributes: {
+          exclude: ['email', 'password', 'birth_date', 'description', 'createdAt', 'updatedAt'],
+          include: [
+            [
+              sequelizeConnection.literal(`
+                CASE
+                  WHEN "user".photo_url IS NOT NULL THEN CONCAT('${
+                    protocol + '://' + host
+                  }', "user".photo_url)
+                  ELSE "user".photo_url
+                END
+            `),
+              'photo_url',
+            ],
+          ],
+        },
+      },
     });
   }
 }
