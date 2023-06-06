@@ -11,9 +11,11 @@ import {
 } from 'sequelize-typescript';
 import Book from './book.model';
 import User from './user.model';
+import AssessmentDto from '../../dto/assessment/assessment.dto';
+import AssessmentCreateDto from '../../dto/assessment/assessmentCreate.dto';
 
 @Table
-export default class Assessment extends Model {
+export default class Assessment extends Model<AssessmentDto, AssessmentCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,
@@ -27,8 +29,8 @@ export default class Assessment extends Model {
   number: number;
 
   @AllowNull(false)
-  @Column(DataType.UUID)
   @ForeignKey(() => User)
+  @Column(DataType.UUID)
   user_id: string;
 
   @AllowNull(false)
