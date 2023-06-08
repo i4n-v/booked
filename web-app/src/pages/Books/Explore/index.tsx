@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import BooksActions from "../Actions";
 import { BooksFilters } from "../Actions/types";
 import { useState } from "react";
+import { ICategory } from "../../../commons/ICategory";
 
 export default function BooksExplore() {
     const { getBooks } = useBook()
@@ -17,8 +18,9 @@ export default function BooksExplore() {
     const { data: books } = useQuery(['getBooks', [state,filters]], () => getBooks({ search: state, ...filters }))
 
 
-    const filterBooks = (filters: BooksFilters) => {
-        setFilters(filters)
+    const filterBooks = (filters: any) => {
+        const categories = filters?.categories?.map( (v:ICategory) => v.id)
+        setFilters({...filters,categories})
     }
     return (
         <Content >
