@@ -4,6 +4,5 @@ export default class UserCreateDto {
   birth_date: Date;
   email: string;
   password: string;
-  salt: string;
   confirm_password: string;
 }
