@@ -3,7 +3,7 @@ import { ResponseMessage } from "../../commons/ResponseMessage";
 import api from "../../configs/api";
 
 export default function useAuth() {
-  async function login(data: IUser<"LOGIN">) {
+  async function login(data: IUser<"LOGIN">): Promise<IUser<"AUTHDATA">> {
     try {
       const result = await api.post<IUser<"AUTHDATA">>("login", data);
       return result.data;
@@ -12,7 +12,7 @@ export default function useAuth() {
     }
   }
 
-  async function verify() {
+  async function verify(): Promise<ResponseMessage & { valid: boolean }> {
     try {
       const result = await api.get<ResponseMessage & { valid: boolean }>(
         "login/verify"

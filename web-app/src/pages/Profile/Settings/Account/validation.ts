@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import Message from "../../../helpers/messages";
+import Message from "../../../../helpers/messages";
 
 const schema = yup.object().shape({
   birth_date: yup

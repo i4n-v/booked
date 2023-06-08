@@ -18,16 +18,20 @@ import {
   useTheme,
 } from "@mui/material";
 import { NavBarProps } from "./types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "../../Dropdown";
 import { AuthContext } from "../../../contexts/AuthContext";
 import useAuth from "../../../services/useAuth";
 import { useMutation } from "react-query";
 import Cookies from 'js-cookie';
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
+import { FormProvider, useForm } from "react-hook-form";
+import Input from "../../Input";
+import { Search } from "@mui/icons-material";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
@@ -52,6 +56,11 @@ export default function NavBar({ logged }: NavBarProps) {
     "#burguer-menu": {
       display: "none",
       cursor: "pointer",
+    },
+    "#search": {
+      flex: '1',
+      padding: '18px auto',
+      paddingLeft: '32px'
     },
     [theme.breakpoints.down("md")]: {
       "#burguer-menu": {
@@ -120,6 +129,16 @@ export default function NavBar({ logged }: NavBarProps) {
     },
   ];
 
+  const form = useForm({
+    defaultValues: {
+      search: ''
+    }
+  })
+
+  const search = form.handleSubmit(({ search }) => {
+    navigate(`/explore`, { replace: true, state: search })
+  })
+
   return (
     <AppBar
       elevation={1}
@@ -136,9 +155,16 @@ export default function NavBar({ logged }: NavBarProps) {
         <Link to="/">
           <DarkLogo />
         </Link>
+       {!['/','/login','/register'].includes(location.pathname) ?  <Box id={"search"}>
+          <FormProvider {...form}>
+            <form onSubmit={search}>
+              <Input type="text" name="search" placeholder="Buscar..." icon={{ right: <IconButton color="primary" type="submit"><Search /></IconButton> }} />
+            </form>
+          </FormProvider>
+        </Box> : null}
         {!logged ? (
           <Box id="unlogged" display={"flex"} columnGap={3}>
-            <MenuItem>Explorar</MenuItem>
+            <MenuItem onClick={() => navigate("/explore")}>Explorar</MenuItem>
             <MenuItem onClick={() => navigate("/login")}>Entrar</MenuItem>
             <Button
               variant="outlined"
@@ -153,7 +179,7 @@ export default function NavBar({ logged }: NavBarProps) {
           </Box>
         ) : (
           <Box id="logged" display={"flex"} columnGap={3}>
-            <MenuItem>Explorar</MenuItem>
+            <MenuItem onClick={() => navigate("/explore")}>Explorar</MenuItem>
             <IconButton
               id="profile-menu"
               sx={{

@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from "@mui/material";
+import { ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from "@mui/material";
 import { IListItemProps } from "./types";
 import { useState } from "react";
 import { CustomList } from "./styles";

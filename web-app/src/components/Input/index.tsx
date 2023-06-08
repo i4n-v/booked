@@ -8,7 +8,7 @@ export default function Input({
   label,
   type,
   icon,
-  shrink = true,
+  shrink,
   ...props
 }: InputProps) {
   const {
@@ -43,13 +43,11 @@ export default function Input({
           type={input_type}
           error={!!errors[name]}
           helperText={errors[name]?.message as string}
-          InputLabelProps={{
-            shrink,
-          }}
           InputProps={{
             startAdornment: icon?.left,
             endAdornment: icon?.right ? icon?.right : type === "password" ? <Visibility /> : null,
           }}
+          InputLabelProps={{ shrink }}
           fullWidth
           autoComplete="off"
           {...props}

@@ -1,3 +1,5 @@
+import { DropdownOptions } from "../../Dropdown/type";
+
 export type BookCardProps = {
   size: "lg" | "md";
   title: string;
@@ -6,4 +8,5 @@ export type BookCardProps = {
   rating: number;
   ratingQuantity: number;
   image?: string | null;
+  actionsOptions?: DropdownOptions[]
 };
