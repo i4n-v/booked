@@ -27,7 +27,7 @@ export default function BooksExplore() {
                 <BooksActions filter handleFilter={filterBooks} />
                 <Divider />
                 <BooksCardsContainer>
-                    {books?.items.map((book: IBook, index) => {
+                    {books?.items?.map((book: IBook, index) => {
                         return <BookCard
                             author={book.user?.name}
                             rating={1}
