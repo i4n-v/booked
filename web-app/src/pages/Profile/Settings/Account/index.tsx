@@ -34,8 +34,8 @@ export default function AccountSettings() {
         }
     })
     useQuery('get-user', () => getUser(authData?.userData?.id as string), {
-        onSuccess: ({ birth_date, photo_url, description, ...data }) => {
-            form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url as unknown as File, description })
+        onSuccess: ({ birth_date, photo_url, description , ...data }) => {
+            form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url as unknown as File, description: description ? description : ''  })
         },
         retry: false,
         refetchOnWindowFocus: false

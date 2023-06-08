@@ -114,6 +114,10 @@ export default function Home() {
     },
   });
 
+  const handleSubmit = methods.handleSubmit(({ search }) => {
+    navigate(`/explore`, { replace: true, state: search })
+  })
+
   return (
     <>
       <IntroductionContainer>
@@ -139,16 +143,18 @@ export default function Home() {
           </Typography>
         </Box>
         <FormProvider {...methods}>
-          <Input
-            name="search"
-            placeholder="Buscar..."
-            icon={{
-              right: <Search style={{ color: theme.palette.primary[700] }} />,
-            }}
-            sx={{
-              maxWidth: "680px",
-            }}
-          />
+          <form onSubmit={handleSubmit}>
+            <Input
+              name="search"
+              placeholder="Buscar..."
+              icon={{
+                right: <Search style={{ color: theme.palette.primary[700] }} />,
+              }}
+              sx={{
+                maxWidth: "680px",
+              }}
+            />
+          </form>
         </FormProvider>
       </IntroductionContainer>
 

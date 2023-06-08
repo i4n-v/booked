@@ -1,34 +1,30 @@
-import { Button, Divider, Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import Content from "../../../components/Layout/Content/styles";
-import { BooksActions, BooksCardsContainer, BooksContainer } from "../styles";
-import { Tune } from "@mui/icons-material";
+import { BooksCardsContainer, BooksContainer } from "../styles";
 import { BookCard } from "../../../components/Cards";
 import IBook from "../../../commons/IBook";
 import { useQuery } from "react-query";
 import useBook from "../../../services/useBook";
 import { useLocation } from "react-router-dom";
+import BooksActions from "../Actions";
+import { BooksFilters } from "../Actions/types";
+import { useState } from "react";
 
 export default function BooksExplore() {
     const { getBooks } = useBook()
     const { state } = useLocation();
-    const { data: books } = useQuery(['getBooks', state], () => getBooks({ search: state }))
+    const [filters,setFilters] = useState<Partial<BooksFilters>>({})
+    const { data: books } = useQuery(['getBooks', [state,filters]], () => getBooks({ search: state, ...filters }))
+
+
+    const filterBooks = (filters: BooksFilters) => {
+        setFilters(filters)
+    }
     return (
         <Content >
             <Typography component={'h1'}>Resultados</Typography >
             <BooksContainer >
-                <BooksActions>
-                    <Button sx={{
-                        height: '42px',
-                        color: (t) => t.palette.secondary.main,
-                        display: 'flex',
-                        font: (t) => t.font.xs,
-                        columnGap: '8px',
-                        padding: '1px'
-                    }}>
-                        <Tune color="primary" fontSize={'large'} />
-                        Filtros
-                    </Button>
-                </BooksActions>
+                <BooksActions filter handleFilter={filterBooks} />
                 <Divider />
                 <BooksCardsContainer>
                     {books?.items.map((book: IBook, index) => {

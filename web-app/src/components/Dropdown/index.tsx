@@ -13,6 +13,7 @@ export default function Dropdown({
   open,
   handleClose,
   options,
+  minWidth = "260px",
   ...props
 }: DropdownProps) {
   const theme = useTheme();
@@ -59,7 +60,7 @@ export default function Dropdown({
         <MenuItem
           key={label}
           sx={{
-            minWidth: "260px",
+            minWidth: {minWidth},
             padding: "10px 20px",
             "&:hover": {
               background: theme.palette.secondary.A100,

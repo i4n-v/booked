@@ -12,6 +12,7 @@ type Props = {
   open: boolean;
   handleClose: () => void;
   options: DropdownOptions[];
+  minWidth?: string;
 };
 
 export type DropdownProps = Props & MenuProps;

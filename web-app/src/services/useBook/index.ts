@@ -54,7 +54,24 @@ export default function useBook() {
 
   async function updateBook(data: IBook<"UPDATE">): Promise<ResponseMessage> {
     try {
-      const result = await api.put<ResponseMessage>(`${DPath}`, { data });
+      const formData = new FormData();
+      formData.append("photo", data.photo);
+      formData.append("file", data.file);
+      Object.entries(data).forEach(([key, value]) => {
+        if (["id", "photo", "file"].includes(key)) return;
+        if (isArray(value)) {
+          value.forEach((obj) => {
+            formData.append(`${key}[]`, obj.id);
+          });
+          return;
+        }
+        formData.append(key, value);
+      });
+      const result = await api.put<ResponseMessage>(`${DPath}/${data.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      } );
       return result.data;
     } catch (error: any) {
       return error.response?.data?.message;

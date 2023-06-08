@@ -69,6 +69,7 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
                     onScrollCapture: ({ currentTarget }) => handleScroll(currentTarget),
                 }}
                 onOpen={onOpen}
+                isOptionEqualToValue={(option: T,value: T) => option[optionLabel] === value[optionLabel]}
                 getOptionLabel={(option) => option[optionLabel] as string}
                 noOptionsText={Service.isFetching ? `Solicitando ${label}...` : `Nenhum (a) ${label} encontradas(os)`}
                 onChange={handleChange}

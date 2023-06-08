@@ -18,7 +18,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { NavBarProps } from "./types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "../../Dropdown";
 import { AuthContext } from "../../../contexts/AuthContext";
 import useAuth from "../../../services/useAuth";
@@ -31,6 +31,7 @@ import { Search } from "@mui/icons-material";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
@@ -154,13 +155,13 @@ export default function NavBar({ logged }: NavBarProps) {
         <Link to="/">
           <DarkLogo />
         </Link>
-        <Box id={"search"}>
+       {!['/','/login','/register'].includes(location.pathname) ?  <Box id={"search"}>
           <FormProvider {...form}>
             <form onSubmit={search}>
               <Input type="text" name="search" placeholder="Buscar..." icon={{ right: <IconButton color="primary" type="submit"><Search /></IconButton> }} />
             </form>
           </FormProvider>
-        </Box>
+        </Box> : null}
         {!logged ? (
           <Box id="unlogged" display={"flex"} columnGap={3}>
             <MenuItem onClick={() => navigate("/explore")}>Explorar</MenuItem>

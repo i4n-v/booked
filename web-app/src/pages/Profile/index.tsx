@@ -2,34 +2,59 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import useUser from "../../services/useUser";
 import { ContainerProfile, IdentityInfo, InfoContainer, LibraryInfo, LibraryInfoBadge, ProfileImage, ProfileImageBox, UserProfileInfo } from "./styles";
-import { useQuery } from "react-query";
-import { Button, Divider } from "@mui/material";
-import { Tune } from "@mui/icons-material";
+import { useMutation, useQuery } from "react-query";
+import { Divider } from "@mui/material";
 import { BookCard } from "../../components/Cards";
 import BooksForm from "../Books/Form";
 import useBook from "../../services/useBook";
 import IBook from "../../commons/IBook";
-import { BooksActions, BooksCardsContainer, BooksContainer } from "../Books/styles";
+import { BooksCardsContainer, BooksContainer } from "../Books/styles";
+import DefaultImage from '../../assets/SVG/account.svg'
+import BooksActions from "../Books/Actions";
+import { BooksFilters } from "../Books/Actions/types";
+import useNotifier from "../../helpers/Notify";
 
 export default function Profile() {
     const { getUser } = useUser();
-    const { getBooks } = useBook()
+    const { getBooks,deleteBook } = useBook()
     const [authData] = useContext(AuthContext)
+    const [open, handleOpen] = useState(false) 
+    const [filters, handleFilters] = useState<Partial<BooksFilters>>({}) 
+    const [bookToEdit,setBookToEdit] = useState<string>()
+    const notify = useNotifier()
     const { data: user } = useQuery('getUser', () => getUser(authData?.userData?.id as string), {
         retry: false,
         refetchOnWindowFocus: false
     })
 
-    const { data: books } = useQuery('getUserBooks', () => getBooks({ user_id: authData?.userData?.id }))
+    const { data: books,refetch } = useQuery(['getUserBooks', [filters]], () => getBooks({ user_id: authData?.userData?.id,...filters }),{
+        refetchOnWindowFocus: false, 
+    })
 
-    const [open, handleOpen] = useState(false)
+    const deleteBookMutation = useMutation(deleteBook)
+
+    const deleteMutation = (id: string) => {
+        deleteBookMutation.mutate(id,{
+            onSuccess(data) {
+                notify(data.message)
+                refetch()
+            },
+            onError(error: any) {
+                notify(error.message)
+            },
+        })
+    }
 
     return (
         <ContainerProfile>
-            <BooksForm open={open} handleClose={handleOpen} />
+            <BooksForm open={open} editBook={bookToEdit} handleClose={ () => {
+                handleOpen(false)
+                setBookToEdit(undefined)
+                refetch()
+            }} />
             <InfoContainer>
                 <ProfileImageBox>
-                    <ProfileImage src={user?.photo_url} />
+                    <ProfileImage src={user?.photo_url || DefaultImage} /> 
                 </ProfileImageBox>
                 <UserProfileInfo>
                     <IdentityInfo>
@@ -45,20 +70,7 @@ export default function Profile() {
                 </UserProfileInfo>
             </InfoContainer>
             <BooksContainer >
-                <BooksActions>
-                    <Button sx={{
-                        height: '42px',
-                        color: (t) => t.palette.secondary.main,
-                        display: 'flex',
-                        font: (t) => t.font.xs,
-                        columnGap: '8px',
-                        padding: '1px'
-                    }}>
-                        <Tune color="primary" fontSize={'large'} />
-                        Filtros
-                    </Button>
-                    <Button sx={{ height: '42px' }} onClick={() => handleOpen(true)} variant="contained">Publicar</Button>
-                </BooksActions>
+                <BooksActions filter publish handleOpenPublish={handleOpen} handleFilter={handleFilters}/>
                 <Divider />
                 <BooksCardsContainer>
                     {books?.items.map((book: IBook) => {
@@ -71,7 +83,21 @@ export default function Profile() {
                             image={book.photo_url}
                             size="md"
                             key={book.name}
-                        ></BookCard>
+                            actionsOptions={[
+                                {
+                                    label: "Editar",
+                                    handler() {
+                                        setBookToEdit(book.id)
+                                    },
+                                },
+                                {
+                                    label: "Deletar",
+                                    handler() {
+                                        deleteMutation(book.id as string)
+                                    },
+                                }
+                            ]}
+                        />
                     })}
                 </BooksCardsContainer>
             </BooksContainer>

@@ -68,14 +68,13 @@ const include: ThemeOptions = {
     MuiInputBase: {
       styleOverrides: {
         root: {
-          height: "44px",
-          paddding: 0,
+          padding: 0,
           background: theme.palette.secondary.light,
           font: theme.font.xs,
+          minHeight: "44px",
         },
         input: {
           font: theme.font.xs,
-          paddingLeft: "0.8rem",
         },
         multiline: {
           height: 'auto',
@@ -96,6 +95,9 @@ const include: ThemeOptions = {
           "&::placeholder": {
             color: theme.palette.secondary.main,
           },
+          padding: 0,
+          paddingLeft: "12px",
+          paddingRight: "14px",
         },
       },
     },
@@ -150,11 +152,12 @@ const include: ThemeOptions = {
     MuiAutocomplete: {
       styleOverrides: {
         input: {
-          height: '100%',
+          minHeight: '44px',
         },
         root: {
           '& .MuiOutlinedInput-root .MuiAutocomplete-input,.MuiOutlinedInput-root': {
             padding: '0 0 0 9px',
+            minHeight: '44px',
           },
 
         }

@@ -12,47 +12,79 @@ import schema from "./validation";
 import IBook from "../../../commons/IBook";
 import { useMutation } from "react-query";
 import useBook from "../../../services/useBook";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import useNotifier from "../../../helpers/Notify";
+import { urlToFile } from "../../../utils";
 
-export default function BooksForm({ handleClose, open }: BooksFormProps) {
-    const { createBook } = useBook()
+export default function BooksForm({ handleClose, open, editBook }: BooksFormProps) {
+    const { createBook, getBook, updateBook } = useBook()
     const createMutation = useMutation(createBook)
+    const updateMutation = useMutation(updateBook)
     const [authData] = useContext(AuthContext)
     const notify = useNotifier()
-    const form = useForm<IBook<"CREATE">>({
+    const { getCategories } = useCategory()
+    const form = useForm<IBook<"CREATE"> | IBook<"UPDATE">>({
         resolver: yupResolver(schema),
         reValidateMode: "onSubmit",
-        defaultValues: {
-            categories: [],
-            description: '',
-            file: undefined,
-            free: true,
-            name: '',
-            photo: undefined,
-            price: 0,
-            user_id: undefined
-        }
     })
-    const { getCategories } = useCategory()
+    useEffect(() => {
+        if (!editBook) {
+            form.reset({
+                categories: [],
+                description: '',
+                file: undefined,
+                free: true,
+                name: '',
+                photo: undefined,
+                price: 0,
+                user_id: undefined
+            });
+            return
+        }
+        getBookToEdit(editBook)
+    }, [editBook])
     const onSubmit = form.handleSubmit((value) => {
+        if (!!editBook) {
+            updateMutation.mutate(value as IBook<"UPDATE">, {
+                onSuccess(data) {
+                    form.reset()
+                    notify(data.message)
+                    handleClose(false)
+                },
+                onError(error: any) {
+                    notify(error.message, 'error')
+                },
+            })
+
+            return
+        }
         createMutation.mutate({ ...value, user_id: authData?.userData?.id as string }, {
             onSuccess(data) {
                 form.reset()
                 notify(data.message)
+                handleClose(false)
             },
             onError(error: any) {
                 notify(error.message, 'error')
             },
         })
     })
+
+    async function getBookToEdit(id: string) {
+        const book = await getBook(id)
+        const photo = await urlToFile(book.photo_url,'image')
+        const file = await urlToFile(book.file_url,'application')
+        form.reset({ ...book, photo: photo, file: file })
+    }
+
+
     return (
         <Page
-            open={open}
-            width={980}
+            open={(open || !!editBook)}
+            maxWidth={'sm'}
             minHeight={488}
-            onClose={() => handleClose(false)}
+            onClose={() => { handleClose(false) }}
             title="Publicar novo livro"
         >
             <FormProvider {...form}>

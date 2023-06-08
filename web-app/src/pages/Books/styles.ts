@@ -1,9 +1,22 @@
 import { Box, styled } from "@mui/material";
 
-export const BooksActions = styled(Box)(({ theme }) => ({
+export const Actions = styled(Box)<{ showfilters: boolean }>(({ theme, showfilters }) => ({
+  "& > div:first-of-type": {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  "& form:first-of-type": {
+    display: "grid",
+    gridTemplateColumns: '1fr 1fr 1fr',
+    gap: '20px',
+    visibility: showfilters ? "visible" : "hidden",
+    opacity: showfilters ? 1 : 0,
+    height: showfilters ? "auto" : 0,
+    transition: "opacity 1s linear",
+  },
   minHeight: "56px",
-  display: "flex",
-  justifyContent: "space-between",
+  display: 'grid',
+  rowGap: '28px',
 }));
 
 export const BooksCardsContainer = styled(Box)(({ theme }) => ({
@@ -14,19 +27,13 @@ export const BooksCardsContainer = styled(Box)(({ theme }) => ({
   justifyContent: "space-evelyn",
   rowGap: "40px",
   [theme.breakpoints.down("lg")]: {
-    display: "grid",
     gridTemplateColumns: "repeat(3, min-content)",
-    justifyContent: "center",
   },
   [theme.breakpoints.down("md")]: {
-    display: "grid",
     gridTemplateColumns: "repeat(2, min-content)",
-    justifyContent: "center",
   },
   [theme.breakpoints.down("sm")]: {
-    display: "grid",
     gridTemplateColumns: "repeat(1, min-content)",
-    justifyContent: "center",
   },
 }));
 

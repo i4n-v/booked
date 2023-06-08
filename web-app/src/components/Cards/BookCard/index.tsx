@@ -1,9 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import { BookCardProps } from "./types";
 import { Box, IconButton, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
 import { MoreVert } from "@mui/icons-material";
+import Dropdown from "../../Dropdown";
 
 export default function BookCard({
   size,
@@ -13,9 +14,10 @@ export default function BookCard({
   rating,
   ratingQuantity,
   price,
+  actionsOptions,
 }: BookCardProps) {
   const theme = useTheme();
-
+  
   const BookImage = styled(Box)(({ theme }) => ({
     width: "100%",
     height: size === "lg" ? "280px" : "160px",
@@ -81,14 +83,23 @@ export default function BookCard({
       borderRadius: "4px",
     },
   }));
+  
+  const [dropdown, setDropdown] = useState(false);
 
   return (
     <BookContainer>
-      <Box sx={{ position: 'absolute', right: 0 }}>
-        <IconButton color="primary">
+      {actionsOptions ? <Box sx={{ position: 'absolute', right: 0 }}>
+        <IconButton id={`card-${title}-${author}`} onClick={() => setDropdown(true)} color="primary" >
           <MoreVert />
         </IconButton>
-      </Box>
+        <Dropdown
+          open={dropdown}
+          anchorId={`card-${title}-${author}`}
+          options={actionsOptions}
+          handleClose={() => setDropdown(false)}
+          minWidth="150px"
+        />
+      </Box> : null}
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />
       </BookImage>
