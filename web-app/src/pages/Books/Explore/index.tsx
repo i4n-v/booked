@@ -14,7 +14,7 @@ import { ICategory } from "../../../commons/ICategory";
 export default function BooksExplore() {
     const { getBooks } = useBook()
     const { state } = useLocation();
-    const [filters,setFilters] = useState<Partial<BooksFilters>>({})
+    const [filters,setFilters] = useState<Partial<BooksFilters>>()
     const { data: books } = useQuery(['getBooks', [state,filters]], () => getBooks({ search: state, ...filters }))
 
 
@@ -28,7 +28,7 @@ export default function BooksExplore() {
             <BooksContainer >
                 <BooksActions filter handleFilter={filterBooks} />
                 <Divider />
-                <BooksCardsContainer>
+                {books ? <BooksCardsContainer>
                     {books?.items?.map((book: IBook, index) => {
                         return <BookCard
                             author={book.user?.name}
@@ -38,10 +38,10 @@ export default function BooksExplore() {
                             title={book.name}
                             image={book.photo_url}
                             size="md"
-                            key={`book-${index}`}
+                            key={book.id}
                         ></BookCard>
                     })}
-                </BooksCardsContainer>
+                </BooksCardsContainer> : null}
             </BooksContainer>
         </Content>
     )

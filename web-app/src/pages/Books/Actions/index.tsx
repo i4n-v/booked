@@ -5,8 +5,7 @@ import { BooksActionsProps, BooksFilters } from "./types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../../components/Input";
 import InputSelect from "../../../components/Input/Select";
-import { useCallback, useEffect, useState } from "react";
-import { useQueries } from "react-query";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useCategory from "../../../services/useCategory";
 import useDebounce from "../../../helpers/Debounce";
 
@@ -30,11 +29,17 @@ export default function BooksActions(
     const { getCategories } = useCategory()
 
     const formValues = form.watch()
+    const didNotSearch = useRef(true)
 
     const search = useCallback(debounceSearch,[formValues])
     useEffect(() => {
-        search(formValues)
+        if(didNotSearch.current) return
+        search({...formValues})
     },[formValues.categories,formValues.max_date, formValues.min_date])
+
+    useEffect(() => {
+        didNotSearch.current = !showFilters
+    },[showFilters])
     return (
         <Actions showfilters={!!showFilters}>
             <Box>

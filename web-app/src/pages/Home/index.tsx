@@ -13,100 +13,15 @@ import {
   QuestionsContainer,
   TopBooksContainer,
 } from "./styles";
+import { useQuery } from "react-query";
+import useBook from "../../services/useBook";
 
-export const cards = [
-  {
-    title: "Pequeno principe",
-    author: "Antoine de Saint-Exupéry",
-    price: 12.58,
-    rating: 3.2,
-    ratingQuantity: 832,
-    image:
-      "https://m.media-amazon.com/images/I/41GrIdsiEIL._SY344_BO1,204,203,200_QL70_ML2_.jpg",
-  },
-  {
-    title: "FRANKENSTEIN",
-    author: " MARY SHELLY",
-    price: null,
-    rating: 5,
-    ratingQuantity: 742,
-    image:
-      "https://bookmundo.pt/wp-content/uploads/2020/05/Screen-Shot-2020-05-18-at-3.39.35-PM-220x300.png",
-  },
-  {
-    title: "CEM ANOS DE SOLIDÃO",
-    author: "GABRIEL GARCÍA MÁRQUEZ",
-    price: 40.0,
-    rating: 2.8,
-    ratingQuantity: 22,
-    image:
-      "https://bookmundo.pt/wp-content/uploads/2020/05/cem-anos-201x300.jpeg",
-  },
-  {
-    title: "CRIME E CASTIGO",
-    author: "FIÓDOR DOSTOYEVSKI",
-    price: 23.0,
-    rating: 3.0,
-    ratingQuantity: 900,
-    image:
-      "https://bookmundo.pt/wp-content/uploads/2020/05/crime-e-castigo-197x300.jpg",
-  },
-  {
-    title: "ORGULHO E PRECONCEITO",
-    author: "JANE AUSTEN",
-    price: 56.32,
-    rating: 3.8,
-    ratingQuantity: 1001,
-    image: "https://bookmundo.pt/wp-content/uploads/2020/05/orgulho.jpeg",
-  },
-  {
-    title: "O SENHOR DOS ANÉIS",
-    author: "J.R.R. TOLKIEN",
-    price: 120.4,
-    rating: 5,
-    ratingQuantity: 2032,
-    image:
-      "https://bookmundo.pt/wp-content/uploads/2020/05/o-senhor-214x300.jpg",
-  },
-  {
-    title: "A ILÍADA",
-    author: "O SENHOR DOS ANÉIS",
-    price: 20.4,
-    rating: 5,
-    ratingQuantity: 232,
-    image:
-      "https://bookmundo.pt/wp-content/uploads/2020/05/Screen-Shot-2020-05-18-at-3.36.59-PM-213x300.png",
-  },
-  {
-    title: "DOM QUIXOTE DE LA MANCHA",
-    author: "MIGUEL DE CERVANTES",
-    price: 55.4,
-    rating: 5,
-    ratingQuantity: 532,
-    image:
-      "https://bookmundo.pt/wp-content/uploads/2020/05/dom-quixote-211x300.jpg",
-  },
-  {
-    title: "O GRANDE GATSBY",
-    author: "F. SCOTT FITZGERALD",
-    price: 80.4,
-    rating: 5,
-    ratingQuantity: 202,
-    image: "https://bookmundo.pt/wp-content/uploads/2020/05/gatsby-195x300.jpg",
-  },
-  {
-    title: "1994",
-    author: "GEORGE ORWELL",
-    price: 80.4,
-    rating: 5,
-    ratingQuantity: 898,
-    image: "https://bookmundo.pt/wp-content/uploads/2020/05/1984-190x300.png",
-  },
-];
 
 export default function Home() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { getBooks } = useBook()
+  const { data: books } = useQuery('getBooks', () => getBooks({ page: 1, limit: 10 }), { retry: false.valueOf, refetchOnWindowFocus: false })
 
   const methods = useForm({
     defaultValues: {
@@ -158,7 +73,7 @@ export default function Home() {
         </FormProvider>
       </IntroductionContainer>
 
-      <TopBooksContainer>
+      {books ? <TopBooksContainer>
         <Box className="header">
           <Typography variant="h2">
             Explore os <span>tops 10</span> livros melhores avaliados na
@@ -166,11 +81,20 @@ export default function Home() {
           </Typography>
         </Box>
         <Carousel
-          data={cards}
+          data={books.items}
           timer
-          renderItem={(item) => <BookCard size="lg" {...item} />}
+          renderItem={(book) => <BookCard
+            author={book.user?.name}
+            rating={1}
+            price={book.price}
+            ratingQuantity={1}
+            title={book.name}
+            image={book.photo_url}
+            key={book.id}
+            size="lg"
+          />}
         />
-      </TopBooksContainer>
+      </TopBooksContainer> : null}
 
       <CallToActionContainer>
         <Box>
