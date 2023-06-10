@@ -143,6 +143,14 @@ class BookRepository {
           attributes: ['id', 'name'],
           through: { attributes: [] },
         },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'acquisitions',
+          attributes: [],
+          through: {
+            attributes: [],
+          },
+        },
       ],
     });
   }
