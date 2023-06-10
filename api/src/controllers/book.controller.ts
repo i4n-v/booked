@@ -77,7 +77,9 @@ class BookController {
           }
         );
 
-        const bookCategories = categories.map((id) => ({
+        const categoriesToMap = Array.isArray(categories) ? categories : [categories];
+
+        const bookCategories = categoriesToMap.map((id) => ({
           book_id: book.id,
           category_id: id,
         }));
@@ -218,12 +220,12 @@ class BookController {
           [Op.or]: [
             {
               name: {
-                [Op.like]: `%${search}%`,
+                [Op.iLike]: `%${search}%`,
               },
             },
             {
               '$user.name$': {
-                [Op.like]: `%${search}%`,
+                [Op.iLike]: `%${search}%`,
               },
             },
           ],
@@ -232,10 +234,10 @@ class BookController {
 
       if (user_id) whereStatement['user_id'] = user_id;
 
-      if (min_date && max_date) {
+      if (min_date || max_date) {
         whereStatement['createdAt'] = {
-          [Op.gte]: startOfDay(parseISO(min_date as string)),
-          [Op.lte]: endOfDay(parseISO(max_date as string)),
+          [Op.gte]: startOfDay(min_date ? parseISO(min_date as string) : new Date()),
+          [Op.lte]: endOfDay(max_date ? parseISO(max_date as string) : new Date()),
         };
       }
 

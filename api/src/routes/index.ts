@@ -1,5 +1,4 @@
-import { Express } from 'express';
-import { Router } from 'express';
+import { Express, Router } from 'express';
 import appRoutes from './app.routes';
 import userRoutes from './user.routes';
 import authRoutes from './auth.routes';
@@ -7,6 +6,7 @@ import BookRouter from './book.routes';
 import CategoryRouter from './category.routes';
 import CommentRouter from './comment.routes';
 import AssessmentRouter from './assessment.routes';
+import AcquisitionRouter from './acquisition.routes';
 
 const routes: Router[] = [
   appRoutes,
@@ -16,6 +16,7 @@ const routes: Router[] = [
   CategoryRouter,
   CommentRouter,
   AssessmentRouter,
+  AcquisitionRouter,
 ];
 
 export default function initRoutes(app: Express) {

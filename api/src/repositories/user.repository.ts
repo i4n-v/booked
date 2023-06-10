@@ -36,7 +36,7 @@ class UserRepository {
     return await this.repository.count({
       where: {
         user_name: {
-          [Op.like]: `${name}%`,
+          [Op.iLike]: `${name}%`,
         },
       },
     });
