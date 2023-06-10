@@ -13,7 +13,7 @@ class BookController {
 
       if (query.name) {
         whereStatement['name'] = {
-          [Op.like]: `${query.name}%`,
+          [Op.iLike]: `${query.name}%`,
         };
       }
 
