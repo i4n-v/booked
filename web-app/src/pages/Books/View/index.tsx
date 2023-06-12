@@ -7,7 +7,7 @@ import { BookDescription, BookDetailsContainer, BookImage, BookImageContainer, B
 import { toBRL } from "../../../utils"
 import BookBackground from "../../../assets/SVG/book-background.svg"
 
-export function BooksView() {
+export default function BooksView() {
     const { bookId } = useParams()
     const { getBook } = useBook()
 
