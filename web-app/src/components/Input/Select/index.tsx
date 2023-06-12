@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Autocomplete } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import Input from "..";
@@ -19,6 +20,7 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
             retry: false,
             refetchOnWindowFocus: false,
             onSuccess: (data: IWrapper<T>) => {
+                if(!data) return
                 data?.current === 1
                     ? setOptionsFromService(data?.items)
                     : setOptionsFromService(curr => [...curr, ...data?.items || []])

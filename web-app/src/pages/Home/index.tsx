@@ -91,6 +91,7 @@ export default function Home() {
             title={book.name}
             image={book.photo_url}
             key={book.id}
+            onClick={() => navigate(`/explore/${book.id}`)}
             size="lg"
           />}
         />

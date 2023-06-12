@@ -8,5 +8,6 @@ export type BookCardProps = {
   rating: number;
   ratingQuantity: number;
   image?: string | null;
-  actionsOptions?: DropdownOptions[]
+  actionsOptions?: DropdownOptions[];
+  onClick?: () => void
 };

@@ -6,7 +6,14 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./configs/Theme/theme";
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions:{
+    queries:{
+      suspense: true,
+      refetchOnWindowFocus: false
+    },
+  }
+});
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

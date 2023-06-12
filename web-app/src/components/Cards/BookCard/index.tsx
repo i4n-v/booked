@@ -15,6 +15,7 @@ export default function BookCard({
   ratingQuantity,
   price,
   actionsOptions,
+  onClick = () => null
 }: BookCardProps) {
   const theme = useTheme();
   
@@ -87,8 +88,8 @@ export default function BookCard({
   const [dropdown, setDropdown] = useState(false);
 
   return (
-    <BookContainer>
-      {actionsOptions ? <Box sx={{ position: 'absolute', right: 0 }}>
+    <Box sx={{position:"relative"}}>
+      {actionsOptions ? <Box sx={{zIndex: 5, position: 'absolute', right: 0 }}>
         <IconButton id={`card-${title}-${author}`} onClick={() => setDropdown(true)} color="primary" >
           <MoreVert />
         </IconButton>
@@ -100,6 +101,7 @@ export default function BookCard({
           minWidth="150px"
         />
       </Box> : null}
+    <BookContainer onClick={() => onClick()} >
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />
       </BookImage>
@@ -134,5 +136,6 @@ export default function BookCard({
         </Typography>
       </InteractiveContainer>
     </BookContainer>
+    </Box>
   );
 }
