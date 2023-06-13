@@ -1,35 +1,54 @@
 import { faker } from '@faker-js/faker';
-import { QueryInterface, Sequelize } from 'sequelize';
-const { v4: uuidv4 } = require('uuid');
+import { v4 } from 'uuid';
+import CommentCreateDto from '../../dto/comment/commentCreate.dto';
+import { Migration } from 'sequelize-cli';
+import { sequelizeConnection } from '../../config/sequelizeConnection.config';
+import { randomNumbers } from '../../utils';
 
-interface Comment {
+interface Comment extends CommentCreateDto {
   id: string;
-  description: string;
-  user_id: string;
-  booke_id: string;
-  refered_by: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const generateFakeComment = (): Comment => {
-  return {
-    id: uuidv4(),
-    description: faker.lorem.sentence(),
-    user_id: uuidv4(),
-    booke_id: uuidv4(),
-    refered_by: faker.lorem.sentence(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+const seeder: Migration = {
+  async up(queryInterface) {
+    await sequelizeConnection.transaction(async (transaction) => {
+      const users = await sequelizeConnection.model('User').findAll({
+        limit: 40,
+        attributes: ['id'],
+        transaction,
+      });
+
+      const books = await sequelizeConnection.model('Book').findAll({
+        limit: 40,
+        attributes: ['id'],
+        transaction,
+      });
+
+      const comments: Comment[] = [];
+
+      books.forEach(({ id }) => {
+        const indexes = randomNumbers(0, users.length - 1, 10);
+        indexes.forEach((index) => {
+          comments.push({
+            id: v4(),
+            description: faker.lorem.sentence(),
+            user_id: users[index].id,
+            book_id: id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
+        });
+      });
+
+      await queryInterface.bulkInsert('Comments', comments, { transaction });
+    });
+  },
+
+  async down(queryInterface) {
+    await queryInterface.bulkDelete('Comments', {});
+  },
 };
 
-const fakeComment: Comment[] = Array.from({ length: 40 }, generateFakeComment);
-
-export const up = async (queryInterface: QueryInterface, _: Sequelize) => {
-  await queryInterface.bulkInsert('Comments', fakeComment, {});
-};
-
-export const down = async (queryInterface: QueryInterface, _: Sequelize) => {
-  await queryInterface.bulkDelete('Comments', {});
-};
+export = seeder;

@@ -1,33 +1,53 @@
 import { faker } from '@faker-js/faker';
-import { QueryInterface, Sequelize } from 'sequelize';
-const { v4: uuidv4 } = require('uuid');
+import AssessmentCreateDto from '../../dto/assessment/assessmentCreate.dto';
+import { v4 } from 'uuid';
+import { Migration } from 'sequelize-cli';
+import { sequelizeConnection } from '../../config/sequelizeConnection.config';
+import { randomNumbers } from '../../utils';
 
-interface Assessment {
-    id: string;
-    number: number;
-    user_id: string;
-    booke_id: string;
-    createdAt: Date;
-    updatedAt: Date;
+interface Assessment extends AssessmentCreateDto {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
+const seeder: Migration = {
+  async up(queryInterface) {
+    await sequelizeConnection.transaction(async (transaction) => {
+      const users = await sequelizeConnection.model('User').findAll({
+        limit: 40,
+        attributes: ['id'],
+        transaction,
+      });
 
-const generateFakeAssessment = (): Assessment => {
-    return {
-        id: uuidv4(),
-        number: faker.datatype.number(),
-        user_id: uuidv4(),
-        booke_id: uuidv4(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-};
+      const books = await sequelizeConnection.model('Book').findAll({
+        limit: 40,
+        attributes: ['id'],
+        transaction,
+      });
 
-const fakeAssessment: Assessment[] = Array.from({ length: 40 }, generateFakeAssessment);
+      const assessments: Assessment[] = [];
 
-export const up = async (queryInterface: QueryInterface, _: Sequelize) => {
-    await queryInterface.bulkInsert('Assessments', fakeAssessment, {});
-};
+      books.forEach(({ id }) => {
+        const indexes = randomNumbers(0, users.length - 1, 10);
+        indexes.forEach((index) => {
+          assessments.push({
+            id: v4(),
+            number: faker.datatype.number(),
+            user_id: users[index].id,
+            book_id: id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
+        });
+      });
 
-export const down = async (queryInterface: QueryInterface, _: Sequelize) => {
+      await queryInterface.bulkInsert('Assessments', assessments, { transaction });
+    });
+  },
+
+  async down(queryInterface) {
     await queryInterface.bulkDelete('Assessments', {});
+  },
 };
+
+export = seeder;
