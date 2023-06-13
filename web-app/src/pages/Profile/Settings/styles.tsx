@@ -1,24 +1,6 @@
 import { Box, styled } from "@mui/material";
 import { InputAreaItemProps, InputAreaProps } from "./types";
 
-const Container = styled(Box)(({ theme }) => ({
-    display: "grid",
-    gridTemplateRows: "20% 1fr",
-    padding: '60px 20px 120px 20px',
-    maxWidth: "1400px",
-    width: '100%',
-    margin: '0 auto',
-    "& > h1": {
-        font: theme.font.xl,
-        color: theme.palette.secondary.A200,
-        marginBottom: "60px",
-        alignSelf: "center"
-    },
-    [theme.breakpoints?.down("md")]: {
-        padding: '60px 5px 120px 5px',
-    },
-}));
-
 const InputArea = styled(Box)<InputAreaProps>(({ theme, cols }) => ({
     display: 'grid',
     width: '100%',
@@ -78,7 +60,6 @@ const ConfigContent = styled(Box)(({ theme }) => ({
 
 
 export {
-    Container,
     ConfigContainer,
     ConfigMenu,
     ConfigContent,

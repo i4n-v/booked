@@ -1,13 +1,13 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { ContentContainer, InputArea, InputAreaItem } from "../styles";
-import Input from "../../../components/Input";
+import Input from "../../../../components/Input";
 import { Box, Button } from "@mui/material";
 import { useContext } from "react";
 import { PasswordChange } from "./types";
 import { useMutation } from "react-query";
-import useUser from "../../../services/useUser";
-import { AuthContext } from "../../../contexts/AuthContext";
-import useNotifier from "../../../helpers/Notify";
+import useUser from "../../../../services/useUser";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import useNotifier from "../../../../helpers/Notify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import schema from "./validation";
 

@@ -1,17 +1,17 @@
 import { Box, Button, Typography } from "@mui/material";
 import { PhotoInputArea, PhotoInputContainer } from "./styles";
 import { FormProvider, useForm } from "react-hook-form";
-import ImageInput from "../../../components/InputImage";
-import Input from "../../../components/Input";
-import { User } from "../../../assets/SVG";
-import useUser from "../../../services/useUser";
+import InputFile from "../../../../components/Input/File";
+import Input from "../../../../components/Input";
+import { User } from "../../../../assets/SVG";
+import useUser from "../../../../services/useUser";
 import { useMutation, useQuery } from "react-query";
-import useNotifier from "../../../helpers/Notify";
-import IUser from "../../../commons/IUser";
+import useNotifier from "../../../../helpers/Notify";
+import IUser from "../../../../commons/IUser";
 import { useContext } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { ResponseMessage } from "../../../commons/ResponseMessage";
-import { AuthActionsKind } from "../../../contexts/AuthContext/types";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import { ResponseMessage } from "../../../../commons/ResponseMessage";
+import { AuthActionsKind } from "../../../../contexts/AuthContext/types";
 import { ContentContainer, InputArea, InputAreaItem } from "../styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import schema from "./validation";
@@ -33,9 +33,9 @@ export default function AccountSettings() {
             user_name: ''
         }
     })
-    const user = useQuery('get-user', () => getUser(authData?.userData?.id), {
-        onSuccess: ({ birth_date, photo_url, description, ...data }) => {
-            form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url })
+    useQuery('get-user', () => getUser(authData?.userData?.id as string), {
+        onSuccess: ({ birth_date, photo_url, description , ...data }) => {
+            form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url as unknown as File, description: description ? description : ''  })
         },
         retry: false,
         refetchOnWindowFocus: false
@@ -58,7 +58,7 @@ export default function AccountSettings() {
             <ContentContainer onSubmit={onSubmit}>
                 <PhotoInputContainer>
                     <PhotoInputArea>
-                        <ImageInput name="photo" />
+                        <InputFile name="photo" accept="image/*" />
                     </PhotoInputArea>
                     <Typography sx={{
                         color: (t) => t.palette.primary[700],
@@ -79,7 +79,7 @@ export default function AccountSettings() {
                         <Input name="birth_date" label="Data de nascimento" type="date" />
                     </InputAreaItem>
                     <InputAreaItem span={2} >
-                        <Input name="description" label="Bios" multiline maxRows={4} minRows={4} />
+                        <Input name="description" label="Sobre você" multiline maxRows={4} minRows={4} />
                     </InputAreaItem>
                     <Box width={'106px'} height={"42px"}>
                         <Button type="submit" variant="contained">SALVAR</Button>

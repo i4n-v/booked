@@ -35,6 +35,11 @@ const IntroductionContainer = styled(Box)(({ theme }) => ({
       color: theme.palette.primary[700],
     },
   },
+  "& > form": {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center"
+  },
   [theme.breakpoints.down("md")]: {
     "& > .title > h1": {
       font: theme.font.xl,

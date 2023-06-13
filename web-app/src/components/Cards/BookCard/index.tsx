@@ -1,8 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import { BookCardProps } from "./types";
-import { Box, Rating, Typography, styled, useTheme } from "@mui/material";
+import { Box, IconButton, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
+import { MoreVert } from "@mui/icons-material";
+import Dropdown from "../../Dropdown";
 
 export default function BookCard({
   size,
@@ -12,9 +14,10 @@ export default function BookCard({
   rating,
   ratingQuantity,
   price,
+  actionsOptions,
 }: BookCardProps) {
   const theme = useTheme();
-
+  
   const BookImage = styled(Box)(({ theme }) => ({
     width: "100%",
     height: size === "lg" ? "280px" : "160px",
@@ -39,6 +42,7 @@ export default function BookCard({
     borderRadius: "8px",
     transition: "0.3s",
     cursor: "pointer",
+    position: "relative",
     "& > h6": {
       font: theme.font[size === "lg" ? "md" : "sm"],
       color: theme.palette.secondary.A200,
@@ -79,9 +83,23 @@ export default function BookCard({
       borderRadius: "4px",
     },
   }));
+  
+  const [dropdown, setDropdown] = useState(false);
 
   return (
     <BookContainer>
+      {actionsOptions ? <Box sx={{ position: 'absolute', right: 0 }}>
+        <IconButton id={`card-${title}-${author}`} onClick={() => setDropdown(true)} color="primary" >
+          <MoreVert />
+        </IconButton>
+        <Dropdown
+          open={dropdown}
+          anchorId={`card-${title}-${author}`}
+          options={actionsOptions}
+          handleClose={() => setDropdown(false)}
+          minWidth="150px"
+        />
+      </Box> : null}
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />
       </BookImage>
@@ -112,7 +130,7 @@ export default function BookCard({
           <Typography component="span">({ratingQuantity})</Typography>
         </Box>
         <Typography component="span">
-          {price ? toBRL(price) : "Gratuito"}
+          {parseInt(price as unknown as string) ? toBRL(parseInt(price as unknown as string)) : "Gratuito"}
         </Typography>
       </InteractiveContainer>
     </BookContainer>
