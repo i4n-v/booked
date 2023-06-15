@@ -36,6 +36,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *               book_id: string
  *               refered_ by: string
  *               description: string
+ *               total_responses: integer
  *             examples:
  *               comment_payload:
  *                 value:
@@ -43,6 +44,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *                     book_id: 'fbd486ce-bf46-4e13-bf46-fbd486ce'
  *                     refered_by: null
  *                     description: 'Um livro cheio de aventuras.'
+ *                     total_responses: 4
  *               response_payload:
  *                 value:
  *                   - id: 'ebd486ce-8dbd-4e13-bf46-e03c3fa5f3dc'

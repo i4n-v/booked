@@ -175,6 +175,7 @@ router.put(
  *               rating: float
  *               total_users_rating: integer
  *               categories: array
+ *               user_raters: array
  *             examples:
  *               get_payload:
  *                 value:
@@ -194,6 +195,12 @@ router.put(
  *                       name: 'Ação'
  *                     - id: 'a29fb524-6fea-4dc1-a8f0-66410097266b'
  *                       name: 'Aventura'
+ *                   user_raters:
+ *                     - id: 'a99fb524-bfea-4dc1-bfea-66410097266b'
+ *                       assessment:
+ *                         id: 'a99fb524-bfea-4dc1-4dc1-66410097266b'
+ *                         number: 3
+ *
  *
  *       400:
  *         $ref: '#/components/responses/error'

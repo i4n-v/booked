@@ -75,6 +75,7 @@ class BookRepository {
           required: false,
           attributes: ['id'],
           through: {
+            as: 'assessment',
             attributes: ['id', 'number'],
           },
           where: {
