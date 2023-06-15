@@ -43,7 +43,34 @@ class UserRepository {
   }
 
   async findById(id: string, options?: Omit<FindOptions<UserDto>, 'where'>) {
-    return await this.repository.findByPk(id, options);
+    return await this.repository.findByPk(id, {
+      attributes: {
+        exclude: ['password', 'salt', 'updatedAt'],
+        include: [
+          [
+            sequelizeConnection.literal(`
+              (
+                SELECT COUNT(id)
+                FROM "Books"
+                WHERE "Books".user_id = "User".id
+              )
+            `),
+            'total_books',
+          ],
+          [
+            sequelizeConnection.literal(`
+              (
+                SELECT COUNT(id)
+                FROM "Acquisitions"
+                WHERE "Acquisitions".user_id = "User".id
+              )
+            `),
+            'total_acquitions',
+          ],
+        ],
+      },
+      ...options,
+    });
   }
 
   async findByCredentials(userLogin: string) {

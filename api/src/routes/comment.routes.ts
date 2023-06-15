@@ -12,7 +12,6 @@ import authMidleware from '../midlewares/auth.midleware';
  *       - Comment
  *     parameters:
  *       - name:
- *         $ref: '#/components/parameters/access_token'
  *       - $ref: '#/components/parameters/page'
  *       - $ref: '#/components/parameters/limit'
  *       - name: book_id
@@ -25,8 +24,6 @@ import authMidleware from '../midlewares/auth.midleware';
  *         in: query
  *         schema:
  *           type: string;
- *     security:
- *       - access_token: []
  *     responses:
  *       200:
  *         description: Return the list of comments.
@@ -57,7 +54,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *       401:
  *         $ref: '#/components/responses/error'
  */
-router.get('/comments', authMidleware, CommentController.index);
+router.get('/comments', CommentController.index);
 
 /**
  * @openapi

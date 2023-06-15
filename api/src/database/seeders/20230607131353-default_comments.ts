@@ -27,6 +27,7 @@ const seeder: Migration = {
       });
 
       const comments: Comment[] = [];
+      const subComments: Comment[] = [];
 
       books.forEach(({ id }) => {
         const indexes = randomNumbers(0, users.length - 1, 10);
@@ -42,7 +43,23 @@ const seeder: Migration = {
         });
       });
 
+      comments.forEach(({ id }) => {
+        const indexes = randomNumbers(0, users.length - 1, 20);
+        indexes.forEach((index) => {
+          subComments.push({
+            id: v4(),
+            description: faker.lorem.sentence(),
+            user_id: users[index].id,
+            refered_by: id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
+        });
+      });
+
       await queryInterface.bulkInsert('Comments', comments, { transaction });
+
+      await queryInterface.bulkInsert('Comments', subComments, { transaction });
     });
   },
 

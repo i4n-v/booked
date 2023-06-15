@@ -32,7 +32,7 @@ const seeder: Migration = {
         indexes.forEach((index) => {
           assessments.push({
             id: v4(),
-            number: faker.datatype.number(),
+            number: faker.number.float({ min: 0, max: 5 }),
             user_id: users[index].id,
             book_id: id,
             createdAt: new Date(),

@@ -53,6 +53,20 @@ class CommentRepository {
       offset: (page - 1) * limit,
       order: [['createdAt', 'ASC']],
       where: options,
+      attributes: {
+        include: [
+          [
+            sequelizeConnection.literal(`
+              (
+                SELECT COUNT(referenced_comments.id)
+                FROM "Comments" as referenced_comments
+                WHERE referenced_comments.refered_by = "Comment".id
+              )
+          `),
+            'total_responses',
+          ],
+        ],
+      },
       include: {
         model: sequelizeConnection.model('User'),
         attributes: {
