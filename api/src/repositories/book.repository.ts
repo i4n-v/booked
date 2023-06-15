@@ -27,7 +27,7 @@ class BookRepository {
     });
   }
 
-  async findById(id: string) {
+  async findById(id: string, userId?: string) {
     return await this.repository.findByPk(id, {
       attributes: {
         exclude: ['user_id'],
@@ -68,6 +68,18 @@ class BookRepository {
           model: sequelizeConnection.model('Category'),
           attributes: ['id', 'name'],
           through: { attributes: [] },
+        },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'user_raters',
+          required: false,
+          attributes: ['id'],
+          through: {
+            attributes: ['id', 'number'],
+          },
+          where: {
+            id: userId || null,
+          },
         },
       ],
     });
@@ -142,14 +154,6 @@ class BookRepository {
           as: 'categories',
           attributes: ['id', 'name'],
           through: { attributes: [] },
-        },
-        {
-          model: sequelizeConnection.model('User'),
-          as: 'acquisitions',
-          attributes: [],
-          through: {
-            attributes: [],
-          },
         },
       ],
     });
