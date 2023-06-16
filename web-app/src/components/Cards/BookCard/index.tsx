@@ -5,6 +5,7 @@ import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
 import { MoreVert } from "@mui/icons-material";
 import Dropdown from "../../Dropdown";
+import MoreOptions from "../../MoreOptions";
 
 export default function BookCard({
   size,
@@ -89,18 +90,9 @@ export default function BookCard({
 
   return (
     <Box sx={{position:"relative"}}>
-      {actionsOptions ? <Box sx={{zIndex: 5, position: 'absolute', right: 0 }}>
-        <IconButton id={`card-${title}-${author}`} onClick={() => setDropdown(true)} color="primary" >
-          <MoreVert />
-        </IconButton>
-        <Dropdown
-          open={dropdown}
-          anchorId={`card-${title}-${author}`}
-          options={actionsOptions}
-          handleClose={() => setDropdown(false)}
-          minWidth="150px"
-        />
-      </Box> : null}
+      {actionsOptions ? 
+        <MoreOptions options={actionsOptions} open={dropdown} handleOpen={setDropdown} id={`card-${title}-${author}`}/>
+       : null}
     <BookContainer onClick={() => onClick()} >
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />

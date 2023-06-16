@@ -1,9 +1,10 @@
 import { Box, Rating, styled } from "@mui/material";
 
 export const BookInfoContainer = styled(Box)(({ theme }) => ({
-    maxHeight: "436px",
+    minHeight: "436px",
     display: "grid",
     gridTemplateColumns: "360px 1fr",
+    backgroundColor: theme.palette.secondary.light,
     "& > div:first-of-type ": {
         padding: "20px",
         display: "flex",
@@ -102,3 +103,6 @@ export const BookDescription = styled(Box)(({ theme }) => ({
         textAlign: 'justify',
     },
 }))
+
+
+

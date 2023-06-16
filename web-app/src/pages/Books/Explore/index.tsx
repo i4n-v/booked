@@ -32,9 +32,9 @@ export default function BooksExplore() {
                     {books?.items?.map((book: IBook, index) => {
                         return <BookCard
                             author={book.user?.name}
-                            rating={1}
+                            rating={book.rating}
                             price={book.price}
-                            ratingQuantity={1}
+                            ratingQuantity={book.total_users_rating}
                             title={book.name}
                             image={book.photo_url}
                             size="md"

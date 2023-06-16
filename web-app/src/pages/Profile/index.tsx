@@ -78,9 +78,9 @@ export default function Profile() {
                     {books?.items.map((book: IBook) => {
                         return <BookCard
                             author={book.user?.name}
-                            rating={1}
+                            rating={book.rating}
                             price={book.price}
-                            ratingQuantity={1}
+                            ratingQuantity={book.total_users_rating}
                             title={book.name}
                             image={book.photo_url}
                             size="md"
