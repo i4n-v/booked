@@ -279,10 +279,11 @@ class BookController {
   async show(request: Request, response: Response, next: NextFunction) {
     try {
       const {
+        auth,
         params: { id },
       } = request;
 
-      const book = await BookRepository.findById(id);
+      const book = await BookRepository.findById(id, auth?.id);
 
       if (!book) return response.status(404).json({ message: messages.unknown('Livro') });
 

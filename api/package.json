@@ -13,9 +13,11 @@
     "db:migrate": "tsup ./src/config/database.config.ts ./src/database/migrations; npx sequelize db:migrate",
     "db:migrate:undo": "tsup ./src/config/database.config.ts ./src/database/migrations; npx sequelize db:migrate:undo",
     "db:seed:all": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed:all",
-    "db:seed:undo:all": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed:undo:all"
+    "db:seed:undo:all": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed:undo:all",
+    "db:seed:unique": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed --seed"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "date-fns": "^2.29.3",
@@ -29,7 +31,8 @@
     "sequelize": "^6.29.0",
     "sequelize-typescript": "^2.1.5",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.2"
+    "swagger-ui-express": "^4.6.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -42,6 +45,7 @@
     "@types/sequelize": "^4.28.14",
     "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-express": "^4.1.3",
+    "@types/uuid": "^9.0.2",
     "@types/validator": "^13.7.13",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
