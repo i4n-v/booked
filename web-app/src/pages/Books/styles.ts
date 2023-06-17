@@ -1,6 +1,6 @@
 import { Box, styled } from "@mui/material";
 
-export const Actions = styled(Box)<{ showfilters: boolean }>(({ theme, showfilters }) => ({
+export const Actions = styled(Box)<{ showfilters: "true" | undefined }>(({ theme, showfilters }) => ({
   "& > div:first-of-type": {
     display: "flex",
     justifyContent: "space-between",
@@ -9,9 +9,9 @@ export const Actions = styled(Box)<{ showfilters: boolean }>(({ theme, showfilte
     display: "grid",
     gridTemplateColumns: '1fr 1fr 1fr',
     gap: '20px',
-    visibility: showfilters ? "visible" : "hidden",
-    opacity: showfilters ? 1 : 0,
-    height: showfilters ? "auto" : 0,
+    visibility: !!showfilters ? "visible" : "hidden",
+    opacity: !!showfilters ? 1 : 0,
+    height: !!showfilters ? "auto" : 0,
     transition: "opacity 1s linear",
   },
   minHeight: "56px",

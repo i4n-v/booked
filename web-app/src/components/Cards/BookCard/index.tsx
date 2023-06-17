@@ -5,6 +5,7 @@ import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
 import { MoreVert } from "@mui/icons-material";
 import Dropdown from "../../Dropdown";
+import MoreOptions from "../../MoreOptions";
 
 export default function BookCard({
   size,
@@ -15,6 +16,7 @@ export default function BookCard({
   ratingQuantity,
   price,
   actionsOptions,
+  onClick = () => null
 }: BookCardProps) {
   const theme = useTheme();
   
@@ -87,19 +89,11 @@ export default function BookCard({
   const [dropdown, setDropdown] = useState(false);
 
   return (
-    <BookContainer>
-      {actionsOptions ? <Box sx={{ position: 'absolute', right: 0 }}>
-        <IconButton id={`card-${title}-${author}`} onClick={() => setDropdown(true)} color="primary" >
-          <MoreVert />
-        </IconButton>
-        <Dropdown
-          open={dropdown}
-          anchorId={`card-${title}-${author}`}
-          options={actionsOptions}
-          handleClose={() => setDropdown(false)}
-          minWidth="150px"
-        />
-      </Box> : null}
+    <Box sx={{position:"relative"}}>
+      {actionsOptions ? 
+        <MoreOptions options={actionsOptions} open={dropdown} handleOpen={setDropdown} id={`card-${title}-${author}`}/>
+       : null}
+    <BookContainer onClick={() => onClick()} >
       <BookImage>
         <img src={image || bookBackground} alt="Capa do livro." />
       </BookImage>
@@ -134,5 +128,6 @@ export default function BookCard({
         </Typography>
       </InteractiveContainer>
     </BookContainer>
+    </Box>
   );
 }

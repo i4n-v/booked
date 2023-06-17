@@ -38,6 +38,7 @@ export default function AccountSettings() {
             form.reset({ ...data, birth_date: new Date(birth_date)?.toISOString().substr(0, 10), photo: photo_url as unknown as File, description: description ? description : ''  })
         },
         retry: false,
+        suspense: false,
         refetchOnWindowFocus: false
     })
     const onSubmit = form.handleSubmit((formData) => {
@@ -76,7 +77,7 @@ export default function AccountSettings() {
                         <Input name="email" label="E-mail" type="email" />
                     </InputAreaItem>
                     <InputAreaItem >
-                        <Input name="birth_date" label="Data de nascimento" type="date" />
+                        <Input name="birth_date" label="Data de nascimento" type="date" shrink />
                     </InputAreaItem>
                     <InputAreaItem span={2} >
                         <Input name="description" label="Sobre você" multiline maxRows={4} minRows={4} />

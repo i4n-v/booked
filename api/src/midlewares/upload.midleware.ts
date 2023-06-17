@@ -6,7 +6,7 @@ export const uploadIdentifierError = 'UPLOAD ERROR:';
 
 function uploadMidleware() {
   const allowedFileMimes = ['application/pdf'];
-  const allowedImageMimes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+  const allowedImageMimes = ['image/jpg','image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
 
   const multerInstance = multer({
     storage: multer.diskStorage({

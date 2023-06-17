@@ -85,12 +85,13 @@ export default function Home() {
           timer
           renderItem={(book) => <BookCard
             author={book.user?.name}
-            rating={1}
+            rating={book.rating}
             price={book.price}
-            ratingQuantity={1}
+            ratingQuantity={book.total_users_rating}
             title={book.name}
             image={book.photo_url}
             key={book.id}
+            onClick={() => navigate(`/explore/${book.id}`)}
             size="lg"
           />}
         />
