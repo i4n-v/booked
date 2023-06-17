@@ -5,6 +5,8 @@ import { GlobalNotifier } from "./helpers/Notify/Alert";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import { AuthActionsKind } from "./contexts/AuthContext/types";
+import { ConfirmContextProvider } from "./contexts/ConfirmContext";
+import GlobalConfirm from "./helpers/Confirm/GlobalConfirm";
 
 function App() {
 
@@ -15,10 +17,12 @@ function App() {
     authDispach({ type: AuthActionsKind.VERIFY })
   }, [location.pathname, authDispach])
   return (
-
     <NotifierContextProvider>
-      <GlobalNotifier />
-      {useRoutes(routes)}
+      <ConfirmContextProvider>
+        <GlobalConfirm />
+        <GlobalNotifier />
+        {useRoutes(routes)}
+      </ConfirmContextProvider>
     </NotifierContextProvider>
 
   );
