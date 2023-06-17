@@ -15,7 +15,7 @@ export default function BooksView() {
 
     const { data: book } = useQuery(['getBook', [bookId]], () => getBook(bookId as string))
     return (
-        <Content headerHeight="fit-content" sx={{ paddingTop: 0, paddingBottom: 5 }} >  
+        <Content headerheight="fit-content" sx={{ paddingTop: 0, paddingBottom: 5 }} >  
             <BookInfoContainer>
                 <Box >
                     <BookImageContainer  >

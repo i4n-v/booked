@@ -1,4 +1,4 @@
 export type ContentProps = {
-  headerHeight: string;
+  headerheight: string;
   padding: string;
 };

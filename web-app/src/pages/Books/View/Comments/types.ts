@@ -11,6 +11,7 @@ interface Comment extends CommentCommom {
   user?: IUser;
   book_id?: string;
   refered_by?: string;
+  total_responses?: number;
 }
 
 interface CommentCreate extends CommentCommom {
@@ -48,7 +49,9 @@ export type CommentsContainerProps = {
 export interface CommentsPros extends Comment {
   openAnswer?: React.Dispatch<React.SetStateAction<ToOpenForm | undefined>>
   refetchFn?: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<any, unknown>>;
+  refetchAnswer?: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<any, unknown>>;
   answer?: boolean;
+  loggedUser?: Partial<IUser>
 }
 
 
