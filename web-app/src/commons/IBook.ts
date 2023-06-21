@@ -11,10 +11,12 @@ type Book = {
   file_url: string;
   photo_url: string;
   user: IUser;
+  rating: number;
+  total_users_rating: number;
 };
 
 interface BookCreate
-  extends Omit<Book, "file_url" | "photo_url" | "id" | "user"> {
+  extends Omit<Book, "file_url" | "photo_url" | "id" | "user" | "rating" | "total_users_rating"> {
   photo: File;
   file: File;
   user_id: string;

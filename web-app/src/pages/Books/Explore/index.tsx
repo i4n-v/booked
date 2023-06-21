@@ -5,7 +5,7 @@ import { BookCard } from "../../../components/Cards";
 import IBook from "../../../commons/IBook";
 import { useQuery } from "react-query";
 import useBook from "../../../services/useBook";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BooksActions from "../Actions";
 import { BooksFilters } from "../Actions/types";
 import { useState } from "react";
@@ -16,7 +16,7 @@ export default function BooksExplore() {
     const { state } = useLocation();
     const [filters,setFilters] = useState<Partial<BooksFilters>>()
     const { data: books } = useQuery(['getBooks', [state,filters]], () => getBooks({ search: state, ...filters }))
-
+    const navigate = useNavigate()
 
     const filterBooks = (filters: any) => {
         const categories = filters?.categories?.map( (v:ICategory) => v.id)
@@ -32,13 +32,14 @@ export default function BooksExplore() {
                     {books?.items?.map((book: IBook, index) => {
                         return <BookCard
                             author={book.user?.name}
-                            rating={1}
+                            rating={book.rating}
                             price={book.price}
-                            ratingQuantity={1}
+                            ratingQuantity={book.total_users_rating}
                             title={book.name}
                             image={book.photo_url}
                             size="md"
                             key={book.id}
+                            onClick={() => navigate(`${book.id}`)}
                         ></BookCard>
                     })}
                 </BooksCardsContainer> : null}

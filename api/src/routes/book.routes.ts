@@ -1,6 +1,7 @@
 import router from '../config/router.config';
 import BookController from '../controllers/book.controller';
 import authMidleware from '../midlewares/auth.midleware';
+import optionalAuthMidleware from '../midlewares/optionalAuth.midlware';
 import uploadMidleware from '../midlewares/upload.midleware';
 
 /**
@@ -146,11 +147,15 @@ router.put(
  *     tags:
  *       - Book
  *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
  *       - name: id
  *         description: The id of book
  *         in: path
  *         schema:
  *           type: string;
+ *     security:
+ *       - access_token: []
  *     responses:
  *       200:
  *         description: Return a book.
@@ -170,6 +175,7 @@ router.put(
  *               rating: float
  *               total_users_rating: integer
  *               categories: array
+ *               user_raters: array
  *             examples:
  *               get_payload:
  *                 value:
@@ -189,6 +195,12 @@ router.put(
  *                       name: 'Ação'
  *                     - id: 'a29fb524-6fea-4dc1-a8f0-66410097266b'
  *                       name: 'Aventura'
+ *                   user_raters:
+ *                     - id: 'a99fb524-bfea-4dc1-bfea-66410097266b'
+ *                       assessment:
+ *                         id: 'a99fb524-bfea-4dc1-4dc1-66410097266b'
+ *                         number: 3
+ *
  *
  *       400:
  *         $ref: '#/components/responses/error'
@@ -197,7 +209,7 @@ router.put(
  *       404:
  *         $ref: '#/components/responses/error'
  */
-router.get('/books/:id', BookController.show);
+router.get('/books/:id', optionalAuthMidleware, BookController.show);
 
 /**
  * @openapi

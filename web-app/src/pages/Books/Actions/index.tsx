@@ -17,7 +17,7 @@ export default function BooksActions(
         handleFilter = (v: true) => null,
     }: BooksActionsProps
 ) {
-    const [showFilters,setShowFilters] = useState(false)
+    const [showFilters,setShowFilters] = useState<"true" | undefined>()
     const form = useForm<BooksFilters>({
         defaultValues:{
             categories: [],
@@ -31,17 +31,17 @@ export default function BooksActions(
     const formValues = form.watch()
     const didNotSearch = useRef(true)
 
-    const search = useCallback(debounceSearch,[formValues])
+    const search = useCallback(debounceSearch,[formValues,debounceSearch])
     useEffect(() => {
         if(didNotSearch.current) return
         search({...formValues})
-    },[formValues.categories,formValues.max_date, formValues.min_date])
+    },[formValues,search])
 
     useEffect(() => {
         didNotSearch.current = !showFilters
     },[showFilters])
     return (
-        <Actions showfilters={!!showFilters}>
+        <Actions showfilters={showFilters}>
             <Box>
                 {filter ? <Button sx={{
                     height: '42px',
@@ -51,7 +51,7 @@ export default function BooksActions(
                     columnGap: '8px',
                     padding: '1px'
                 }}
-                    onClick={() => setShowFilters(curr => !curr)}
+                    onClick={() => setShowFilters(curr => !!curr ? undefined : "true")}
                 >
                     <Tune color="primary" fontSize={'large'} />
                     Filtros

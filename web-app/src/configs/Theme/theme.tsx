@@ -110,7 +110,7 @@ const include: ThemeOptions = {
         },
         outlined: {
           "&.MuiInputLabel-shrink": {
-            transform: "translate(19px, -4px) scale(0.75)",
+            transform: "translate(16px, -4px) scale(0.75)",
             top: "-2px",
           },
           '&.MuiInputLabel-root': {

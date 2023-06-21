@@ -30,20 +30,17 @@ class UserController {
   async show(request: Request, response: Response, next: NextFunction) {
     try {
       const {
+        auth,
         params: { id },
       } = request;
 
-      if (!id) {
+      if (id !== auth.id) {
         return response.status(400).json({
-          message: messages.unknown('Usuário'),
+          message: messages.unauthorized(),
         });
       }
 
-      const user = await UserRepository.findById(id, {
-        attributes: {
-          exclude: ['password', 'salt', 'updatedAt'],
-        },
-      });
+      const user = await UserRepository.findById(id);
 
       if (!user) {
         return response.status(400).json({

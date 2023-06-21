@@ -45,7 +45,7 @@ class CommentController {
       if (!book_id && !comment_id) {
         return response
           .status(400)
-          .json({ message: 'O identificador do livro ou comementário deve ser fornecido.' });
+          .json({ message: 'O identificador do livro ou comentário deve ser fornecido.' });
       }
 
       if (book_id && comment_id) {

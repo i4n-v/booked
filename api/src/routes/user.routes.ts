@@ -82,6 +82,10 @@ router.post('/users', UserController.store);
  *                 type: string;
  *               createdAt:
  *                 type: string;
+ *               total_books:
+ *                 type: integer;
+ *               total_acquisitions:
+ *                 type: integer;
  *             examples:
  *               get_payload:
  *                 value:
@@ -92,6 +96,8 @@ router.post('/users', UserController.store);
  *                   description: 'I am a big author!'
  *                   photo_url: 'http://localhost:5000/public/uploads/images/5bbd9d133d18170ac1db1d633546f2c6-profile.png'
  *                   createdAt: '2010-03-23'
+ *                   total_books: 20
+ *                   total_acquisitions: 5
  *
  *       400:
  *         $ref: '#/components/responses/error'

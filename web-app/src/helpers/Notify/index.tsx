@@ -11,7 +11,6 @@ function useNotifier() {
         dispatch({
             type: INotifierActionKind.SHOW_NOTIFICATION,
             payload: {
-                show: true,
                 message,
                 severity
             },

@@ -13,6 +13,7 @@ import DefaultImage from '../../assets/SVG/account.svg'
 import BooksActions from "../Books/Actions";
 import { BooksFilters } from "../Books/Actions/types";
 import useNotifier from "../../helpers/Notify";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const { getUser } = useUser();
@@ -22,6 +23,7 @@ export default function Profile() {
     const [filters, handleFilters] = useState<Partial<BooksFilters>>({}) 
     const [bookToEdit,setBookToEdit] = useState<string>()
     const notify = useNotifier()
+    const navigate = useNavigate()
     const { data: user } = useQuery('getUser', () => getUser(authData?.userData?.id as string), {
         retry: false,
         refetchOnWindowFocus: false
@@ -76,13 +78,14 @@ export default function Profile() {
                     {books?.items.map((book: IBook) => {
                         return <BookCard
                             author={book.user?.name}
-                            rating={1}
+                            rating={book.rating}
                             price={book.price}
-                            ratingQuantity={1}
+                            ratingQuantity={book.total_users_rating}
                             title={book.name}
                             image={book.photo_url}
                             size="md"
                             key={book.name}
+                            onClick={() => navigate(`/explore/${book.id}`)}
                             actionsOptions={[
                                 {
                                     label: "Editar",

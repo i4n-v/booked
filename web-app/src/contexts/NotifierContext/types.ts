@@ -1,10 +1,11 @@
 import { AlertColor } from "@mui/material";
 import { ContextAction } from "../../commons/ContextAction";
 
+
 export type INotifier = {
-  show: boolean;
+  show?: boolean;
   message: string;
-  severity?: AlertColor;
+  severity: AlertColor;
 };
 
 export enum INotifierActionKind {

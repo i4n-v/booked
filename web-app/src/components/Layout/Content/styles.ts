@@ -1,8 +1,8 @@
 import { Box, styled } from "@mui/material";
 
-const Content = styled(Box)(({ theme }) => ({
+const Content = styled(Box)<{headerheight?: string}>(({ theme, headerheight = '74px' }) => ({
   display: "grid",
-  gridTemplateRows: "74px 1fr",
+  gridTemplateRows: `${headerheight} 1fr`,
   padding: "60px 20px 120px 20px",
   maxWidth: "1400px",
   width: "100%",

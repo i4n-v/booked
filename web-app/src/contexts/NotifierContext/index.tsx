@@ -10,13 +10,13 @@ export const initialState: INotifier = {
 export const NotifierContext = React.createContext<[INotifier, Dispatch<INotifierAction>]>([initialState, (value: INotifierAction) => null]);
 
 
-const reducer = (state = initialState, action: INotifierAction) => {
-    switch (action.type) {
+const reducer = (state = initialState, {type,payload}: INotifierAction) => {
+    switch (type) {
         case INotifierActionKind.SHOW_NOTIFICATION:
             return {
                 show: true,
-                message: action?.payload?.message,
-                severity: action?.payload?.severity
+                message: payload?.message,
+                severity: payload?.severity
             } as INotifier;
         case INotifierActionKind.HIDE_NOTIFICATION:
             return initialState;
