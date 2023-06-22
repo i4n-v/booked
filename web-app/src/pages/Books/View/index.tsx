@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Content from "../../../components/Layout/Content/styles"
 import { Box, Button, Typography } from "@mui/material"
 import { useQuery } from "react-query"
@@ -11,11 +11,12 @@ import Comments from "./Comments"
 export default function BooksView() {
     const { bookId } = useParams()
     const { getBook } = useBook()
+    const navigate = useNavigate()
 
 
     const { data: book } = useQuery(['getBook', [bookId]], () => getBook(bookId as string))
     return (
-        <Content headerheight="fit-content" sx={{ paddingTop: 0, paddingBottom: 5 }} >  
+        <Content headerheight="fit-content" sx={{ paddingTop: 0, paddingBottom: 5 }} >
             <BookInfoContainer>
                 <Box >
                     <BookImageContainer  >
@@ -29,7 +30,7 @@ export default function BooksView() {
                                     : "GRATUITO"
                             }
                         </Button>
-                        <Button fullWidth variant="outlined">LER AMOSTRA GRATUITA</Button>
+                        <Button onClick={() => navigate("content")} fullWidth variant="outlined">LER AMOSTRA GRATUITA</Button>
                     </Box>
                 </Box>
                 <BookDetailsContainer>
