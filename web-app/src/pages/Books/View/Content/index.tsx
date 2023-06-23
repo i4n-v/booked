@@ -53,7 +53,6 @@ export default function BookViewContent() {
                     position: 'fixed',
                     right: '3%',
                     top: '5%',
-                    // transform: 'translate(24px, -50%)',
                     zIndex: 1,
                 }}
                 onClick={props.onClick}
