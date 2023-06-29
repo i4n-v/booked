@@ -23,7 +23,7 @@ class BookController {
     try {
       const { auth, body } = request;
       const files = request.files as unknown as MulterUploadedFiles;
-      const { name, price, description, user_id, categories }: BookCreateDto = body;
+      const { name, price, free_pages, description, user_id, categories }: BookCreateDto = body;
       let file_url;
       let photo_url;
 
@@ -68,6 +68,7 @@ class BookController {
             user_id,
             name,
             price,
+            free_pages,
             description,
             photo_url,
             file_url,
@@ -113,7 +114,7 @@ class BookController {
         params: { id },
       } = request;
       const files = request.files as unknown as MulterUploadedFiles;
-      const { name, price, description, categories }: BookUpdateDto = body;
+      const { name, price, free_pages, description, categories }: BookUpdateDto = body;
       let file_url;
       let photo_url;
 
@@ -182,6 +183,7 @@ class BookController {
             {
               name,
               price,
+              free_pages,
               description,
               photo_url,
               file_url,

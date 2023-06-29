@@ -41,6 +41,10 @@ export default class Book extends Model<BookDto, BookCreateDto> {
   price: number;
 
   @AllowNull(true)
+  @Column(DataType.INTEGER)
+  free_pages: number;
+
+  @AllowNull(true)
   @Column(DataType.STRING)
   photo_url: string;
 
