@@ -17,6 +17,7 @@ import Message from "../../../../helpers/messages"
 const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...comment }: CommentsPros) => {
     const [openOptions, setOpenOptions] = useState(false)
     const [seeAnswers, setSeeAnswers] = useState(false)
+    const [authData] = useContext(AuthContext)
     const { getComments,deleteComment } = useComment()
     const deleteMutation = useMutation(deleteComment)
     const notify = useNotifier()
@@ -45,7 +46,7 @@ const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...
         [
             {
                 label: "Responder",
-                handler: () => openAnswer({ commentId: comment.id, description: "", refetchFn: refetch })
+                handler: () => openAnswer({ commentId: comment.id, description: "", refetchFn: refetch, title: `Resposta: ${comment.user?.name}` })
             }
         ] : []
     const userOptions: DropdownOptions[] = [
@@ -64,7 +65,7 @@ const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...
 
     return (
         <Box position={"relative"}>
-            <MoreOptions open={openOptions} handleOpen={setOpenOptions} id={`${comment.id}`} options={commentOptions} />
+            {authData?.valid && commentOptions.length ? <MoreOptions open={openOptions} handleOpen={setOpenOptions} id={`${comment.id}`} options={commentOptions} /> : null}
             <CommentBox response={answer}>
                 <Box display={"flex"} alignItems={"center"} columnGap={"8px"}>
                     <Account />
@@ -88,7 +89,7 @@ const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...
                     marginLeft: "20px",
                     cursor: "pointer"
                 }}>
-                Visualizar respostas
+                {`Visualizar respostas ( ${responses?.totalItems || comment.total_responses} )` } 
             </Typography> : null}
             {!answer && seeAnswers ? <CommentsList>
                 {responses?.items?.map((comment) => (
@@ -108,14 +109,14 @@ export default function Comments({ bookId, bookName }: CommentsContainerProps) {
 
     return (
         <CommentsContainer>
-            <Page open={!!openForm} onClose={() => setOpenForm(undefined)} title={bookName} maxWidth="md" minWidth={"960px"}>
+            <Page open={!!openForm} onClose={() => setOpenForm(undefined)} title={openForm?.title} maxWidth="md" minWidth={"960px"}>
                 <CommentsForm openForm={openForm} handleClose={setOpenForm} />
             </Page>
             <Box>
                 <CommentsContainerHeader>
                     <span>Comentários</span>
                     {authData?.valid ?
-                        <Button onClick={() => setOpenForm({ bookId, refetchFn: refetch })} variant="contained">COMENTAR</Button>
+                        <Button onClick={() => setOpenForm({ bookId, refetchFn: refetch, title: bookName })} variant="contained">COMENTAR</Button>
                         : null
                     }
                 </CommentsContainerHeader>

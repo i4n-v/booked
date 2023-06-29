@@ -57,7 +57,7 @@ export default function BookViewContent() {
                 }}
                 onClick={props.onClick}
             >
-                <FullscreenExitOutlined />
+                <FullscreenExitOutlined color='primary' />
             </IconButton>
         )
 
@@ -114,7 +114,7 @@ export default function BookViewContent() {
                                     className='full_screen_button'
                                     onClick={props.onClick}
                                 >
-                                    <FullscreenOutlined />
+                                    <FullscreenOutlined color='primary' />
                                 </IconButton>
                             )
                         }
@@ -136,7 +136,7 @@ export default function BookViewContent() {
                                     }}
                                     onClick={props.onClick}
                                 >
-                                    <ZoomInOutlined />
+                                    <ZoomInOutlined color='primary' />
                                 </IconButton>
                             )}
                         </ZoomIn>
@@ -152,7 +152,7 @@ export default function BookViewContent() {
                                     }}
                                     onClick={props.onClick}
                                 >
-                                    <ZoomOutOutlined />
+                                    <ZoomOutOutlined color='primary' />
                                 </IconButton>
                             )}
                         </ZoomOut>
@@ -177,7 +177,7 @@ export default function BookViewContent() {
                                     }}
                                 >
 
-                                    <Visibility />
+                                    <Visibility color='primary' />
                                 </IconButton>
 
                             )}
@@ -197,7 +197,7 @@ export default function BookViewContent() {
                                         position={Position.BottomCenter}
                                         target={
                                             <MinimalButton onClick={props.onClick}>
-                                                <NavigateBefore />
+                                                <NavigateBefore color='primary' />
                                             </MinimalButton>
                                         }
                                         content={() => 'Previous page'}
@@ -221,7 +221,7 @@ export default function BookViewContent() {
                                         position={Position.BottomCenter}
                                         target={
                                             <MinimalButton onClick={() => props.onClick()}>
-                                                <NavigateNext />
+                                                <NavigateNext color='primary' />
                                             </MinimalButton>
                                         }
                                         content={() => 'Next page'}
