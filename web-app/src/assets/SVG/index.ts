@@ -12,6 +12,7 @@ import { ReactComponent as Logout } from "./logout.svg";
 import { ReactComponent as Ellipse } from "./ellipse.svg";
 import { ReactComponent as ArrowDown } from "./arrow-down.svg";
 import { ReactComponent as ArrowUp } from "./arrow-up.svg";
+import { ReactComponent as Book } from "./book.svg";
 
 export {
   DarkLogo,
@@ -28,4 +29,5 @@ export {
   Ellipse,
   ArrowDown,
   ArrowUp,
+  Book,
 };
