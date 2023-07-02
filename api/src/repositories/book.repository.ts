@@ -142,6 +142,7 @@ class BookRepository {
             ),
             'total_users_rating',
           ],
+          [sequelizeConnection.literal('"acquisitions->Acquisition".marked_page'), 'marked_page'],
         ],
       },
       include: [

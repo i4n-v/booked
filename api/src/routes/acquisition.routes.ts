@@ -112,4 +112,44 @@ router.get('/acquisitions/books', authMidleware, AcquisitionController.index);
  */
 router.post('/acquisitions/books/:id', authMidleware, AcquisitionController.store);
 
+/**
+ * @openapi
+ * /acquisitions/{id}:
+ *   put:
+ *     summary: update a acquisition.
+ *     description: This route update a book's acquisition.
+ *     tags:
+ *       - Acquisition
+ *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
+ *       - name: id
+ *         description: The id of acquisition
+ *         in: path
+ *         schema:
+ *           type: string;
+ *     security:
+ *       - access_token: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               marked_page:
+ *                 type: integer
+ *           examples:
+ *             send_payload:
+ *               value:
+ *                 marked_page: 5
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/success'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ */
+router.put('/acquisitions/:id', authMidleware, AcquisitionController.update);
+
 export default router;

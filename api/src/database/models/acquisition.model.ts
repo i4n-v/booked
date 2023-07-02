@@ -21,6 +21,10 @@ export default class Acquisition extends Model<AcquisitionDto, AcquisitionCreate
   })
   id: string;
 
+  @AllowNull(true)
+  @Column(DataType.INTEGER)
+  marked_page: number;
+
   @AllowNull(false)
   @Column(DataType.UUID)
   @ForeignKey(() => User)

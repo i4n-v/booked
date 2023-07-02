@@ -5,6 +5,7 @@ import BookRepository from '../repositories/book.repository';
 import { Op } from 'sequelize';
 import { endOfDay, parseISO, startOfDay } from 'date-fns';
 import paginationWrapper from '../utils/paginationWrapper';
+import AcquisitionUpdateDto from '../dto/acquisition/acquisitionUpdate.dto';
 
 class CommentController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -30,6 +31,34 @@ class CommentController {
       });
 
       return response.json({ message: 'Livro adquirido com sucesso!' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { auth, params, body } = request;
+      const acquisitionId = params.id;
+      const { marked_page }: AcquisitionUpdateDto = body;
+
+      const acquisition = await AcquisitionRepository.findById(acquisitionId);
+
+      if (!acquisition) {
+        return response.status(404).json({ message: messages.unknown('Acquisição') });
+      }
+
+      if (acquisition.user_id !== auth.id) {
+        return response.status(401).json({
+          message: messages.unauthorized(),
+        });
+      }
+
+      await AcquisitionRepository.update(acquisitionId, {
+        marked_page,
+      });
+
+      return response.json({ message: messages.update('Aquisição') });
     } catch (error) {
       next(error);
     }

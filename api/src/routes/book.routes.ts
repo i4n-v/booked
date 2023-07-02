@@ -28,7 +28,9 @@ import uploadMidleware from '../midlewares/upload.midleware';
  *               name:
  *                 type: string
  *               price:
- *                 type: number
+ *                 type: float
+ *               free_pages:
+ *                 type: integer
  *               description:
  *                 type: string
  *               photo:
@@ -49,6 +51,7 @@ import uploadMidleware from '../midlewares/upload.midleware';
  *                 user_id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                 name: 'Mundo mágico'
  *                 price: 32.50
+ *                 free_pages: 10
  *                 description: 'Um livro cheio de aventuras'
  *                 photo: 'Arquivo da foto'
  *                 file: 'Arquivo do livro'
@@ -97,7 +100,9 @@ router.post(
  *               name:
  *                 type: string
  *               price:
- *                 type: number
+ *                 type: float
+ *               free_pages:
+ *                 type: integer
  *               description:
  *                 type: string
  *               photo:
@@ -117,6 +122,7 @@ router.post(
  *               value:
  *                 name: 'Mundo mágico'
  *                 price: 32.50
+ *                 free_pages: 10
  *                 description: 'Um livro cheio de aventuras'
  *                 photo: 'Arquivo da foto'
  *                 file: 'Arquivo do livro'
@@ -167,6 +173,7 @@ router.put(
  *               name: string
  *               description: string
  *               price: float
+ *               free_pages: integer
  *               photo_url: string
  *               file_url: string
  *               user_id: string
@@ -183,6 +190,7 @@ router.put(
  *                   name: 'Mundo mágico'
  *                   description: 'Um grande mundo mágico.'
  *                   price: 12.56
+ *                   free_pages: 10
  *                   photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
  *                   file_url: 'http://localhost:5000/public/uploads/files/1f96b637e1b9b174ffc4d3030e87b71c-example-file.pdf'
  *                   user_id: 'a99fb524-6fea-4dc1-a8f0-66410097266b'
@@ -277,6 +285,7 @@ router.get('/books/:id', optionalAuthMidleware, BookController.show);
  *               name: string
  *               description: string
  *               price: float
+ *               free_pages: integer
  *               photo_url: string
  *               user_id: string
  *               createdAt: string
@@ -291,6 +300,7 @@ router.get('/books/:id', optionalAuthMidleware, BookController.show);
  *                     name: 'Mundo mágico'
  *                     description: 'Um grande mundo mágico.'
  *                     price: 12.56
+ *                     free_pages: 10
  *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
  *                     user_id: 'a99fb524-6fea-4dc1-a8f0-66410097266b'
  *                     createdAt: '2023-05-15T01:48:16.006Z'
