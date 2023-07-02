@@ -10,13 +10,13 @@ import { fullScreenPlugin } from '@react-pdf-viewer/full-screen';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 
 // Import the main component
-import { MinimalButton, PageLayout, Position, SpecialZoomLevel, Tooltip, ViewMode, Worker } from '@react-pdf-viewer/core';
+import { PageLayout, SpecialZoomLevel, ViewMode, Worker } from '@react-pdf-viewer/core';
 import { Viewer } from '@react-pdf-viewer/core';
 import RenderPage from './RenderPage';
 import Content from '../../../../components/Layout/Content/styles';
 import { Box, IconButton, Typography } from '@mui/material';
 import { RenderEnterFullScreenProps } from '@react-pdf-viewer/full-screen';
-import { FullscreenExitOutlined, FullscreenOutlined, NavigateBefore, NavigateNext, Visibility, ZoomInOutlined, ZoomOutOutlined } from '@mui/icons-material';
+import { Bookmark, FullscreenExitOutlined, FullscreenOutlined, NavigateBefore, NavigateNext, Visibility, ZoomInOutlined, ZoomOutOutlined } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import useBook from '../../../../services/useBook';
@@ -64,10 +64,10 @@ export default function BookViewContent() {
     });
 
     const { EnterFullScreen } = fullScreenPluginInstance;
-    const { GoToPreviousPage, GoToNextPage } = pageNavigationPluginInstance;
+    const { GoToPreviousPage, GoToNextPage, CurrentPageInput, NumberOfPages } = pageNavigationPluginInstance;
     const { ZoomIn, ZoomOut, CurrentScale, zoomTo } = zoonPluginInstance
     const pageLayout: PageLayout = {
-        buildPageStyles({ numPages, pageIndex, scrollMode, viewMode, }) {
+        buildPageStyles() {
             return {
                 height: "fit-content",
             }
@@ -100,6 +100,7 @@ export default function BookViewContent() {
                         },
                     }}
                 >
+
                     <EnterFullScreen>
                         {
                             (props: RenderEnterFullScreenProps) => (
@@ -112,6 +113,7 @@ export default function BookViewContent() {
                                         zIndex: 1,
                                     }}
                                     className='full_screen_button'
+                                    title='Entrar em tela cheia'
                                     onClick={props.onClick}
                                 >
                                     <FullscreenOutlined color='primary' />
@@ -124,6 +126,45 @@ export default function BookViewContent() {
                             height: '1000px',
                         }}
                     >
+                        <Box
+                            sx={{
+                                width: '100%',
+
+                                position: 'absolute',
+                                display: 'flex',
+                                justifyContent: 'center',
+
+                                zIndex: 1,
+                                '&:hover': {
+                                    "& > :first-of-type": {
+                                        opacity: 1,
+                                        backgroundColor: t => t.palette.primary[700],
+                                    }
+                                }
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    alignItems: 'center',
+                                    zIndex: 1,
+                                    opacity: 0.25,
+                                    width: '100px',
+                                    transition: 'opacity 0.3s ease-in-out',
+                                    backgroundColor: t => t.palette.secondary[700],
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    padding: '4px',
+                                }}
+                            >
+                                <Box sx={{ padding: '0px 2px', flex: 1, textAlign: 'center' }}>
+                                    <CurrentPageInput />
+                                </Box>
+                                <Box sx={{ padding: '0px 2px', flex: 1, textAlign: 'center', color: t => t.palette.secondary.light }}>
+                                    <NumberOfPages />
+                                </Box>
+
+                            </Box>
+                        </Box>
                         <ZoomIn>
                             {(props: RenderZoomInProps) => (
                                 <IconButton
@@ -134,6 +175,7 @@ export default function BookViewContent() {
                                         transform: 'translate(24px, -50%)',
                                         zIndex: 1,
                                     }}
+                                    title='Adicionar zoom'
                                     onClick={props.onClick}
                                 >
                                     <ZoomInOutlined color='primary' />
@@ -150,6 +192,7 @@ export default function BookViewContent() {
                                         transform: 'translate(24px, -50%)',
                                         zIndex: 1,
                                     }}
+                                    title='Remover zoom'
                                     onClick={props.onClick}
                                 >
                                     <ZoomOutOutlined color='primary' />
@@ -166,6 +209,7 @@ export default function BookViewContent() {
                                         transform: 'translate(24px, -50%)',
                                         zIndex: 1,
                                     }}
+                                    title='Trocar modo de visualização'
                                     onClick={() => {
                                         if (props.scale >= 2) {
                                             zoomTo(SpecialZoomLevel.PageFit)
@@ -182,7 +226,21 @@ export default function BookViewContent() {
 
                             )}
                         </CurrentScale>
-                        <div
+                        <Box
+                            style={{
+                                left: 0,
+                                position: 'absolute',
+                                top: '20%',
+                                transform: 'translate(24px, -50%)',
+                                zIndex: 1,
+                            }}>
+                            <IconButton
+                                title='Adicionar marcador a página'
+                            >
+                                <Bookmark color='primary' />
+                            </IconButton>
+                        </Box>
+                        <Box
                             style={{
                                 left: 0,
                                 position: 'absolute',
@@ -193,20 +251,17 @@ export default function BookViewContent() {
                         >
                             <GoToPreviousPage>
                                 {(props: RenderGoToPageProps) => (
-                                    <Tooltip
-                                        position={Position.BottomCenter}
-                                        target={
-                                            <MinimalButton onClick={props.onClick}>
-                                                <NavigateBefore color='primary' />
-                                            </MinimalButton>
-                                        }
-                                        content={() => 'Previous page'}
-                                        offset={{ left: 0, top: 8 }}
-                                    />
+                                    <IconButton
+                                        onClick={props.onClick}
+                                        title='Página anterior'
+                                    >
+                                        <NavigateBefore color='primary' />
+
+                                    </IconButton>
                                 )}
                             </GoToPreviousPage>
-                        </div>
-                        <div
+                        </Box>
+                        <Box
                             style={{
                                 position: 'absolute',
                                 right: 0,
@@ -217,19 +272,16 @@ export default function BookViewContent() {
                         >
                             <GoToNextPage>
                                 {(props: RenderGoToPageProps) => (
-                                    <Tooltip
-                                        position={Position.BottomCenter}
-                                        target={
-                                            <MinimalButton onClick={() => props.onClick()}>
-                                                <NavigateNext color='primary' />
-                                            </MinimalButton>
-                                        }
-                                        content={() => 'Next page'}
-                                        offset={{ left: 0, top: 8 }}
-                                    />
+                                    <IconButton
+                                        onClick={props.onClick}
+                                        title='Página seguinte'
+                                    >
+                                        <NavigateNext color='primary' />
+
+                                    </IconButton>
                                 )}
                             </GoToNextPage>
-                        </div>
+                        </Box>
                         <Viewer
                             setRenderRange={(props) => ({ startPage: 0, endPage: 1 })}
                             pageLayout={pageLayout}
