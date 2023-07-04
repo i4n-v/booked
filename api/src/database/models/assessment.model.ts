@@ -25,7 +25,7 @@ export default class Assessment extends Model<AssessmentDto, AssessmentCreateDto
 
   @Min(0)
   @Max(5)
-  @Column(DataType.INTEGER)
+  @Column(DataType.DECIMAL(10, 2))
   number: number;
 
   @AllowNull(false)

@@ -61,7 +61,7 @@ class AssessmentController {
         number,
       });
 
-      return response.json({ message: messages.update('Comentário') });
+      return response.json({ message: messages.update('Avaliação') });
     } catch (error) {
       next(error);
     }
