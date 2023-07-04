@@ -19,12 +19,13 @@ export default function BookCard({
   onClick = () => null
 }: BookCardProps) {
   const theme = useTheme();
-  
+
   const BookImage = styled(Box)(({ theme }) => ({
     width: "100%",
     height: size === "lg" ? "280px" : "160px",
     background: theme.palette.secondary[200],
     borderRadius: "8px 8px 0 0",
+    display: "flex",
     "& > img": {
       width: "100%",
       maxWidth: "100%",
@@ -85,49 +86,49 @@ export default function BookCard({
       borderRadius: "4px",
     },
   }));
-  
+
   const [dropdown, setDropdown] = useState(false);
 
   return (
-    <Box sx={{position:"relative"}}>
-      {actionsOptions ? 
-        <MoreOptions options={actionsOptions} open={dropdown} handleOpen={setDropdown} id={`card-${title}-${author}`}/>
-       : null}
-    <BookContainer onClick={() => onClick()} >
-      <BookImage>
-        <img src={image || bookBackground} alt="Capa do livro." />
-      </BookImage>
-      <Typography component="h6">{title}</Typography>
-      <Typography component="p">Autor: {author}</Typography>
-      <InteractiveContainer>
-        <Box>
-          <Rating
-            value={rating}
-            color={theme.palette.primary[700]}
-            readOnly
-            precision={0.5}
-            sx={{
-              "& .MuiRating-iconFilled": {
-                color: theme.palette.primary[700],
-                fontSize: size === "lg" ? "32px" : "24px",
-              },
-              "& .MuiRating-iconHover": {
-                color: theme.palette.primary[700],
-                fontSize: size === "lg" ? "32px" : "24px",
-              },
-              "& .MuiRating-iconEmpty": {
-                color: theme.palette.primary[700],
-                fontSize: size === "lg" ? "32px" : "24px",
-              },
-            }}
-          />
-          <Typography component="span">({ratingQuantity})</Typography>
-        </Box>
-        <Typography component="span">
-          {parseInt(price as unknown as string) ? toBRL(parseInt(price as unknown as string)) : "Gratuito"}
-        </Typography>
-      </InteractiveContainer>
-    </BookContainer>
+    <Box sx={{ position: "relative" }}>
+      {actionsOptions ?
+        <MoreOptions options={actionsOptions} open={dropdown} handleOpen={setDropdown} id={`card-${title}-${author}`} />
+        : null}
+      <BookContainer onClick={() => onClick()} >
+        <BookImage>
+          <img src={image || bookBackground} alt="Capa do livro." />
+        </BookImage>
+        <Typography component="h6">{title}</Typography>
+        <Typography component="p">Autor: {author}</Typography>
+        <InteractiveContainer>
+          <Box>
+            <Rating
+              value={rating}
+              color={theme.palette.primary[700]}
+              readOnly
+              precision={0.5}
+              sx={{
+                "& .MuiRating-iconFilled": {
+                  color: theme.palette.primary[700],
+                  fontSize: size === "lg" ? "32px" : "24px",
+                },
+                "& .MuiRating-iconHover": {
+                  color: theme.palette.primary[700],
+                  fontSize: size === "lg" ? "32px" : "24px",
+                },
+                "& .MuiRating-iconEmpty": {
+                  color: theme.palette.primary[700],
+                  fontSize: size === "lg" ? "32px" : "24px",
+                },
+              }}
+            />
+            <Typography component="span">({ratingQuantity})</Typography>
+          </Box>
+          <Typography component="span">
+            {parseInt(price as unknown as string) ? toBRL(parseInt(price as unknown as string)) : "Gratuito"}
+          </Typography>
+        </InteractiveContainer>
+      </BookContainer>
     </Box>
   );
 }

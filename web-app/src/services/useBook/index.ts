@@ -58,7 +58,22 @@ export default function useBook() {
       formData.append("photo", data.photo);
       formData.append("file", data.file);
       Object.entries(data).forEach(([key, value]) => {
-        if (["id", "photo", "file"].includes(key)) return;
+        if (
+          [
+            "id",
+            "photo",
+            "file",
+            "createdAt",
+            "updatedAt",
+            "rating",
+            "total_users_rating",
+            "acquisition_id",
+            "marked_page",
+            "user",
+            "free_pages",
+          ].includes(key)
+        )
+          return;
         if (isArray(value)) {
           value.forEach((obj) => {
             formData.append(`${key}[]`, obj.id);
@@ -67,11 +82,15 @@ export default function useBook() {
         }
         formData.append(key, value);
       });
-      const result = await api.put<ResponseMessage>(`${DPath}/${data.id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      } );
+      const result = await api.put<ResponseMessage>(
+        `${DPath}/${data.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return result.data;
     } catch (error: any) {
       return error.response?.data?.message;

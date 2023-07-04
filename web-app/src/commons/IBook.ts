@@ -1,3 +1,4 @@
+import IAssessment from "./IAssessment";
 import { ICategory } from "./ICategory";
 import IUser from "./IUser";
 
@@ -13,10 +14,25 @@ type Book = {
   user: IUser;
   rating: number;
   total_users_rating: number;
+  marked_page?: number;
+  user_raters?: {
+    id: string;
+    assessment: IAssessment;
+  }[];
 };
 
 interface BookCreate
-  extends Omit<Book, "file_url" | "photo_url" | "id" | "user" | "rating" | "total_users_rating"> {
+  extends Omit<
+    Book,
+    | "file_url"
+    | "photo_url"
+    | "id"
+    | "user"
+    | "rating"
+    | "total_users_rating"
+    | "user_raters"
+    | "marked_page"
+  > {
   photo: File;
   file: File;
   user_id: string;

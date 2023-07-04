@@ -14,11 +14,11 @@ import useNotifier from "../../../../helpers/Notify"
 import { useConfirm } from "../../../../helpers/Confirm"
 import Message from "../../../../helpers/messages"
 
-const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...comment }: CommentsPros) => {
+const Comment = ({ openAnswer = () => null, refetchFn, answer, loggedUser, ...comment }: CommentsPros) => {
     const [openOptions, setOpenOptions] = useState(false)
     const [seeAnswers, setSeeAnswers] = useState(false)
     const [authData] = useContext(AuthContext)
-    const { getComments,deleteComment } = useComment()
+    const { getComments, deleteComment } = useComment()
     const deleteMutation = useMutation(deleteComment)
     const notify = useNotifier()
     const confirm = useConfirm()
@@ -31,13 +31,13 @@ const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...
     const isFromLoggedUser = loggedUser?.id === comment.user?.id
 
     const onDelete = () => {
-        deleteMutation.mutate(comment.id as string,{
+        deleteMutation.mutate(comment.id as string, {
             onSuccess(data) {
                 notify(data.message)
-                if(refetchFn instanceof Function) refetchFn()
+                if (refetchFn instanceof Function) refetchFn()
             },
-            onError(error:any) {
-                notify(error.message,'error')
+            onError(error: any) {
+                notify(error.message, 'error')
             },
         })
     }
@@ -56,12 +56,12 @@ const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...
         }, {
             label: "Excluir",
             handler() {
-                confirm(Message.DELETE_QUESTION("*Comentário*"),onDelete)
+                confirm(Message.DELETE_QUESTION("*Comentário*"), onDelete)
             },
         }
     ]
 
-    const commentOptions: DropdownOptions[] = isFromLoggedUser ? [...canAnswer,...userOptions] : [...canAnswer]
+    const commentOptions: DropdownOptions[] = isFromLoggedUser ? [...canAnswer, ...userOptions] : [...canAnswer]
 
     return (
         <Box position={"relative"}>
@@ -89,7 +89,7 @@ const Comment = ({ openAnswer = () => null, refetchFn , answer , loggedUser, ...
                     marginLeft: "20px",
                     cursor: "pointer"
                 }}>
-                {`Visualizar respostas ( ${responses?.totalItems || comment.total_responses} )` } 
+                {`Visualizar respostas ( ${responses?.totalItems || comment.total_responses} )`}
             </Typography> : null}
             {!answer && seeAnswers ? <CommentsList>
                 {responses?.items?.map((comment) => (
@@ -105,7 +105,7 @@ export default function Comments({ bookId, bookName }: CommentsContainerProps) {
     const [authData] = useContext(AuthContext)
 
     const { getComments } = useComment();
-    const { data: comments, refetch } = useQuery(['getBookComments'], () => getComments({ book_id:bookId }))
+    const { data: comments, refetch } = useQuery(['getBookComments'], () => getComments({ book_id: bookId }))
 
     return (
         <CommentsContainer>
@@ -131,6 +131,7 @@ export default function Comments({ bookId, bookName }: CommentsContainerProps) {
                         key={comment.id}
                         refetchFn={refetch}
                     />)}
+                <Box></Box>
             </CommentsList>
         </CommentsContainer>
     )
