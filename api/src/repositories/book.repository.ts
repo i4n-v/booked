@@ -56,6 +56,8 @@ class BookRepository {
             ),
             'total_users_rating',
           ],
+          [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
+          [sequelizeConnection.literal('"acquisitions->Acquisition".marked_page'), 'marked_page'],
         ],
       },
       include: [
@@ -80,6 +82,14 @@ class BookRepository {
           },
           where: {
             id: userId || null,
+          },
+        },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'acquisitions',
+          attributes: [],
+          through: {
+            attributes: [],
           },
         },
       ],
@@ -142,7 +152,7 @@ class BookRepository {
             ),
             'total_users_rating',
           ],
-          [sequelizeConnection.literal('"acquisitions->Acquisition".marked_page'), 'marked_page'],
+          [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
         ],
       },
       include: [

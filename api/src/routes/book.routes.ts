@@ -181,6 +181,8 @@ router.put(
  *               updatedAt: string
  *               rating: float
  *               total_users_rating: integer
+ *               acquisition_id: integer
+ *               marked_page: integer
  *               categories: array
  *               user_raters: array
  *             examples:
@@ -198,6 +200,8 @@ router.put(
  *                   updatedAt: '2023-05-15T01:48:16.006Z'
  *                   rating: 0
  *                   total_users_rating: 0
+ *                   acquisition_id: 'a29fb524-a8f0-4dc1-a8f0-66410097266b'
+ *                   marked_page: 25
  *                   categories:
  *                     - id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                       name: 'Ação'
@@ -292,6 +296,7 @@ router.get('/books/:id', optionalAuthMidleware, BookController.show);
  *               updatedAt: string
  *               rating: float
  *               total_users_rating: integer
+ *               acquisition_id: string
  *               categories: array
  *             examples:
  *               get_payload:
@@ -307,6 +312,7 @@ router.get('/books/:id', optionalAuthMidleware, BookController.show);
  *                     updatedAt: '2023-05-15T01:48:16.006Z'
  *                     rating: 0
  *                     total_users_rating: 0
+ *                     acquisition_id: 'a29fb524-a8f0-4dc1-a8f0-66410097266b'
  *                     categories:
  *                       - id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                         name: 'Ação'
