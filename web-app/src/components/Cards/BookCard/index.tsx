@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { BookCardProps } from "./types";
-import { Box, IconButton, Rating, Typography, styled, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Rating,
+  Typography,
+  styled,
+  useTheme,
+} from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
-import { MoreVert } from "@mui/icons-material";
-import Dropdown from "../../Dropdown";
 import MoreOptions from "../../MoreOptions";
 
 export default function BookCard({
@@ -16,10 +21,11 @@ export default function BookCard({
   ratingQuantity,
   price,
   actionsOptions,
-  onClick = () => null
+  showPrice = true,
+  onClick = () => null,
 }: BookCardProps) {
   const theme = useTheme();
-  
+
   const BookImage = styled(Box)(({ theme }) => ({
     width: "100%",
     height: size === "lg" ? "280px" : "160px",
@@ -85,49 +91,58 @@ export default function BookCard({
       borderRadius: "4px",
     },
   }));
-  
+
   const [dropdown, setDropdown] = useState(false);
 
   return (
-    <Box sx={{position:"relative"}}>
-      {actionsOptions ? 
-        <MoreOptions options={actionsOptions} open={dropdown} handleOpen={setDropdown} id={`card-${title}-${author}`}/>
-       : null}
-    <BookContainer onClick={() => onClick()} >
-      <BookImage>
-        <img src={image || bookBackground} alt="Capa do livro." />
-      </BookImage>
-      <Typography component="h6">{title}</Typography>
-      <Typography component="p">Autor: {author}</Typography>
-      <InteractiveContainer>
-        <Box>
-          <Rating
-            value={rating}
-            color={theme.palette.primary[700]}
-            readOnly
-            precision={0.5}
-            sx={{
-              "& .MuiRating-iconFilled": {
-                color: theme.palette.primary[700],
-                fontSize: size === "lg" ? "32px" : "24px",
-              },
-              "& .MuiRating-iconHover": {
-                color: theme.palette.primary[700],
-                fontSize: size === "lg" ? "32px" : "24px",
-              },
-              "& .MuiRating-iconEmpty": {
-                color: theme.palette.primary[700],
-                fontSize: size === "lg" ? "32px" : "24px",
-              },
-            }}
-          />
-          <Typography component="span">({ratingQuantity})</Typography>
-        </Box>
-        <Typography component="span">
-          {parseInt(price as unknown as string) ? toBRL(parseInt(price as unknown as string)) : "Gratuito"}
-        </Typography>
-      </InteractiveContainer>
-    </BookContainer>
+    <Box sx={{ position: "relative" }}>
+      {actionsOptions ? (
+        <MoreOptions
+          options={actionsOptions}
+          open={dropdown}
+          handleOpen={setDropdown}
+          id={`card-${title}-${author}`}
+        />
+      ) : null}
+      <BookContainer onClick={() => onClick()}>
+        <BookImage>
+          <img src={image || bookBackground} alt="Capa do livro." />
+        </BookImage>
+        <Typography component="h6">{title}</Typography>
+        <Typography component="p">Autor: {author}</Typography>
+        <InteractiveContainer>
+          <Box>
+            <Rating
+              value={rating}
+              color={theme.palette.primary[700]}
+              readOnly
+              precision={0.5}
+              sx={{
+                "& .MuiRating-iconFilled": {
+                  color: theme.palette.primary[700],
+                  fontSize: size === "lg" ? "32px" : "24px",
+                },
+                "& .MuiRating-iconHover": {
+                  color: theme.palette.primary[700],
+                  fontSize: size === "lg" ? "32px" : "24px",
+                },
+                "& .MuiRating-iconEmpty": {
+                  color: theme.palette.primary[700],
+                  fontSize: size === "lg" ? "32px" : "24px",
+                },
+              }}
+            />
+            <Typography component="span">({ratingQuantity})</Typography>
+          </Box>
+          {showPrice && (
+            <Typography component="span">
+              {parseInt(price as unknown as string)
+                ? toBRL(parseInt(price as unknown as string))
+                : "Gratuito"}
+            </Typography>
+          )}
+        </InteractiveContainer>
+      </BookContainer>
     </Box>
   );
 }

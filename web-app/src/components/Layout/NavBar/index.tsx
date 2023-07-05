@@ -9,6 +9,7 @@ import {
   Logout,
   Menu,
   User,
+  Book
 } from "../../../assets/SVG";
 import {
   Button,
@@ -102,7 +103,12 @@ export default function NavBar({ logged }: NavBarProps) {
       handler: () => navigate("/profile"),
     },
     {
-      label: "Condigurações",
+      label: "Biblioteca",
+      icon: <Book/>,
+      handler: () => navigate("acquisitions"),
+    },
+    {
+      label: "Configurações",
       icon: <Config />,
       handler: () => navigate("profile/settings"),
     },
