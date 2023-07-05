@@ -18,29 +18,29 @@ export default function BooksActions(
         dateLabels = {},
     }: BooksActionsProps
 ) {
-    const [showFilters,setShowFilters] = useState<"true" | undefined>()
+    const [showFilters, setShowFilters] = useState<"true" | undefined>()
     const form = useForm<BooksFilters>({
-        defaultValues:{
+        defaultValues: {
             categories: [],
-            max_date: '',
-            min_date: ''
+            max_date: undefined,
+            min_date: undefined
         }
     });
-    const debounceSearch = useDebounce(handleFilter,700)
+    const debounceSearch = useDebounce(handleFilter, 700)
     const { getCategories } = useCategory()
 
     const formValues = form.watch()
     const didNotSearch = useRef(true)
 
-    const search = useCallback(debounceSearch,[formValues,debounceSearch])
+    const search = useCallback(debounceSearch, [formValues, debounceSearch])
     useEffect(() => {
-        if(didNotSearch.current) return
-        search({...formValues})
-    },[formValues,search])
+        if (didNotSearch.current) return
+        search({ ...formValues })
+    }, [formValues, search])
 
     useEffect(() => {
         didNotSearch.current = !showFilters
-    },[showFilters])
+    }, [showFilters])
     return (
         <Actions showfilters={showFilters}>
             <Box>
@@ -61,9 +61,14 @@ export default function BooksActions(
             </Box>
             <FormProvider {...form}>
                 <form >
-                    <Input type="date" name="min_date" label={dateLabels.minDate || 'Data mínima da publicação'} shrink/>
-                    <Input type="date" name="max_date" label={dateLabels.maxDate || 'Data máxima da publicação'} shrink/>
+                    <Input type="date" name="min_date" label={dateLabels.minDate || 'Data mínima da publicação'} shrink />
+                    <Input type="date" name="max_date" label={dateLabels.maxDate || 'Data máxima da publicação'} shrink />
                     <InputSelect service={getCategories} name="categories" optionLabel={'name'} label="Categorias" multiple />
+                    <Input name="min_price" label={'Preço minimo'} type="number" />
+                    <Input name="max_price" label={'Preço maximo'} type="number" />
+                    <Box width={"70px"} >
+                        <Input name="free" type='checkbox' label={'Gratuito'} shrink />
+                    </Box>
                 </form>
             </FormProvider>
         </Actions>

@@ -17,11 +17,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const { getUser } = useUser();
-    const { getBooks,deleteBook } = useBook()
+    const { getBooks, deleteBook } = useBook()
     const [authData] = useContext(AuthContext)
-    const [open, handleOpen] = useState(false) 
-    const [filters, handleFilters] = useState<Partial<BooksFilters>>({}) 
-    const [bookToEdit,setBookToEdit] = useState<string>()
+    const [open, handleOpen] = useState(false)
+    const [filters, handleFilters] = useState<Partial<BooksFilters>>({})
+    const [bookToEdit, setBookToEdit] = useState<string>()
     const notify = useNotifier()
     const navigate = useNavigate()
     const { data: user } = useQuery('getUser', () => getUser(authData?.userData?.id as string), {
@@ -29,14 +29,14 @@ export default function Profile() {
         refetchOnWindowFocus: false
     })
 
-    const { data: books,refetch } = useQuery(['getUserBooks', [filters]], () => getBooks({ user_id: authData?.userData?.id,...filters }),{
-        refetchOnWindowFocus: false, 
+    const { data: books, refetch } = useQuery(['getUserBooks', [filters]], () => getBooks({ user_id: authData?.userData?.id, ...filters }), {
+        refetchOnWindowFocus: false,
     })
 
     const deleteBookMutation = useMutation(deleteBook)
 
     const deleteMutation = (id: string) => {
-        deleteBookMutation.mutate(id,{
+        deleteBookMutation.mutate(id, {
             onSuccess(data) {
                 notify(data.message)
                 refetch()
@@ -49,14 +49,14 @@ export default function Profile() {
 
     return (
         <ContainerProfile>
-            <BooksForm open={open} editBook={bookToEdit} handleClose={ () => {
+            <BooksForm open={open} editBook={bookToEdit} handleClose={() => {
                 handleOpen(false)
                 setBookToEdit(undefined)
                 refetch()
             }} />
             <InfoContainer>
                 <ProfileImageBox>
-                    <ProfileImage src={user?.photo_url || DefaultImage} /> 
+                    <ProfileImage src={user?.photo_url || DefaultImage} />
                 </ProfileImageBox>
                 <UserProfileInfo>
                     <IdentityInfo>
@@ -72,10 +72,10 @@ export default function Profile() {
                 </UserProfileInfo>
             </InfoContainer>
             <BooksContainer >
-                <BooksActions filter publish handleOpenPublish={handleOpen} handleFilter={handleFilters}/>
+                <BooksActions filter publish handleOpenPublish={handleOpen} handleFilter={handleFilters} />
                 <Divider />
                 <BooksCardsContainer>
-                    {books?.items.map((book: IBook) => {
+                    {books?.items.map((book: IBook, index) => {
                         return <BookCard
                             author={book.user?.name}
                             rating={book.rating}
@@ -84,7 +84,7 @@ export default function Profile() {
                             title={book.name}
                             image={book.photo_url}
                             size="md"
-                            key={book.name}
+                            key={`${book.id}-${index}`}
                             onClick={() => navigate(`/explore/${book.id}`)}
                             actionsOptions={[
                                 {

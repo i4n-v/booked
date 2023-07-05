@@ -59,5 +59,6 @@ export type ToOpenForm = {
   bookId?: string,
   commentId?: string,
   description?: string,
+  title?: string,
   refetchFn?: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<any, unknown>>;
 }

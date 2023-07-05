@@ -7,7 +7,7 @@ export default function highlightText(text, result = [], matchNumber = 0) {
     const split = text.split(match[1]);
     const newText = split[0] + "match" + matchNumber + " " + split[1];
     const highlighted = (
-      <Typography key={match[1]} variant="span" fontWeight={700}>
+      <Typography key={match[1]} variant="span" color={"primary"} fontWeight={700}>
         {`${match[1].replaceAll("*", "")} `}
       </Typography>
     );

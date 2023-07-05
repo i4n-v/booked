@@ -11,12 +11,6 @@ const schema = yup.object().shape({
     .required(),
   free: yup.boolean().required(),
   name: yup.string().required(),
-  photo: yup
-    .mixed()
-    .test("fileType", "Invalid file type", (value) => {
-      return value instanceof File;
-    })
-    .required(),
   price: yup
     .number()
     .when("free", (free, schema) =>

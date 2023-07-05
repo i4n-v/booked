@@ -38,7 +38,7 @@ class BookRepository {
                 SELECT
                   CASE
                     WHEN (SUM(number) / COUNT(*)) IS NULL THEN 0
-                    ELSE (SUM(number) / COUNT(*))
+                    ELSE ROUND((SUM(number) / COUNT(*))::numeric, 2)
                   END
                 FROM "Assessments"
                 WHERE "Assessments".book_id = "Book".id

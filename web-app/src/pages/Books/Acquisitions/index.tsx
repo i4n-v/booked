@@ -16,7 +16,7 @@ export default function Acquisitions() {
   const [filters, setFilters] = useState<Partial<BooksFilters>>({});
   const navigate = useNavigate();
 
-  const { data: acquisitions, refetch } = useQuery(
+  const { data: acquisitions } = useQuery(
     ["getAcquisitions", filters],
     () => getAcquisitions(),
     {
@@ -54,7 +54,7 @@ export default function Acquisitions() {
                 image={book.photo_url}
                 size="md"
                 key={book.name}
-                onClick={() => navigate(`#`)}
+                onClick={() => navigate(`/explore/${book.id}`)}
                 showPrice={false}
               />
             );

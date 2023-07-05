@@ -19,7 +19,7 @@ class CommentController {
         return response.status(404).json({ message: messages.unknown('Livro') });
       }
 
-      if (book.price !== 0) {
+      if (Number(book.price) !== 0) {
         return response
           .status(400)
           .json({ message: 'Não é possível adquirir livros pagos no momento.' });

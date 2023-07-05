@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { BookCardProps } from "./types";
-import {
-  Box,
-  IconButton,
-  Rating,
-  Typography,
-  styled,
-  useTheme,
-} from "@mui/material";
+import { Box, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
 import MoreOptions from "../../MoreOptions";
@@ -31,6 +24,7 @@ export default function BookCard({
     height: size === "lg" ? "280px" : "160px",
     background: theme.palette.secondary[200],
     borderRadius: "8px 8px 0 0",
+    display: "flex",
     "& > img": {
       width: "100%",
       maxWidth: "100%",
