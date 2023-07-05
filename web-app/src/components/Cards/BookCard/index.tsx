@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { BookCardProps } from "./types";
-import {
-  Box,
-  IconButton,
-  Rating,
-  Typography,
-  styled,
-  useTheme,
-} from "@mui/material";
+import { Box, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
 import MoreOptions from "../../MoreOptions";
