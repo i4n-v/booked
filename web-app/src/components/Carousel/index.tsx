@@ -42,10 +42,10 @@ export default function Carousel<T>({
 
     function changeActiveTab() {
       navigationButtons.forEach((button) => {
-        button.classList.remove("activeTab");
+        button?.classList.remove("activeTab");
       });
 
-      navigationButtons[activeSlideItem.current].classList.add("activeTab");
+      navigationButtons[activeSlideItem.current]?.classList.add("activeTab");
     }
 
     function transition(boolean: boolean) {
@@ -55,10 +55,10 @@ export default function Carousel<T>({
 
     function changeActiveClass() {
       mapedListItems.forEach(({ element }) => {
-        element.classList.remove("active");
+        element?.classList.remove("active");
       });
 
-      mapedListItems[activeSlideItem.current].element.classList.add("active");
+      mapedListItems[activeSlideItem.current]?.element.classList.add("active");
     }
 
     function moveSlide(distX: number) {
@@ -70,8 +70,8 @@ export default function Carousel<T>({
 
     function changeSlideItem(index: number) {
       const activeSlide = mapedListItems[index];
-      moveSlide(activeSlide.position);
-      distances.current.finalPosition = activeSlide.position;
+      moveSlide(activeSlide?.position);
+      distances.current.finalPosition = activeSlide?.position;
       changeActiveTab();
       changeActiveClass();
     }
@@ -149,7 +149,7 @@ export default function Carousel<T>({
     }
 
     navigationButtons.forEach((button, index) => {
-      if (index === 0) button.classList.add("activeTab");
+      if (index === 0) button?.classList.add("activeTab");
 
       button.addEventListener("click", () => {
         activeSlideItem.current = index;

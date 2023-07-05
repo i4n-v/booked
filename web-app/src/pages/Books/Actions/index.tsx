@@ -15,6 +15,7 @@ export default function BooksActions(
         publish,
         handleOpenPublish = (v: true) => null,
         handleFilter = (v: true) => null,
+        dateLabels = {},
     }: BooksActionsProps
 ) {
     const [showFilters, setShowFilters] = useState<"true" | undefined>()
@@ -60,8 +61,8 @@ export default function BooksActions(
             </Box>
             <FormProvider {...form}>
                 <form >
-                    <Input type="date" name="min_date" label="Data minima da publicação" shrink />
-                    <Input type="date" name="max_date" label="Data máxima   da publicação" shrink />
+                    <Input type="date" name="min_date" label={dateLabels.minDate || 'Data mínima da publicação'} shrink />
+                    <Input type="date" name="max_date" label={dateLabels.maxDate || 'Data máxima da publicação'} shrink />
                     <InputSelect service={getCategories} name="categories" optionLabel={'name'} label="Categorias" multiple />
                     <Input name="min_price" label={'Preço minimo'} type="number" />
                     <Input name="max_price" label={'Preço maximo'} type="number" />

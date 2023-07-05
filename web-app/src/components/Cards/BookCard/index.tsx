@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { BookCardProps } from "./types";
-import { Box, IconButton, Rating, Typography, styled, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Rating,
+  Typography,
+  styled,
+  useTheme,
+} from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
-import { MoreVert } from "@mui/icons-material";
-import Dropdown from "../../Dropdown";
 import MoreOptions from "../../MoreOptions";
 
 export default function BookCard({
@@ -16,7 +21,8 @@ export default function BookCard({
   ratingQuantity,
   price,
   actionsOptions,
-  onClick = () => null
+  showPrice = true,
+  onClick = () => null,
 }: BookCardProps) {
   const theme = useTheme();
 
@@ -91,10 +97,15 @@ export default function BookCard({
 
   return (
     <Box sx={{ position: "relative" }}>
-      {actionsOptions ?
-        <MoreOptions options={actionsOptions} open={dropdown} handleOpen={setDropdown} id={`card-${title}-${author}`} />
-        : null}
-      <BookContainer onClick={() => onClick()} >
+      {actionsOptions ? (
+        <MoreOptions
+          options={actionsOptions}
+          open={dropdown}
+          handleOpen={setDropdown}
+          id={`card-${title}-${author}`}
+        />
+      ) : null}
+      <BookContainer onClick={() => onClick()}>
         <BookImage>
           <img src={image || bookBackground} alt="Capa do livro." />
         </BookImage>
@@ -124,9 +135,13 @@ export default function BookCard({
             />
             <Typography component="span">({ratingQuantity})</Typography>
           </Box>
-          <Typography component="span">
-            {parseInt(price as unknown as string) ? toBRL(parseInt(price as unknown as string)) : "Gratuito"}
-          </Typography>
+          {showPrice && (
+            <Typography component="span">
+              {parseInt(price as unknown as string)
+                ? toBRL(parseInt(price as unknown as string))
+                : "Gratuito"}
+            </Typography>
+          )}
         </InteractiveContainer>
       </BookContainer>
     </Box>

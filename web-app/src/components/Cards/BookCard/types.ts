@@ -5,9 +5,10 @@ export type BookCardProps = {
   title: string;
   author: string;
   price?: number | null;
+  showPrice?: boolean;
   rating: number;
   ratingQuantity: number;
   image?: string | null;
   actionsOptions?: DropdownOptions[];
-  onClick?: () => void
+  onClick?: () => void;
 };
