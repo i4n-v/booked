@@ -29,7 +29,18 @@ function createSequelizeConnection() {
   config.logging = process.env.LOG_DB_QUERIES === 'true' ? console.log : undefined;
   config.repositoryMode = true;
 
-  const sequelize = new Sequelize(config);
+  const sequelize = new Sequelize({
+    ...config,
+    dialectOptions:
+      process.env.SSL === 'true'
+        ? undefined
+        : {
+            ssl: {
+              require: true,
+              rejectUnauthorized: false,
+            },
+          },
+  });
 
   sequelize.addModels(models);
 
