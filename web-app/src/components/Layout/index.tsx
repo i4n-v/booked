@@ -26,11 +26,9 @@ export default function Layout() {
           flex: 1,
         }}
       >
-        {/* <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading />}>
           <Outlet />
-        </Suspense> */}
-
-        <Loading></Loading>
+        </Suspense>
       </Container>
       <Footer />
     </Box>
