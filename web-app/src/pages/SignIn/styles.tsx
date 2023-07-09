@@ -1,5 +1,5 @@
 import { Box, styled } from "@mui/material";
-import loginBg from "../../assets/IMG/login-bg.png";
+import loginBg from "../../assets/IMG/login-bg.jpg";
 
 const SignInContainer = styled(Box)(({ theme }) => ({
   display: "grid",

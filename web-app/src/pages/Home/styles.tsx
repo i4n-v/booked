@@ -1,5 +1,5 @@
 import { Box, styled } from "@mui/material";
-import introducitionBg from "../../assets/IMG/introduction-bg.png";
+import introducitionBg from "../../assets/IMG/introduction-bg.jpg";
 
 const IntroductionContainer = styled(Box)(({ theme }) => ({
   background: `url(${introducitionBg})`,
@@ -38,7 +38,7 @@ const IntroductionContainer = styled(Box)(({ theme }) => ({
   "& > form": {
     width: "100%",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   [theme.breakpoints.down("md")]: {
     "& > .title > h1": {

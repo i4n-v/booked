@@ -2,7 +2,7 @@ import { Box, Button, Typography, useTheme } from "@mui/material";
 import Input from "../../components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { Search } from "@mui/icons-material";
-import bookcase from "../../assets/IMG/bookcase.png";
+import bookcase from "../../assets/IMG/bookcase.jpg";
 import help from "../../assets/SVG/help.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { Carousel } from "../../components";
@@ -16,12 +16,15 @@ import {
 import { useQuery } from "react-query";
 import useBook from "../../services/useBook";
 
-
 export default function Home() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { getBooks } = useBook()
-  const { data: books } = useQuery('getBooks', () => getBooks({ page: 1, limit: 10 }), { retry: false.valueOf, refetchOnWindowFocus: false })
+  const { getBooks } = useBook();
+  const { data: books } = useQuery(
+    "getBooks",
+    () => getBooks({ page: 1, limit: 10 }),
+    { retry: false.valueOf, refetchOnWindowFocus: false }
+  );
 
   const methods = useForm({
     defaultValues: {
@@ -30,8 +33,8 @@ export default function Home() {
   });
 
   const handleSubmit = methods.handleSubmit(({ search }) => {
-    navigate(`/explore`, { replace: true, state: search })
-  })
+    navigate(`/explore`, { replace: true, state: search });
+  });
 
   return (
     <>
@@ -73,29 +76,33 @@ export default function Home() {
         </FormProvider>
       </IntroductionContainer>
 
-      {books ? <TopBooksContainer>
-        <Box className="header">
-          <Typography variant="h2">
-            Explore os <span>tops 10</span> livros melhores avaliados na
-            plataforma.
-          </Typography>
-        </Box>
-        <Carousel
-          data={books.items}
-          timer
-          renderItem={(book) => <BookCard
-            author={book.user?.name}
-            rating={book.rating}
-            price={book.price}
-            ratingQuantity={book.total_users_rating}
-            title={book.name}
-            image={book.photo_url}
-            key={book.id}
-            onClick={() => navigate(`/explore/${book.id}`)}
-            size="lg"
-          />}
-        />
-      </TopBooksContainer> : null}
+      {books ? (
+        <TopBooksContainer>
+          <Box className="header">
+            <Typography variant="h2">
+              Explore os <span>tops 10</span> livros melhores avaliados na
+              plataforma.
+            </Typography>
+          </Box>
+          <Carousel
+            data={books.items}
+            timer
+            renderItem={(book) => (
+              <BookCard
+                author={book.user?.name}
+                rating={book.rating}
+                price={book.price}
+                ratingQuantity={book.total_users_rating}
+                title={book.name}
+                image={book.photo_url}
+                key={book.id}
+                onClick={() => navigate(`/explore/${book.id}`)}
+                size="lg"
+              />
+            )}
+          />
+        </TopBooksContainer>
+      ) : null}
 
       <CallToActionContainer>
         <Box>
