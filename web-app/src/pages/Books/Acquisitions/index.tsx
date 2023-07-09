@@ -31,14 +31,14 @@ export default function Acquisitions() {
 
   return (
     <Content>
-      <Typography component={"h1"}>Aquisições</Typography>
+      <Typography component={"h1"}>Biblioteca</Typography>
       <BooksContainer>
         <BooksActions
           filter
           handleFilter={filterBooks}
           dateLabels={{
-            minDate: "Data mínima da aquisição",
-            maxDate: "Data máxima da aquisição",
+            minDate: "Data mínima",
+            maxDate: "Data máxima",
           }}
         />
         <Divider />
