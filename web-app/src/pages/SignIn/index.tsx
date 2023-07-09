@@ -14,15 +14,18 @@ import { AuthActionsKind } from "../../contexts/AuthContext/types";
 import { AsideBackground, FormContainer, SignInContainer } from "./styles";
 import Message from "../../helpers/messages";
 import Cookies from "js-cookie";
+import ImageBlur from "../../components/ImageBlur";
+import loginBg from "../../assets/IMG/login-bg.jpg";
+import imageHashs from "../../assets/IMG/imageHashs";
 
 export default function SignIn() {
   const methods = useForm<IUser<"LOGIN">>({
     resolver: yupResolver(schema),
     reValidateMode: "onSubmit",
     defaultValues: {
-      password: '',
-      user_login: ''
-    }
+      password: "",
+      user_login: "",
+    },
   });
   const { login } = useAuth();
   const notify = useNotifier();
@@ -37,7 +40,7 @@ export default function SignIn() {
     createUserMutation.mutate(value, {
       onSuccess: ({ token, ...data }) => {
         notify(Message.SUCCESS_LOGIN);
-        Cookies.set('x-access-token', token)
+        Cookies.set("x-access-token", token);
         authDispatch({
           type: AuthActionsKind.SET_USER_DATA,
           payload: { userData: data },
@@ -53,7 +56,9 @@ export default function SignIn() {
 
   return (
     <SignInContainer>
-      <AsideBackground />
+      <AsideBackground>
+        <ImageBlur src={loginBg} hash={imageHashs.login} />
+      </AsideBackground>
       <FormContainer>
         <Typography component="h1">Login</Typography>
         <FormProvider {...methods}>

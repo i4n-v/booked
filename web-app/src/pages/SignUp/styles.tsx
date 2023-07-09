@@ -1,5 +1,4 @@
 import { Box, styled } from "@mui/material";
-import registerBg from "../../assets/IMG/register-bg.jpg";
 
 const SignUpContainer = styled(Box)(({ theme }) => ({
   display: "grid",
@@ -13,11 +12,14 @@ const SignUpContainer = styled(Box)(({ theme }) => ({
 
 const AsideBackground = styled(Box)(({ theme }) => ({
   height: "100%",
-  backgroundImage: `url(${registerBg})`,
-  backgroundSize: "cover",
-  objectFit: "cover",
-  backgroundPosition: "center center",
-  backgroundRepeat: "no-repeat",
+  position: "relative",
+  "& > img": {
+    objectFit: "cover",
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    objectViewBox: "inset(10% 0% 5% 0%)",
+  },
   clipPath: "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
   filter: "brightness(50%)",
   [theme.breakpoints.down("md")]: {
