@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import NavBar from "./NavBar";
 import { Suspense, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { BookBackground } from "../../assets/SVG";
+import Loading from "../../helpers/Loading";
 
 export default function Layout() {
   const [authData] = useContext(AuthContext);
@@ -26,10 +26,7 @@ export default function Layout() {
           flex: 1,
         }}
       >
-        <Suspense fallback={
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <BookBackground />
-          </div>}>
+        <Suspense fallback={<Loading />}>
           <Outlet />
         </Suspense>
       </Container>
