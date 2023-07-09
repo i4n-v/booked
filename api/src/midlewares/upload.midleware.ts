@@ -13,13 +13,13 @@ function uploadMidleware() {
     storage: multer.diskStorage({
       destination: (request, file, callback) => {
         if (allowedFileMimes.includes(file.mimetype)) {
-          if (process.env.NODE_ENV === 'development') {
+          if (process.env.NODE_ENV !== 'development') {
             callback(null, path.resolve(__dirname, '..', 'public', 'uploads', 'files'));
           } else {
             callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'files'));
           }
         } else if (allowedImageMimes.includes(file.mimetype)) {
-          if (process.env.NODE_ENV === 'development') {
+          if (process.env.NODE_ENV !== 'development') {
             callback(null, path.resolve(__dirname, '..', 'public', 'uploads', 'images'));
           } else {
             callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'images'));
