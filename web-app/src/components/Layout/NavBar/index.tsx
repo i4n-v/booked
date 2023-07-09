@@ -9,7 +9,7 @@ import {
   Logout,
   Menu,
   User,
-  Book
+  Book,
 } from "../../../assets/SVG";
 import {
   Button,
@@ -24,7 +24,7 @@ import Dropdown from "../../Dropdown";
 import { AuthContext } from "../../../contexts/AuthContext";
 import useAuth from "../../../services/useAuth";
 import { useMutation } from "react-query";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../Input";
@@ -59,9 +59,9 @@ export default function NavBar({ logged }: NavBarProps) {
       cursor: "pointer",
     },
     "#search": {
-      flex: '1',
-      padding: '18px auto',
-      paddingLeft: '32px'
+      flex: "1",
+      padding: "18px auto",
+      paddingLeft: "32px",
     },
     [theme.breakpoints.down("md")]: {
       "#burguer-menu": {
@@ -92,7 +92,7 @@ export default function NavBar({ logged }: NavBarProps) {
     },
     {
       label: "Explorar",
-      handler: () => navigate("/home"),
+      handler: () => navigate("/explore"),
     },
   ];
 
@@ -104,7 +104,7 @@ export default function NavBar({ logged }: NavBarProps) {
     },
     {
       label: "Biblioteca",
-      icon: <Book/>,
+      icon: <Book />,
       handler: () => navigate("acquisitions"),
     },
     {
@@ -124,26 +124,28 @@ export default function NavBar({ logged }: NavBarProps) {
       handler: () => {
         logoutMutation.mutate(undefined, {
           onSuccess: () => {
-            localStorage.clear()
-            Cookies.remove('x-access-token')
-            authDispatch({ type: AuthActionsKind.SET_USER_DATA, payload: { userData: undefined } })
-            navigate('/login', { replace: true })
-
-          }
-        })
+            localStorage.clear();
+            Cookies.remove("x-access-token");
+            authDispatch({
+              type: AuthActionsKind.SET_USER_DATA,
+              payload: { userData: undefined },
+            });
+            navigate("/login", { replace: true });
+          },
+        });
       },
     },
   ];
 
   const form = useForm({
     defaultValues: {
-      search: ''
-    }
-  })
+      search: "",
+    },
+  });
 
   const search = form.handleSubmit(({ search }) => {
-    navigate(`/explore`, { replace: true, state: search })
-  })
+    navigate(`/explore`, { replace: true, state: search });
+  });
 
   return (
     <AppBar
@@ -161,13 +163,26 @@ export default function NavBar({ logged }: NavBarProps) {
         <Link to="/">
           <DarkLogo />
         </Link>
-       {!['/','/login','/register'].includes(location.pathname) ?  <Box id={"search"}>
-          <FormProvider {...form}>
-            <form onSubmit={search}>
-              <Input type="text" name="search" placeholder="Buscar..." icon={{ right: <IconButton color="primary" type="submit"><Search /></IconButton> }} />
-            </form>
-          </FormProvider>
-        </Box> : null}
+        {!["/", "/login", "/register"].includes(location.pathname) ? (
+          <Box id={"search"}>
+            <FormProvider {...form}>
+              <form onSubmit={search}>
+                <Input
+                  type="text"
+                  name="search"
+                  placeholder="Buscar..."
+                  icon={{
+                    right: (
+                      <IconButton color="primary" type="submit">
+                        <Search />
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </form>
+            </FormProvider>
+          </Box>
+        ) : null}
         {!logged ? (
           <Box id="unlogged" display={"flex"} columnGap={3}>
             <MenuItem onClick={() => navigate("/explore")}>Explorar</MenuItem>

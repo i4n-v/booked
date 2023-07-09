@@ -18,8 +18,8 @@ export default function Loading() {
           autoplay: true,
           animationData: bookLoading,
         }}
-        height={400}
-        width={400}
+        height={350}
+        width={350}
       />
     </Box>
   );
