@@ -2,7 +2,7 @@ import { Box, TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { InputProps } from "./types";
 import { useState } from "react";
-import { RemoveRedEye } from "@mui/icons-material";
+import { RemoveRedEye, VisibilityOff } from "@mui/icons-material";
 export default function Input({
   name,
   label,
@@ -15,22 +15,31 @@ export default function Input({
     control,
     formState: { errors },
   } = useFormContext();
-  const [input_type, setType] = useState(type)
+  const [input_type, setType] = useState(type);
   const Visibility = () => {
     const changeVisibility = () => {
-      if (input_type === 'password') {
-        setType('text')
+      if (input_type === "password") {
+        setType("text");
       } else {
-        setType('password')
+        setType("password");
       }
-    }
+    };
 
     return (
-      <Box sx={{ cursor: 'pointer' }} display={'flex'} alignItems={'center'} onClick={() => changeVisibility()}>
-        <RemoveRedEye color="primary" />
+      <Box
+        sx={{ cursor: "pointer" }}
+        display={"flex"}
+        alignItems={"center"}
+        onClick={() => changeVisibility()}
+      >
+        {input_type === "text" ? (
+          <RemoveRedEye color="primary" />
+        ) : (
+          <VisibilityOff color="primary" />
+        )}
       </Box>
-    )
-  }
+    );
+  };
 
   return (
     <Controller
@@ -45,7 +54,11 @@ export default function Input({
           helperText={errors[name]?.message as string}
           InputProps={{
             startAdornment: icon?.left,
-            endAdornment: icon?.right ? icon?.right : type === "password" ? <Visibility /> : null,
+            endAdornment: icon?.right ? (
+              icon?.right
+            ) : type === "password" ? (
+              <Visibility />
+            ) : null,
           }}
           InputLabelProps={{ shrink }}
           fullWidth

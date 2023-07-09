@@ -77,8 +77,8 @@ const include: ThemeOptions = {
           font: theme.font.xs,
         },
         multiline: {
-          height: 'auto',
-          minHeight: "44px"
+          height: "auto",
+          minHeight: "44px",
         },
       },
     },
@@ -113,9 +113,9 @@ const include: ThemeOptions = {
             transform: "translate(16px, -4px) scale(0.75)",
             top: "-2px",
           },
-          '&.MuiInputLabel-root': {
-            top: '-3px'
-          }
+          "&.MuiInputLabel-root": {
+            top: "-3px",
+          },
         },
       },
     },
@@ -139,30 +139,36 @@ const include: ThemeOptions = {
         root: {
           padding: "12px 24px",
         },
+        contained: {
+          background: "linear-gradient(180deg, #9B51E0 0%, #720ECF 100%)",
+          ":hover": {
+            background: "linear-gradient(180deg, #720ECF 0%, #54079D 100%)",
+          },
+        },
       },
     },
 
     MuiChip: {
       styleOverrides: {
         root: {
-          height: 'auto'
-        }
-      }
+          height: "auto",
+        },
+      },
     },
     MuiAutocomplete: {
       styleOverrides: {
         input: {
-          minHeight: '44px',
+          minHeight: "44px",
         },
         root: {
-          '& .MuiOutlinedInput-root .MuiAutocomplete-input,.MuiOutlinedInput-root': {
-            padding: '0 0 0 9px',
-            minHeight: '44px',
-          },
-
-        }
-      }
-    }
+          "& .MuiOutlinedInput-root .MuiAutocomplete-input,.MuiOutlinedInput-root":
+            {
+              padding: "0 0 0 9px",
+              minHeight: "44px",
+            },
+        },
+      },
+    },
   },
 };
 theme = createTheme(theme, include);
