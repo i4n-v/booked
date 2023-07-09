@@ -1,5 +1,4 @@
 import { Box, styled } from "@mui/material";
-import loginBg from "../../assets/IMG/login-bg.jpg";
 
 const SignInContainer = styled(Box)(({ theme }) => ({
   display: "grid",
@@ -14,11 +13,12 @@ const SignInContainer = styled(Box)(({ theme }) => ({
 const AsideBackground = styled(Box)(({ theme }) => ({
   height: "100%",
   minWidth: "600px",
-  backgroundImage: `url(${loginBg})`,
-  backgroundSize: "cover",
-  objectFit: "cover",
-  backgroundPosition: "center center",
-  backgroundRepeat: "no-repeat",
+  "& > img": {
+    objectFit: "cover",
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
   clipPath: "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
   filter: "brightness(50%)",
   [theme.breakpoints.down("md")]: {

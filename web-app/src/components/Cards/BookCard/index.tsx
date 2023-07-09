@@ -107,7 +107,7 @@ export default function BookCard({
         <InteractiveContainer>
           <Box>
             <Rating
-              value={rating}
+              value={parseFloat(rating as unknown as string)}
               color={theme.palette.primary[700]}
               readOnly
               precision={0.5}

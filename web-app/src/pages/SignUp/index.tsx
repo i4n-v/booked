@@ -9,18 +9,20 @@ import schema from "./validation";
 import IUser from "../../commons/IUser";
 import { Link, useNavigate } from "react-router-dom";
 import { AsideBackground, FormContainer, SignUpContainer } from "./styles";
-
+import imageHashs from "../../assets/IMG/imageHashs";
+import registerBg from "../../assets/IMG/register-bg.jpg";
+import ImageBlur from "../../components/ImageBlur";
 export default function SignUp() {
   const methods = useForm<IUser<"CREATE">>({
     resolver: yupResolver(schema),
     reValidateMode: "onSubmit",
     defaultValues: {
       birth_date: undefined,
-      confirm_password: '',
-      email: '',
-      name: '',
-      password: ''
-    }
+      confirm_password: "",
+      email: "",
+      name: "",
+      password: "",
+    },
   });
   const { createUser } = useUser();
   const notify = useNotifier();
@@ -45,7 +47,9 @@ export default function SignUp() {
 
   return (
     <SignUpContainer>
-      <AsideBackground />
+      <AsideBackground>
+        <ImageBlur src={registerBg} hash={imageHashs.register} />
+      </AsideBackground>
       <FormContainer>
         <Typography component="h1">
           Cadastre

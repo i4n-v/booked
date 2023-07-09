@@ -15,6 +15,9 @@ import {
 } from "./styles";
 import { useQuery } from "react-query";
 import useBook from "../../services/useBook";
+import introducitionBg from "../../assets/IMG/introduction-bg.jpg";
+import imageHashs from "../../assets/IMG/imageHashs";
+import ImageBlur from "../../components/ImageBlur";
 
 export default function Home() {
   const theme = useTheme();
@@ -39,6 +42,7 @@ export default function Home() {
   return (
     <>
       <IntroductionContainer>
+        <ImageBlur src={introducitionBg} hash={imageHashs.introduction} />
         <Box
           sx={{
             backgroundColor: theme.palette.secondary.dark,
@@ -119,8 +123,8 @@ export default function Home() {
               Cadastre-se já
             </Button>
           </Box>
-          <Box className="image">
-            <img src={bookcase} alt="Uma estante de livros." />
+          <Box className="image" position={"relative"}>
+            <ImageBlur src={bookcase} hash={imageHashs.bookcase} />
           </Box>
         </Box>
       </CallToActionContainer>

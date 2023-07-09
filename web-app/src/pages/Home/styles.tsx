@@ -1,11 +1,6 @@
 import { Box, styled } from "@mui/material";
-import introducitionBg from "../../assets/IMG/introduction-bg.jpg";
 
 const IntroductionContainer = styled(Box)(({ theme }) => ({
-  background: `url(${introducitionBg})`,
-  backgroundSize: "cover",
-  backgroundPosition: "50% 58%",
-  backgroundRepeat: "no-repeat",
   height: "654px",
   display: "flex",
   flexDirection: "column",
@@ -14,6 +9,16 @@ const IntroductionContainer = styled(Box)(({ theme }) => ({
   gap: "80px",
   padding: "20px",
   position: "relative",
+  "& > img": {
+    objectFit: "cover",
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+    objectViewBox: "inset(-0% 0% -15% 0%)",
+    [theme.breakpoints.down("md")]: {
+      objectViewBox: "inset(40% 16% 10% 0%)",
+    },
+  },
   "& > .title": {
     maxWidth: "1400px",
     width: "100%",
