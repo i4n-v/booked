@@ -6,6 +6,7 @@ import BookUpdateDto from '../dto/book/bookUpdate.dto';
 import { CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
 import { Request } from 'express';
+import 'dotenv/config';
 
 class BookRepository {
   private repository: Repository<Book>;
@@ -103,9 +104,10 @@ class BookRepository {
     options?: WhereOptions<BookDto>
   ) {
     const {
-      protocol,
       headers: { host },
     } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
 
     return await this.repository.findAndCountAll({
       limit,
@@ -121,7 +123,7 @@ class BookRepository {
             sequelizeConnection.literal(`
               CASE
                 WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
-                  'https' + '://' + host
+                  protocol + '://' + host
                 }', "Book".photo_url)
                 ELSE "Book".photo_url
               END
