@@ -8,7 +8,7 @@ class FileSystem {
       headers: { host },
     } = request;
 
-    const url = `${protocol}://${host}${path}`;
+    const url = `${'https'}://${host}${path}`;
 
     return url;
   }

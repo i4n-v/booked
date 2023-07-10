@@ -76,7 +76,7 @@ class CommentRepository {
               sequelizeConnection.literal(`
                 CASE
                   WHEN "user".photo_url IS NOT NULL THEN CONCAT('${
-                    protocol + '://' + host
+                    'https' + '://' + host
                   }', "user".photo_url)
                   ELSE "user".photo_url
                 END

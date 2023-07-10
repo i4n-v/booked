@@ -121,7 +121,7 @@ class BookRepository {
             sequelizeConnection.literal(`
               CASE
                 WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
+                  'https' + '://' + host
                 }', "Book".photo_url)
                 ELSE "Book".photo_url
               END
