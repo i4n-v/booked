@@ -8,7 +8,7 @@ const api: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  baseURL: "http://localhost:5000",
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 api.interceptors.request.use(
