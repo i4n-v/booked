@@ -10,12 +10,7 @@ async function initApp() {
   const app = express();
 
   app.use(express.json());
-  app.use(
-    cors({
-      origin: '*',
-      optionsSuccessStatus: 200,
-    })
-  );
+  // app.use(cors());
   app.use('/public', express.static('public'));
   swagger(app);
   routes(app);
