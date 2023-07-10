@@ -1,20 +1,29 @@
 import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
+import 'dotenv/config';
 
 export const uploadIdentifierError = 'UPLOAD ERROR:';
 
 function uploadMidleware() {
   const allowedFileMimes = ['application/pdf'];
-  const allowedImageMimes = ['image/jpg','image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+  const allowedImageMimes = ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
 
   const multerInstance = multer({
     storage: multer.diskStorage({
       destination: (request, file, callback) => {
         if (allowedFileMimes.includes(file.mimetype)) {
-          callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'files'));
+          if (process.env.NODE_ENV !== 'development') {
+            callback(null, path.resolve(__dirname, '..', 'public', 'uploads', 'files'));
+          } else {
+            callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'files'));
+          }
         } else if (allowedImageMimes.includes(file.mimetype)) {
-          callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'images'));
+          if (process.env.NODE_ENV !== 'development') {
+            callback(null, path.resolve(__dirname, '..', 'public', 'uploads', 'images'));
+          } else {
+            callback(null, path.resolve(__dirname, '..', '..', 'public', 'uploads', 'images'));
+          }
         }
       },
       filename: (request, file, callback) => {

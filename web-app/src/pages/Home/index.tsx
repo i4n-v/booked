@@ -81,14 +81,14 @@ export default function Home() {
         </FormProvider>
       </IntroductionContainer>
 
-      {books ? (
-        <TopBooksContainer>
-          <Box className="header">
-            <Typography variant="h2">
-              Explore os <span>tops 10</span> livros melhores avaliados na
-              plataforma.
-            </Typography>
-          </Box>
+      <TopBooksContainer>
+        <Box className="header">
+          <Typography variant="h2">
+            Explore os <span>tops 10</span> livros melhores avaliados na
+            plataforma.
+          </Typography>
+        </Box>
+        {!!books?.items?.length ? (
           <Carousel
             data={books.items}
             timer
@@ -106,8 +106,19 @@ export default function Home() {
               />
             )}
           />
-        </TopBooksContainer>
-      ) : null}
+        ) : (
+          <Typography
+            component="p"
+            sx={{
+              color: theme.palette.secondary[800],
+              font: theme.font.md,
+              textAlign: "center",
+            }}
+          >
+            Nenhum livro encontrado.
+          </Typography>
+        )}
+      </TopBooksContainer>
 
       <CallToActionContainer>
         <Box>

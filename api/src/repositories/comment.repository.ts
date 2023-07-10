@@ -5,6 +5,7 @@ import CommentCreateDto from '../dto/comment/commentCreate.dto';
 import CommentUpdateDto from '../dto/comment/commentUpdate.dto';
 import { WhereOptions } from 'sequelize';
 import { Request } from 'express';
+import 'dotenv/config';
 
 class CommentRepository {
   private repository: Repository<Comment>;
@@ -44,9 +45,10 @@ class CommentRepository {
     options?: WhereOptions<Comment>
   ) {
     const {
-      protocol,
       headers: { host },
     } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
 
     return await this.repository.findAndCountAll({
       limit,

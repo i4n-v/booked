@@ -1,12 +1,14 @@
 import { Request } from 'express';
 import fs from 'fs';
+import 'dotenv/config';
 
 class FileSystem {
   uploadedFilePath(request: Request, path: string) {
     const {
-      protocol,
       headers: { host },
     } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
 
     const url = `${protocol}://${host}${path}`;
 

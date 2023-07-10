@@ -23,7 +23,7 @@ export default class Comment extends Model<CommentDto, CommentCreateDto> {
   })
   id: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(2000))
   description: string;
 
   @AllowNull(false)

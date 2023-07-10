@@ -98,7 +98,7 @@ export default function Footer() {
             Outros
           </Typography>
           <Box display="flex" flexDirection="column" gap="6px">
-            <FooterOptions to="home">Explorar</FooterOptions>
+            <FooterOptions to="explore">Explorar</FooterOptions>
             <FooterOptions to="questions">Duvidas</FooterOptions>
             <FooterOptions to="terms">Termos e condições</FooterOptions>
           </Box>

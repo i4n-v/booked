@@ -145,7 +145,7 @@ export default function Profile() {
               width: "100%",
               textAlign: "center",
               padding: "15px",
-              color: (t) => t.palette.primary[600],
+              color: (t) => t.palette.secondary[800],
             }}
           >
             Nenhum livro publicado.

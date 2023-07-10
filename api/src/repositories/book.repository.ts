@@ -6,6 +6,7 @@ import BookUpdateDto from '../dto/book/bookUpdate.dto';
 import { CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
 import { Request } from 'express';
+import 'dotenv/config';
 
 class BookRepository {
   private repository: Repository<Book>;
@@ -103,9 +104,10 @@ class BookRepository {
     options?: WhereOptions<BookDto>
   ) {
     const {
-      protocol,
       headers: { host },
     } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
 
     return await this.repository.findAndCountAll({
       limit,
