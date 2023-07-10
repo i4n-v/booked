@@ -33,7 +33,7 @@ export default class Book extends Model<BookDto, BookCreateDto> {
   name: string;
 
   @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(2000))
   description: string;
 
   @AllowNull(false)
