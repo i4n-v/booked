@@ -144,6 +144,9 @@ const include: ThemeOptions = {
           ":hover": {
             background: "linear-gradient(180deg, #720ECF 0%, #54079D 100%)",
           },
+          ":disabled": {
+            color: theme.palette.secondary.light,
+          },
         },
       },
     },

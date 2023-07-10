@@ -69,6 +69,7 @@ export default function Home() {
             <Input
               name="search"
               placeholder="Buscar..."
+              inputProps={{ maxLength: 255 }}
               icon={{
                 right: <Search style={{ color: theme.palette.primary[700] }} />,
               }}

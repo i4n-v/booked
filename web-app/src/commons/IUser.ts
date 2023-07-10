@@ -20,7 +20,9 @@ interface User extends UserCommom {
   id?: string;
   user_name: string;
   photo_url?: string;
-  description: string;
+  description?: string;
+  total_books?: number;
+  total_acquitions?: number;
 }
 
 interface UserUpdate extends User {

@@ -92,6 +92,7 @@ export default function BooksForm({
       maxWidth={"sm"}
       minHeight={488}
       onClose={() => {
+        if (createMutation.isLoading || updateMutation.isLoading) return;
         handleClose(false);
       }}
       title="Publicar novo livro"
@@ -100,7 +101,11 @@ export default function BooksForm({
         <form onSubmit={onSubmit}>
           <Grid item container xs={12} gap={2}>
             <Grid item xs={6}>
-              <Input name="name" label={"Nome"} />
+              <Input
+                name="name"
+                label={"Nome"}
+                inputProps={{ maxLength: 255 }}
+              />
             </Grid>
             <Grid item xs={2} justifyContent={"center"} display={"flex"}>
               <InputRadio
@@ -137,6 +142,7 @@ export default function BooksForm({
               <Input
                 name="description"
                 label={"Descrição"}
+                inputProps={{ maxLength: 2000 }}
                 maxRows={6}
                 minRows={6}
                 multiline
@@ -158,8 +164,15 @@ export default function BooksForm({
               />
             </Grid>
             <Grid item xs={2}>
-              <Button sx={{ height: "42px" }} type="submit" variant="contained">
-                PUBLICAR
+              <Button
+                sx={{ height: "42px" }}
+                disabled={createMutation.isLoading || updateMutation.isLoading}
+                type="submit"
+                variant="contained"
+              >
+                {!createMutation.isLoading || updateMutation.isLoading
+                  ? "PUBLICAR"
+                  : "PUBLICANDO..."}
               </Button>
             </Grid>
           </Grid>

@@ -33,7 +33,7 @@ export default function Profile() {
   const [bookToEdit, setBookToEdit] = useState<string>();
   const notify = useNotifier();
   const navigate = useNavigate();
-  const { data: user } = useQuery(
+  const { data: user, refetch: userRefetch } = useQuery(
     "getUser",
     () => getUser(authData?.userData?.id as string),
     {
@@ -42,7 +42,7 @@ export default function Profile() {
     }
   );
 
-  const { data: books, refetch } = useQuery(
+  const { data: books, refetch: booksRefetch } = useQuery(
     ["getUserBooks", [filters]],
     () => getBooks({ user_id: authData?.userData?.id, ...filters }),
     {
@@ -56,7 +56,8 @@ export default function Profile() {
     deleteBookMutation.mutate(id, {
       onSuccess(data) {
         notify(data.message);
-        refetch();
+        booksRefetch();
+        userRefetch();
       },
       onError(error: any) {
         notify(error.message);
@@ -72,7 +73,8 @@ export default function Profile() {
         handleClose={() => {
           handleOpen(false);
           setBookToEdit(undefined);
-          refetch();
+          booksRefetch();
+          userRefetch();
         }}
       />
       <InfoContainer>
@@ -87,10 +89,10 @@ export default function Profile() {
           </IdentityInfo>
           <LibraryInfo>
             <LibraryInfoBadge>
-              <span>{2}</span>Livros
+              <span>{user?.total_books}</span>Livros
             </LibraryInfoBadge>
             <LibraryInfoBadge>
-              <span>{2}</span>Bibliotecas
+              <span>{user?.total_acquitions}</span>Bibliotecas
             </LibraryInfoBadge>
           </LibraryInfo>
           <p>{user?.description}</p>

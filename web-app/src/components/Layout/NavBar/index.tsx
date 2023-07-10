@@ -171,6 +171,7 @@ export default function NavBar({ logged }: NavBarProps) {
                   type="text"
                   name="search"
                   placeholder="Buscar..."
+                  inputProps={{ maxLength: 255 }}
                   icon={{
                     right: (
                       <IconButton color="primary" type="submit">
