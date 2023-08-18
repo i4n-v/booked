@@ -1,8 +1,8 @@
 // .storybook/manager.js
 
 import { addons } from "@storybook/manager-api";
-import { themes } from "@storybook/theming";
+import storyBookTheme from "./storyBookTheme";
 
 addons.setConfig({
-  theme: themes.dark,
+  theme: storyBookTheme,
 });
