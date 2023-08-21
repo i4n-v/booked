@@ -4,9 +4,32 @@ import CarouselProps from "../../components/Carousel/types";
 import { Typography } from "@mui/material";
 import CarouselItemProps from "./types";
 import { CarouselItemContainer } from "./styles";
+import {
+  Description,
+  Subtitle,
+  Title,
+  Primary,
+  Controls,
+} from "@storybook/blocks";
 
 const meta: Meta<CarouselProps<any>> = {
   component: Carousel,
+  tags: ["autodocs"],
+  parameters: {
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <Description>
+            Carousel component to render any list of items.
+          </Description>
+          <Subtitle>See the examples and put them into practice:</Subtitle>
+          <Primary />
+          <Controls />
+        </>
+      ),
+    },
+  },
   argTypes: {
     data: {
       description: "Array of data, which will be passed to your carousel item.",
@@ -65,9 +88,9 @@ export const Default: Story = {
   render: ({ data, timer }) => (
     <Carousel
       data={data}
-      renderItem={(item) => <CarouselItem title={item.title} />}
-      keyExtractor={(item) => item.title}
       timer={timer}
+      keyExtractor={(item) => item.title}
+      renderItem={(item) => <CarouselItem title={item.title} />}
     />
   ),
 };
