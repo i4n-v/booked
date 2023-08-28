@@ -18,6 +18,8 @@ import Acquisition from './acquisition.model';
 import Book from './book.model';
 import Authentication from './authentication.model';
 import Comment from './comment.model';
+import Chat from './chat.model';
+import Message from './message.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -109,6 +111,15 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @HasMany(() => Comment)
   comments: Comment[];
+
+  @HasMany(() => Chat)
+  chats: Chat[];
+
+  @HasMany(() => Message, 'sender_id')
+  sender_messages: Message[];
+
+  @HasMany(() => Message, 'receiver_id')
+  receiver_messages: Message[];
 
   @BeforeValidate
   static async hashPasswordBeforeValidate(user: UserCreateDto) {
