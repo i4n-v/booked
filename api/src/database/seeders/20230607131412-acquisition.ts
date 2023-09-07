@@ -1,5 +1,3 @@
-import { faker } from '@faker-js/faker';
-import AssessmentCreateDto from '../../dto/assessment/assessmentCreate.dto';
 import { v4 } from 'uuid';
 import { Migration } from 'sequelize-cli';
 import { sequelizeConnection } from '../../config/sequelizeConnection.config';
