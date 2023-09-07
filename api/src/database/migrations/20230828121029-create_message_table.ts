@@ -9,6 +9,11 @@ const migration: Migration = {
           defaultValue: Sequelize.DataTypes.UUIDV4,
           primaryKey: true,
         },
+        read: {
+          type: Sequelize.DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
         content: {
           type: Sequelize.DataTypes.STRING(7000),
           allowNull: false,

@@ -41,10 +41,17 @@ export default class User extends Model<UserDto, UserCreateDto> {
   })
   name: string;
 
+  @AllowNull(false)
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  online: string;
+
   @Unique
   @AllowNull(false)
   @Column(DataType.STRING)
-  user_name: string;
+  user_name: boolean;
 
   @Unique({
     name: 'Users_email_key',

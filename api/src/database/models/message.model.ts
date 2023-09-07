@@ -23,6 +23,13 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
   id: string;
 
   @AllowNull(false)
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  read: boolean;
+
+  @AllowNull(false)
   @Column(DataType.STRING(7000))
   content: string;
 
