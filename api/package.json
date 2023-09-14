@@ -14,7 +14,8 @@
     "db:migrate:undo": "tsup ./src/config/database.config.ts ./src/database/migrations; npx sequelize db:migrate:undo",
     "db:seed:all": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed:all",
     "db:seed:undo:all": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed:undo:all",
-    "db:seed:unique": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed --seed"
+    "db:seed:unique": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed --seed",
+    "db:seed:undo:unique": "tsup ./src/config/database.config.ts ./src/database/seeders; npx sequelize db:seed:undo --seed"
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
@@ -30,6 +31,7 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.29.0",
     "sequelize-typescript": "^2.1.5",
+    "socket.io": "^4.7.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0"
@@ -43,6 +45,7 @@
     "@types/multer": "^1.4.7",
     "@types/node": "^18.14.6",
     "@types/sequelize": "^4.28.14",
+    "@types/socket.io": "^3.0.2",
     "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-express": "^4.1.3",
     "@types/uuid": "^9.0.2",
