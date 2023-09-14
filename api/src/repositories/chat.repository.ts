@@ -17,6 +17,81 @@ class ChatRepository {
     return await this.repository.findByPk(id);
   }
 
+  async findByIdWithUsers(id: string, request: Request) {
+    const {
+      headers: { host },
+    } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
+
+    return await this.repository.findByPk(id, {
+      attributes: {
+        exclude: ['first_user_id', 'second_user_id'],
+        include: [
+          [
+            sequelizeConnection.literal(
+              `(
+                SELECT COUNT(id)
+                FROM "Messages"
+                WHERE "Messages".chat_id = "Chat".id
+              )`
+            ),
+            'unreaded_messages',
+          ],
+        ],
+      },
+      include: [
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'first_user',
+          attributes: [
+            'id',
+            'name',
+            'user_name',
+            [
+              sequelizeConnection.literal(`
+              CASE
+                WHEN first_user.photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', first_user.photo_url)
+                ELSE first_user.photo_url
+              END
+          `),
+              'photo_url',
+            ],
+          ],
+        },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'second_user',
+          attributes: [
+            'id',
+            'name',
+            'user_name',
+            [
+              sequelizeConnection.literal(`
+              CASE
+                WHEN second_user.photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', second_user.photo_url)
+                ELSE second_user.photo_url
+              END
+          `),
+              'photo_url',
+            ],
+          ],
+        },
+        {
+          model: sequelizeConnection.model('Message'),
+          as: 'messages',
+          attributes: ['id', 'sender_id', 'read', 'content', 'createdAt'],
+          order: [['createdAt', 'DESC']],
+          limit: 1,
+        },
+      ],
+    });
+  }
+
   async findByUsers(first_user_id: string, second_user_id: string) {
     return await this.repository.findOne({
       where: {
@@ -34,6 +109,7 @@ class ChatRepository {
   ) {
     const {
       headers: { host },
+      auth,
     } = request;
 
     const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
@@ -53,7 +129,6 @@ class ChatRepository {
           'DESC',
         ],
       ],
-      subQuery: false,
       attributes: {
         exclude: ['first_user_id', 'second_user_id'],
         include: [
@@ -62,7 +137,9 @@ class ChatRepository {
               `(
                 SELECT COUNT(id)
                 FROM "Messages"
-                WHERE "Messages".chat_id = "Chat".id
+                WHERE
+                  "Messages".chat_id = "Chat".id
+                  AND "Messages".receiver_id = '${auth.id}'
               )`
             ),
             'unreaded_messages',
@@ -114,7 +191,7 @@ class ChatRepository {
         {
           model: sequelizeConnection.model('Message'),
           as: 'messages',
-          attributes: ['id', 'sender_id', 'content', 'createdAt'],
+          attributes: ['id', 'sender_id', 'read', 'content', 'createdAt'],
           order: [['createdAt', 'DESC']],
           limit: 1,
         },
