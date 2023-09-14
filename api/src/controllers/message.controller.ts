@@ -5,6 +5,7 @@ import ChatRepository from '../repositories/chat.repository';
 import messages from '../config/messages.config';
 import MessageCreateDto from '../dto/message/messageCreate.dto';
 import UserRepository from '../repositories/user.repository';
+import { io } from '../setup';
 
 class MessageController {
   async index(request: Request, response: Response, next: NextFunction) {
@@ -67,15 +68,22 @@ class MessageController {
       const chat = await ChatRepository.findByUsers(auth.id, receiver_id);
 
       if (!chat) {
-        return response.status(400).json({ message: messages.unknown('Mensagem') });
+        return response.status(400).json({ message: messages.unknown('Conversa') });
       }
 
-      await MessageRepository.create({
+      const createdMessage = await MessageRepository.create({
         chat_id: chat.id,
         sender_id: auth.id,
         receiver_id,
         content,
       });
+
+      const message = await MessageRepository.findByIdWithUsers(createdMessage.id, request);
+      const chatWithLasMessage = await ChatRepository.findByIdWithUsers(chat.id, request);
+
+      io.emit(`receive-chat-${receiver_id}`, chatWithLasMessage);
+
+      io.emit(`receive-message-${chat.id}-${receiver_id}`, message);
 
       return response.json(messages.create('Mensagem'));
     } catch (error) {
@@ -94,6 +102,8 @@ class MessageController {
       }
 
       await MessageRepository.deleteById(params.id);
+
+      io.emit(`deleted-message-${message.receiver_id}`, message.id);
 
       return response.json(messages.delete('Mensagem'));
     } catch (error) {
