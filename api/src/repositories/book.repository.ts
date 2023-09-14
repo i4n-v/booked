@@ -38,8 +38,8 @@ class BookRepository {
               `(
                 SELECT
                   CASE
-                    WHEN (SUM(number) / COUNT(*)) IS NULL THEN 0
-                    ELSE ROUND((SUM(number) / COUNT(*))::numeric, 2)
+                    WHEN (SUM(number) / COUNT(id)) IS NULL THEN 0
+                    ELSE ROUND((SUM(number) / COUNT(id))::numeric, 2)
                   END
                 FROM "Assessments"
                 WHERE "Assessments".book_id = "Book".id
@@ -50,7 +50,7 @@ class BookRepository {
           [
             sequelizeConnection.literal(
               `(
-                SELECT COUNT(*)
+                SELECT COUNT(id)
                 FROM "Assessments"
                 WHERE "Assessments".book_id = "Book".id
               )`
@@ -135,8 +135,8 @@ class BookRepository {
               `(
                 SELECT
                   CASE
-                    WHEN (SUM(number) / COUNT(*)) IS NULL THEN 0
-                    ELSE (SUM(number) / COUNT(*))
+                    WHEN (SUM(number) / COUNT(id)) IS NULL THEN 0
+                    ELSE (SUM(number) / COUNT(id))
                   END
                 FROM "Assessments"
                 WHERE "Assessments".book_id = "Book".id
@@ -147,7 +147,7 @@ class BookRepository {
           [
             sequelizeConnection.literal(
               `(
-                SELECT COUNT(*)
+                SELECT COUNT(id)
                 FROM "Assessments"
                 WHERE "Assessments".book_id = "Book".id
               )`

@@ -45,6 +45,69 @@ router.post('/users', UserController.store);
 
 /**
  * @openapi
+ * /users:
+ *   get:
+ *     summary: List users.
+ *     description: This route list users with pagination.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - $ref: '#/components/parameters/page'
+ *       - $ref: '#/components/parameters/limit'
+ *       - $ref: '#/components/parameters/access_token'
+ *       - name: name
+ *         description: Name of user
+ *         in: query
+ *         schema:
+ *           type: string
+ *     security:
+ *       - access_token: []
+ *     responses:
+ *       200:
+ *         description: Return the user data except credentials.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               name:
+ *                 type: string
+ *               user_name:
+ *                  ype: string
+ *               email:
+ *                  ype: string
+ *               birth_date:
+ *                  ype: string
+ *               description:
+ *                 type: string
+ *               photo_url:
+ *                 type: string;
+ *               createdAt:
+ *                 type: string;
+ *               total_books:
+ *                 type: integer;
+ *               total_acquisitions:
+ *                 type: integer;
+ *             examples:
+ *               get_payload:
+ *                 value:
+ *                   name: Ana Carollina
+ *                   user_name: ana#0
+ *                   email: ana@email.com
+ *                   birth_date: '2003-07-14'
+ *                   description: 'I am a big author!'
+ *                   photo_url: 'http://localhost:5000/public/uploads/images/5bbd9d133d18170ac1db1d633546f2c6-profile.png'
+ *                   createdAt: '2010-03-23'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ *       404:
+ *         $ref: '#/components/responses/error'
+ */
+router.get('/users', authMidleware, UserController.index);
+
+/**
+ * @openapi
  * /users/{id}:
  *   get:
  *     summary: get a user data.

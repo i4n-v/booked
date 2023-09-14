@@ -9,13 +9,14 @@ import { ConfirmContextProvider } from "./contexts/ConfirmContext";
 import GlobalConfirm from "./helpers/Confirm/GlobalConfirm";
 
 function App() {
+  const location = useLocation();
+  const [, authDispach] = useContext(AuthContext);
 
-  const location = useLocation()
-  const [, authDispach] = useContext(AuthContext)
   useEffect(() => {
     window.scrollTo(0, 0);
-    authDispach({ type: AuthActionsKind.VERIFY })
-  }, [location.pathname, authDispach])
+    authDispach({ type: AuthActionsKind.VERIFY });
+  }, [location.pathname, authDispach]);
+
   return (
     <NotifierContextProvider>
       <ConfirmContextProvider>
@@ -24,7 +25,6 @@ function App() {
         {useRoutes(routes)}
       </ConfirmContextProvider>
     </NotifierContextProvider>
-
   );
 }
 

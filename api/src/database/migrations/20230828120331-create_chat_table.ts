@@ -3,28 +3,21 @@ import { Migration } from 'sequelize-cli';
 const migration: Migration = {
   async up(queryInterface, Sequelize) {
     try {
-      await queryInterface.createTable('Authentications', {
+      await queryInterface.createTable('Chats', {
         id: {
           type: Sequelize.DataTypes.UUID,
           defaultValue: Sequelize.DataTypes.UUIDV4,
           primaryKey: true,
         },
-        token: {
-          type: Sequelize.DataTypes.STRING,
+        first_user_id: {
+          type: Sequelize.DataTypes.UUID,
+          references: {
+            model: 'Users',
+            key: 'id',
+          },
           allowNull: false,
-          unique: true,
         },
-        valid: {
-          type: Sequelize.DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: true,
-        },
-        expiry_date: {
-          type: Sequelize.DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: true,
-        },
-        user_id: {
+        second_user_id: {
           type: Sequelize.DataTypes.UUID,
           references: {
             model: 'Users',
@@ -40,7 +33,7 @@ const migration: Migration = {
 
   async down(queryInterface) {
     try {
-      await queryInterface.dropTable('Authentications');
+      await queryInterface.dropTable('Chats');
     } catch (error: any) {
       console.log(error);
     }

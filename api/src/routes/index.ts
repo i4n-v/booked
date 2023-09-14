@@ -7,6 +7,8 @@ import CategoryRouter from './category.routes';
 import CommentRouter from './comment.routes';
 import AssessmentRouter from './assessment.routes';
 import AcquisitionRouter from './acquisition.routes';
+import ChatRouter from './chat.routes';
+import MessageRouter from './message.routes';
 
 const routes: Router[] = [
   appRoutes,
@@ -17,6 +19,8 @@ const routes: Router[] = [
   CommentRouter,
   AssessmentRouter,
   AcquisitionRouter,
+  ChatRouter,
+  MessageRouter,
 ];
 
 export default function initRoutes(app: Express) {
