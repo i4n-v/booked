@@ -13,8 +13,8 @@ import Cookies from "js-cookie";
 function App() {
   const location = useLocation();
   const [authData, authDispach] = useContext(AuthContext);
-  const chatId = "7dcf5e5f-5720-4059-a30d-db57de48cc79";
-  const receiverId = "2176e13d-a767-41a0-bcf8-7c78234def81";
+  const chatId = "9b669823-b92a-4fc3-b334-44c92cd86d15";
+  const receiverId = "624bb1a0-b920-4877-aec7-e28dd3f33aef";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,6 +51,10 @@ function App() {
 
       socket.on(`deleted-message-${receiverId}`, (arg) => {
         console.log("deleted-message:", arg);
+      });
+
+      socket.on(`pending-chats-${receiverId}`, (arg) => {
+        console.log("pending-chats:", arg);
       });
 
       const handleEnterInChat = () => {
