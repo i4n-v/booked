@@ -101,6 +101,21 @@ class ChatRepository {
     });
   }
 
+  async countUnreadedByReceiverId(id: string) {
+    return await this.repository.count({
+      distinct: true,
+      include: {
+        model: sequelizeConnection.model('Message'),
+        as: 'messages',
+        attributes: [],
+        where: {
+          read: false,
+          receiver_id: id,
+        },
+      },
+    });
+  }
+
   async findAndCountAll(
     page: number,
     limit: number,

@@ -4,6 +4,7 @@ import UserRepository from '../repositories/user.repository';
 import Auth from '../interfaces/auth.interface';
 import { io } from '../setup';
 import { ISocketEvent } from '../interfaces/socketEvent.interface';
+import ChatRepository from '../repositories/chat.repository';
 
 const userEvents: ISocketEvent[] = [
   {
@@ -26,6 +27,9 @@ const userEvents: ISocketEvent[] = [
 
         if (!user.online) {
           await UserRepository.update(user.id, { online: true });
+          const unreadedChats = await ChatRepository.countUnreadedByReceiverId(user.id);
+
+          io.emit(`pending-chats-${user.id}`, unreadedChats);
           io.emit(`user-connect-${user.id}`, user.id);
         }
       } catch (error) {
