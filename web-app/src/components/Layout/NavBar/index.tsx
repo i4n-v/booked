@@ -12,6 +12,7 @@ import {
   Book,
 } from "../../../assets/SVG";
 import {
+  Badge,
   Button,
   IconButton,
   Typography,
@@ -28,7 +29,7 @@ import Cookies from "js-cookie";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../Input";
-import { Search } from "@mui/icons-material";
+import { ChatBubble, Search } from "@mui/icons-material";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
@@ -223,6 +224,20 @@ export default function NavBar({ logged }: NavBarProps) {
                 {authData?.userData?.user_name}
               </Typography>
               <Account />
+            </IconButton>
+
+            <IconButton sx={{}} onClick={() => navigate("/chat")}>
+              <ChatBubble color="primary" />
+              <Typography
+                component={"div"}
+                sx={{
+                  position: "absolute",
+                  top: 3,
+                  right: 10,
+                }}
+              >
+                <Badge badgeContent={9} max={9} color="error" />
+              </Typography>
             </IconButton>
           </Box>
         )}
