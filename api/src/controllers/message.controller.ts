@@ -80,9 +80,10 @@ class MessageController {
 
       const message = await MessageRepository.findByIdWithUsers(createdMessage.id, request);
       const chatWithLasMessage = await ChatRepository.findByIdWithUsers(chat.id, request);
+      const unreadedChats = await ChatRepository.countUnreadedByReceiverId(receiver_id);
 
       io.emit(`receive-chat-${receiver_id}`, chatWithLasMessage);
-
+      io.emit(`pending-chats-${receiver_id}`, unreadedChats);
       io.emit(`receive-message-${chat.id}-${receiver_id}`, message);
 
       return response.json(messages.create('Mensagem'));
