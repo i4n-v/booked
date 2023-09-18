@@ -1,14 +1,13 @@
 import { AccountCircle } from "@mui/icons-material";
 import { Box, Paper } from "@mui/material";
 
-export default function Message({ showAccount, response }) {
+export default function Message({ showAccount, response, content }) {
     return (
         <Box sx={{
             display: "flex",
             alignItems: "center",
             flexDirection: response ? "initial" : "row-reverse",
             columnGap: "12px",
-
         }}>
             <AccountCircle sx={{ display: showAccount && response ? "block" : "none" }} color="primary" fontSize="large" />
             <Paper sx={{
@@ -18,10 +17,11 @@ export default function Message({ showAccount, response }) {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: "6px",
+                wordBreak: "break-word",
                 maxWidth: "550px",
                 marginLeft: showAccount || !response ? "initial" : "47px"
             }}>
-                asfsdfkakdddddddddddddddddddddddddddddddddddddsadsda wedqw qw wq e qeq weqweq e eq e qwe qeqeqewwe  eqw
+                {content}
             </Paper>
         </Box >
     )

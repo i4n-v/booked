@@ -1,23 +1,14 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import { AccountCircle, Person, Search, Send } from "@mui/icons-material";
-import {
-  BarChat,
-  ChatList,
-  ChatListContainer,
-  ChatMessages,
-  ChatMessagesContainer,
-  ContainerChat,
-  ContentChat,
-  SearchChat,
-  SendMessage,
-} from "./styles";
-import Input from "../../components/Input";
-import { FormProvider, useForm } from "react-hook-form";
-import ChatItem from "./ChatItem";
-import Message from "./Message";
+import { Box, Button, Typography } from "@mui/material";
+import { AccountCircle, Send } from "@mui/icons-material";
+import { BarChat, ContainerChat, ContentChat } from "./styles";
+import ChatList from "./ChatList/Index";
+import Messages from "./Messages";
+import { useState } from "react";
+import { IChat } from "../../services/useChat/types";
 
 export default function Chat() {
-  const form = useForm();
+
+  const [selectedChat, setSelectedChat] = useState<IChat>()
   return (
     <ContainerChat>
       <BarChat>
@@ -39,75 +30,10 @@ export default function Chat() {
         </Box>
       </BarChat>
       <ContentChat>
-        <ChatListContainer>
-          <SearchChat>
-            <FormProvider {...form}>
-              <form>
-                <Input
-                  type="text"
-                  name="search"
-                  placeholder="Buscar..."
-                  inputProps={{ maxLength: 255 }}
-                  icon={{
-                    right: (
-                      <IconButton color="primary" type="submit">
-                        <Search />
-                      </IconButton>
-                    ),
-                  }}
-                />
-                <Person color="primary" sx={{ fontSize: "32px" }} />
-              </form>
-            </FormProvider>
-          </SearchChat>
-          <ChatList>
-            <ChatItem active={true} />
-            <ChatItem active={false} />
-            <ChatItem active={false} />
-            <ChatItem active={false} />
-            <ChatItem active={false} />
-            <ChatItem active={false} />
-          </ChatList>
-        </ChatListContainer>
-        <ChatMessagesContainer>
-          <SendMessage>
-            <FormProvider {...form}>
-              <form>
-                <Input
-                  type="text"
-                  name="search"
-                  inputProps={{ maxLength: 255 }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ fontSize: "32px" }}
-                >
-                  <Send />
-                </Button>
-              </form>
-            </FormProvider>
-          </SendMessage>
-          <ChatMessages>
-            <Message showAccount response />
-            <Message showAccount={false} response={true} />
-            <Message showAccount={false} response={false} />
-            <Message showAccount={false} response={false} />
-            <Message showAccount response />
-            <Message showAccount={false} response={true} />
-            <Message showAccount={false} response={false} />
-            <Message showAccount={false} response={false} />
-            <Message showAccount response />
-            <Message showAccount={false} response={true} />
-            <Message showAccount={false} response={false} />
-            <Message showAccount={false} response={false} />
-
-            <Message showAccount response />
-            <Message showAccount={false} response={true} />
-            <Message showAccount={false} response={false} />
-            <Message showAccount={false} response={false} />
-          </ChatMessages>
-        </ChatMessagesContainer>
+        <ChatList handleViewChat={setSelectedChat} />
+        {selectedChat ? 
+        <Messages chat={selectedChat} />
+      : null}
       </ContentChat>
     </ContainerChat>
   );
