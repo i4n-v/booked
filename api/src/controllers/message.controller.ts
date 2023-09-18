@@ -6,6 +6,7 @@ import messages from '../config/messages.config';
 import MessageCreateDto from '../dto/message/messageCreate.dto';
 import UserRepository from '../repositories/user.repository';
 import { io } from '../setup';
+import { sequelizeConnection } from '../config/sequelizeConnection.config';
 
 class MessageController {
   async index(request: Request, response: Response, next: NextFunction) {
@@ -65,28 +66,51 @@ class MessageController {
         return response.status(400).json({ message: messages.unknown('Usuário') });
       }
 
-      const chat = await ChatRepository.findByUsers(auth.id, receiver_id);
+      let chat = await ChatRepository.findByUsers(auth.id, receiver_id);
 
-      if (!chat) {
-        return response.status(400).json({ message: messages.unknown('Conversa') });
-      }
+      await sequelizeConnection.transaction(async (transaction) => {
+        if (!chat) {
+          chat = await ChatRepository.create(
+            {
+              first_user_id: auth.id,
+              second_user_id: receiver_id,
+            },
+            transaction
+          );
+        }
 
-      const createdMessage = await MessageRepository.create({
-        chat_id: chat.id,
-        sender_id: auth.id,
-        receiver_id,
-        content,
+        const createdMessage = await MessageRepository.create(
+          {
+            chat_id: chat.id,
+            sender_id: auth.id,
+            receiver_id,
+            content,
+          },
+          transaction
+        );
+
+        const message = await MessageRepository.findByIdWithUsers(
+          createdMessage.id,
+          request,
+          transaction
+        );
+        const chatWithLasMessage = await ChatRepository.findByIdWithUsers(
+          chat.id,
+          request,
+          transaction
+        );
+        const unreadedChats = await ChatRepository.countUnreadedByReceiverId(
+          receiver_id,
+          transaction
+        );
+
+        io.emit(`receive-chat-${receiver_id}`, chatWithLasMessage);
+        io.emit(`receive-chat-${auth.id}`, chatWithLasMessage);
+        io.emit(`pending-chats-${receiver_id}`, unreadedChats);
+        io.emit(`receive-message-${chat.id}-${receiver_id}`, message);
+
+        return response.json({ message: messages.create('Mensagem') });
       });
-
-      const message = await MessageRepository.findByIdWithUsers(createdMessage.id, request);
-      const chatWithLasMessage = await ChatRepository.findByIdWithUsers(chat.id, request);
-      const unreadedChats = await ChatRepository.countUnreadedByReceiverId(receiver_id);
-
-      io.emit(`receive-chat-${receiver_id}`, chatWithLasMessage);
-      io.emit(`pending-chats-${receiver_id}`, unreadedChats);
-      io.emit(`receive-message-${chat.id}-${receiver_id}`, message);
-
-      return response.json(messages.create('Mensagem'));
     } catch (error) {
       next(error);
     }
@@ -106,7 +130,7 @@ class MessageController {
 
       io.emit(`deleted-message-${message.receiver_id}`, message.id);
 
-      return response.json(messages.delete('Mensagem'));
+      return response.json({ message: messages.delete('Mensagem') });
     } catch (error) {
       next(error);
     }

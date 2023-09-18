@@ -2,7 +2,7 @@ import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
 import Chat from '../database/models/chat.model';
 import ChatCreateDto from '../dto/chat/chatCreate.dto';
-import { WhereOptions } from 'sequelize';
+import { Transaction, WhereOptions } from 'sequelize';
 import ChatDto from '../dto/chat/chat.dto';
 import { Request } from 'express';
 
@@ -17,7 +17,7 @@ class ChatRepository {
     return await this.repository.findByPk(id);
   }
 
-  async findByIdWithUsers(id: string, request: Request) {
+  async findByIdWithUsers(id: string, request: Request, transaction?: Transaction) {
     const {
       headers: { host },
     } = request;
@@ -40,6 +40,7 @@ class ChatRepository {
           ],
         ],
       },
+      transaction,
       include: [
         {
           model: sequelizeConnection.model('User'),
@@ -101,9 +102,10 @@ class ChatRepository {
     });
   }
 
-  async countUnreadedByReceiverId(id: string) {
+  async countUnreadedByReceiverId(id: string, transaction?: Transaction) {
     return await this.repository.count({
       distinct: true,
+      transaction,
       include: {
         model: sequelizeConnection.model('Message'),
         as: 'messages',
@@ -214,8 +216,8 @@ class ChatRepository {
     });
   }
 
-  async create(chat: ChatCreateDto) {
-    return await this.repository.create(chat);
+  async create(chat: ChatCreateDto, transaction?: Transaction) {
+    return await this.repository.create(chat, { transaction });
   }
 }
 
