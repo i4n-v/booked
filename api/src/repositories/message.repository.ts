@@ -2,7 +2,7 @@ import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
 import Message from '../database/models/message.model';
 import MessageCreateDto from '../dto/message/messageCreate.dto';
-import { FindOptions, WhereOptions } from 'sequelize';
+import { FindOptions, Transaction, WhereOptions } from 'sequelize';
 import MessageDto from '../dto/message/message.dto';
 import { Request } from 'express';
 import MessageUpdateDto from '../dto/message/messageUpdate.dto';
@@ -14,7 +14,7 @@ class MessageRepository {
     this.repository = sequelizeConnection.getRepository(Message);
   }
 
-  async findByIdWithUsers(id: string, request: Request) {
+  async findByIdWithUsers(id: string, request: Request, transaction?: Transaction) {
     const {
       headers: { host },
     } = request;
@@ -25,6 +25,7 @@ class MessageRepository {
       attributes: {
         exclude: ['sender_id', 'receiver_id'],
       },
+      transaction,
       include: [
         {
           model: sequelizeConnection.model('User'),
@@ -143,8 +144,10 @@ class MessageRepository {
     });
   }
 
-  async create(chat: MessageCreateDto) {
-    return await this.repository.create(chat);
+  async create(chat: MessageCreateDto, transaction?: Transaction) {
+    return await this.repository.create(chat, {
+      transaction,
+    });
   }
 
   async deleteById(id: string) {

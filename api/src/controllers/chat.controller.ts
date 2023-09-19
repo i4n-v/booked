@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import paginationWrapper from '../utils/paginationWrapper';
 import { Op } from 'sequelize';
 import ChatRepository from '../repositories/chat.repository';
-import ChatCreateDto from '../dto/chat/chatCreate.dto';
-import messages from '../config/messages.config';
 
 class ChatController {
   async index(request: Request, response: Response, next: NextFunction) {
@@ -29,31 +27,6 @@ class ChatController {
       const wrappedChats = paginationWrapper(chats, page, limit);
 
       return response.json(wrappedChats);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async store(request: Request, response: Response, next: NextFunction) {
-    try {
-      const { body, auth } = request;
-      const { second_user_id }: ChatCreateDto = body;
-
-      if (second_user_id === auth.id) {
-        return response
-          .status(400)
-          .json({ message: 'Não é possível criar uma conversa para o mesmo usuário.' });
-      }
-
-      const chat = await ChatRepository.findByUsers(auth.id, second_user_id);
-
-      if (chat) {
-        return response.status(400).json({ message: 'A conversa já foi cadastrada.' });
-      }
-
-      await ChatRepository.create({ first_user_id: auth.id, second_user_id });
-
-      return response.json(messages.create('Conversa'));
     } catch (error) {
       next(error);
     }

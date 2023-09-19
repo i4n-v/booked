@@ -129,41 +129,4 @@ router.get('/chats', authMidleware, ChatController.index);
  */
 router.get('/chats/:id/messages', authMidleware, MessageController.index);
 
-/**
- * @openapi
- * /chats:
- *   post:
- *     summary: Create a chat.
- *     description: This route create a chat.
- *     tags:
- *       - Chat
- *     parameters:
- *       - name:
- *         $ref: '#/components/parameters/access_token'
- *     security:
- *       - access_token: []
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               second_user_id:
- *                 type: string
- *             required:
- *               - second_user_id
- *           examples:
- *             create_chat:
- *               value:
- *                 second_user_id: 'a98fb524-bfea-4dc1-a8f0-66410097263a'
- *     responses:
- *       200:
- *         $ref: '#/components/responses/success'
- *       400:
- *         $ref: '#/components/responses/error'
- *       401:
- *         $ref: '#/components/responses/error'
- */
-router.post('/chats', authMidleware, ChatController.store);
-
 export default router;
