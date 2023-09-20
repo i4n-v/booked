@@ -19,7 +19,9 @@ const meta: Meta<CarouselProps<any>> = {
     docs: {
       page: () => (
         <>
-          <Title />
+          <Title>
+            Carousel Teste
+          </Title>
           <Description>
             Carousel component to render any list of items.
           </Description>
