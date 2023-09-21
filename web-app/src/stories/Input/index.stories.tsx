@@ -11,6 +11,7 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import FormWrapperProps from "./types";
 
+
 const meta: Meta<InputProps> = {
   component: Input,
   tags: ["autodocs"],
@@ -19,8 +20,8 @@ const meta: Meta<InputProps> = {
       page: () => (
         <>
           <Title />
-          <Description>Input componet</Description>
-          <Subtitle>See the examples</Subtitle>
+          <Description>Input component for forms that receive data from users.</Description>
+          <Subtitle>See the examples and put them into practice:</Subtitle>
           <Primary />
           <Controls />
         </>
@@ -29,26 +30,68 @@ const meta: Meta<InputProps> = {
   },
   argTypes: {
     name: {
-      description: "",
+      description: "Specifies the name of an element.",
     },
     label: {
-      description: "",
+      description: "Represents a legend for an item.",
     },
     type: {
-      description: "",
-    },
+      description: "Specifies the type element to display.",
+      control: {
+        type: "select",
+      },
+      options: {
+        'button': 'button',
+        'checkbox': 'checkbox',
+        'color': 'color',
+        'date': 'date',
+        'datetime-local': 'datetime-local',
+        'email': 'email',
+        'file': 'file',
+        'hidden': 'hidden',
+        'image': 'image',
+        'month': 'month',
+        'number': 'number',
+        'password': 'password',
+        'radio': 'radio',
+        'range': 'range',
+        'reset': 'reset',
+        'search': 'search',
+        'submit': 'submit',
+        'tel': 'tek',
+        'text': 'text',
+        'time': 'time',
+        'url': 'url',
+        'week': 'week',
+  },
+  },
     icon: {
-      description: "",
+      description: "It includes an icon to help the user enter data.",
     },
     shrink: {
-      description: "",
+      description: "Property specifies how the item will shrink relative to the rest of the items.",
+    },
+    focused: {
+      description: "Applied when an element receives focus, which can occur when the user selects the element.",
+    },
+    hiddenLabel: {
+      description: "Boolean attribute that indicates whether an element is relevant or not.",
+    },
+    margin: {
+      description: "Defines the margin area on all four sides of the element.",
+    },
+    ref: {
+      description: "Provide a way to access DOM or React elements.",
     },
   },
   args: {
-    name: "livro",
-    label: "nome do livro",
-    type: "text",
+    name: "Input",
+    label: "Label of Input",
+    type: "",
     shrink: true,
+    focused: false,
+    hiddenLabel: true,
+    margin: "none",
   },
 };
 
@@ -61,9 +104,18 @@ const FormWrapper = ({ children }: FormWrapperProps) => {
 };
 
 export const Default: Story = {
-  render: ({ name, label, type, shrink }: InputProps) => (
+  render: ({ name, label, type, shrink, focused, hiddenLabel, margin, ref }: InputProps) => (
     <FormWrapper>
-      <Input name={name} label={label} type={type} shrink={shrink} />
+      <Input 
+      name={name} 
+      label={label} 
+      type={type} 
+      shrink={shrink}
+      focused={focused}
+      hiddenLabel={hiddenLabel}
+      margin={margin}
+      ref={ref}
+      />
     </FormWrapper>
   ),
 };
