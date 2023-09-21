@@ -81,7 +81,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "chat",
-        element: <Chat />,
+        element: (
+          <RequireAuth>
+            <Chat />
+          </RequireAuth>
+        ),
       },
       {
         path: "acquisitions",

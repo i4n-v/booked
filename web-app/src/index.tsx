@@ -7,12 +7,12 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./configs/Theme/theme";
 const queryClient = new QueryClient({
-  defaultOptions:{
-    queries:{
+  defaultOptions: {
+    queries: {
       suspense: true,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     },
-  }
+  },
 });
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

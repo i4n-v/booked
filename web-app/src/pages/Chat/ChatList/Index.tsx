@@ -6,9 +6,10 @@ import Input from "../../../components/Input";
 import ChatItem from "./ChatItem";
 import useChat from "../../../services/useChat";
 import { useQuery } from "react-query";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IChat } from "../../../services/useChat/types";
 import { AuthContext } from "../../../contexts/AuthContext";
+import socket from "../../../configs/socket";
 
 export default function ChatList({
   handleViewChat,
@@ -23,8 +24,31 @@ export default function ChatList({
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [chatsToShow, setChatsToShow] = useState<IChat[]>([]);
 
-  const chats = useQuery("getChats", () => getChats({ page, limit }));
+  const chats = useQuery("getChats", () => getChats({ page, limit }), {
+    onSuccess: (data) => {
+      setChatsToShow(data.items);
+    },
+    suspense: false,
+  });
+
+  useEffect(() => {
+    socket.on(`receive-chat-${authData?.userData?.id}`, (arg) => {
+      // console.log(arg);
+      const existIndex = chatsToShow.findIndex((item) => arg.id === item.id);
+      console.log(existIndex);
+      console.log(chatsToShow);
+      if (existIndex !== -1) {
+        // setChatsToShow((curr) => [...curr.splice(existIndex, 1), arg]);
+      } else {
+        // chatsToShow.push(arg);
+      }
+    });
+    return () => {
+      socket.off(`receive-chat-${authData?.userData?.id}`);
+    };
+  }, []);
   return (
     <ChatListContainer>
       <SearchChat>
@@ -48,10 +72,15 @@ export default function ChatList({
         </FormProvider>
       </SearchChat>
       <ChatListBox>
-        {chats.data?.items?.map((chat) => (
+        {chatsToShow.map((chat, index) => (
           <ChatItem
+            // key={index}
             onClick={() => handleViewChat(chat)}
-            username={chat.second_user.id === authData?.userData?.id ? chat.first_user.name : chat.second_user.name}
+            username={
+              chat.second_user.id === authData?.userData?.id
+                ? chat.first_user.name
+                : chat.second_user.name
+            }
             active={true}
             unread_messages={chat.unreaded_messages}
             last_message={chat.messages[0]?.content}
