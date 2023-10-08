@@ -13,6 +13,7 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { IMessage } from "../../../services/useMessage/types";
 import socket from "../../../configs/socket";
 import IUser from "../../../commons/IUser";
+import usePaginateScroll from "../../../helpers/PaginateScroll";
 
 export default function Messages({ chat }: { chat: IChat }) {
   const form = useForm({
@@ -32,12 +33,22 @@ export default function Messages({ chat }: { chat: IChat }) {
 
   const { createMessage } = useMessage();
   const { getMessages } = useChat();
-  const chatMessages = useQuery(
-    ["chatMessages"],
-    () => getMessages(chat.id as string, {}),
+  const targetRef = useRef(null);
+  const { page, scrollEvent, setMaxPage, reset } = usePaginateScroll(
+    targetRef,
+    true
+  );
+  useQuery(
+    ["chatMessages", chat.id, page],
+    () => getMessages(chat.id as string, { page, limit: 10 }),
     {
       onSuccess: (data) => {
-        setMessagesToShow((curr) => [...data.items.reverse(), ...curr]);
+        setMaxPage(data.totalPages);
+        if (data.current > 1) {
+          setMessagesToShow((curr) => [...curr, ...data.items]);
+        } else {
+          setMessagesToShow(data.items);
+        }
       },
       suspense: false,
     }
@@ -46,6 +57,11 @@ export default function Messages({ chat }: { chat: IChat }) {
     mutationFn: createMessage,
     mutationKey: "sendMessage",
   });
+
+  useEffect(() => {
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chat]);
 
   const sendMessage = form.handleSubmit(({ message }: { message: string }) => {
     if (!message) return;
@@ -71,11 +87,16 @@ export default function Messages({ chat }: { chat: IChat }) {
   useEffect(() => {
     socket.emit("enter-in-chat", chat.id);
     socket.on(`receive-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
-      setMessagesToShow((curr) => [arg, ...curr]);
+      console.log(arg)
+      if (arg.chat_id === chat.id) {
+        socket.emit("enter-in-chat", chat.id);
+        setMessagesToShow((curr) => [arg, ...curr]);
+      }
     });
     return () => {
       socket.off(`receive-message-${chat.id}-${authData?.userData?.id}`);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -95,7 +116,7 @@ export default function Messages({ chat }: { chat: IChat }) {
           </form>
         </FormProvider>
       </NewMessage>
-      <ChatMessages>
+      <ChatMessages ref={targetRef} onScrollCapture={scrollEvent}>
         {/* <Box sx={{textAlign: "center",font: t => t.font.xs}}>
               Someone is typing...
             </Box> */}

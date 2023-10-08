@@ -4,51 +4,48 @@ import { IconButton } from "@mui/material";
 import { Person, Search } from "@mui/icons-material";
 import Input from "../../../components/Input";
 import ChatItem from "./ChatItem";
-import useChat from "../../../services/useChat";
-import { useQuery } from "react-query";
-import { useContext, useEffect, useState } from "react";
 import { IChat } from "../../../services/useChat/types";
-import { AuthContext } from "../../../contexts/AuthContext";
 import socket from "../../../configs/socket";
+import { remove } from "lodash";
+import IUser from "../../../commons/IUser";
+import { useEffect, useRef, useState } from "react";
+import { useQuery } from "react-query";
+import useChat from "../../../services/useChat";
+import usePaginateScroll from "../../../helpers/PaginateScroll";
 
 export default function ChatList({
   handleViewChat,
+  userData
 }: {
   handleViewChat: React.Dispatch<React.SetStateAction<IChat | undefined>>;
+  userData: Partial<IUser> | undefined
 }) {
   const form = useForm();
-
   const { getChats } = useChat();
-
-  const [authData] = useContext(AuthContext);
-
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
   const [chatsToShow, setChatsToShow] = useState<IChat[]>([]);
-
-  const chats = useQuery("getChats", () => getChats({ page, limit }), {
+  const targetRef= useRef(null)
+  const {page,setMaxPage,scrollEvent} = usePaginateScroll(targetRef)
+  useQuery(["getChats",page], () => getChats({ page, limit: 10 }), {
     onSuccess: (data) => {
+      setMaxPage(data.totalPages)
+      if (data.current > 1) {
+        setChatsToShow((curr) => [...data.items, ...curr]);
+        return;
+      }
       setChatsToShow(data.items);
     },
     suspense: false,
   });
-
   useEffect(() => {
-    socket.on(`receive-chat-${authData?.userData?.id}`, (arg) => {
-      // console.log(arg);
-      const existIndex = chatsToShow.findIndex((item) => arg.id === item.id);
-      console.log(existIndex);
-      console.log(chatsToShow);
-      if (existIndex !== -1) {
-        // setChatsToShow((curr) => [...curr.splice(existIndex, 1), arg]);
-      } else {
-        // chatsToShow.push(arg);
-      }
+    socket.on(`receive-chat-${userData?.id}`, (arg) => {
+      setChatsToShow((curr) => [arg,...remove(curr,(item) => !(arg.id === item.id))])
     });
     return () => {
-      socket.off(`receive-chat-${authData?.userData?.id}`);
+      socket.off(`receive-chat-${userData?.id}`);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <ChatListContainer>
       <SearchChat>
@@ -71,13 +68,13 @@ export default function ChatList({
           </form>
         </FormProvider>
       </SearchChat>
-      <ChatListBox>
+      <ChatListBox ref={targetRef} onScrollCapture={scrollEvent}>
         {chatsToShow.map((chat, index) => (
           <ChatItem
-            // key={index}
+            key={index}
             onClick={() => handleViewChat(chat)}
             username={
-              chat.second_user.id === authData?.userData?.id
+              chat.second_user.id === userData?.id
                 ? chat.first_user.name
                 : chat.second_user.name
             }
