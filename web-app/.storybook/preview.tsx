@@ -3,6 +3,9 @@ import type { Preview } from "@storybook/react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "../src/configs/Theme/theme";
 import { initialize, mswLoader } from "msw-storybook-addon";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClientProvider } from "react-query";
+import queryClient from "../src/configs/queryCLient";
 
 initialize();
 
@@ -34,10 +37,14 @@ const preview: Preview = {
   loaders: [mswLoader],
   decorators: [
     (Story) => (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Story />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Story />
+          </ThemeProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     ),
   ],
 };

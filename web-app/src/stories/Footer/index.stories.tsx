@@ -27,4 +27,4 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = () => <Footer></Footer>;
+export const Default = () => <Footer />;
