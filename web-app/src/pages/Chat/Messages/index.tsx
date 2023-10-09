@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { ChatMessages, ChatMessagesContainer, NewMessage } from "./styles";
 import Input from "../../../components/Input";
-import { Button } from "@mui/material";
+import {  Button } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import Message from "./Message";
 import useMessage from "../../../services/useMessage";
@@ -34,7 +34,7 @@ export default function Messages({ chat }: { chat: IChat }) {
   const { createMessage } = useMessage();
   const { getMessages } = useChat();
   const targetRef = useRef(null);
-  const { page, scrollEvent, setMaxPage, reset } = usePaginateScroll(
+  const { page, paginateTrigger, setMaxPage, reset } = usePaginateScroll(
     targetRef,
     true
   );
@@ -86,6 +86,9 @@ export default function Messages({ chat }: { chat: IChat }) {
 
   useEffect(() => {
     socket.emit("enter-in-chat", chat.id);
+  },[chat])
+
+  useEffect(() => {
     socket.on(`receive-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
       console.log(arg)
       if (arg.chat_id === chat.id) {
@@ -116,10 +119,10 @@ export default function Messages({ chat }: { chat: IChat }) {
           </form>
         </FormProvider>
       </NewMessage>
-      <ChatMessages ref={targetRef} onScrollCapture={scrollEvent}>
+      <ChatMessages ref={targetRef} onScrollCapture={paginateTrigger}>
         {/* <Box sx={{textAlign: "center",font: t => t.font.xs}}>
               Someone is typing...
-            </Box> */}
+        </Box> */}
         {messagesToShow?.map((message, index, array) => {
           const itsMine = message.sender?.id === authData?.userData?.id;
           const showProfile =

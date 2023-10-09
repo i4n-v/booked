@@ -13,7 +13,7 @@ function usePaginateScroll(
     if (reverse) {
       if (
         target?.scrollTop - target?.clientHeight <=
-        5 - target?.scrollHeight
+        50 - target?.scrollHeight
       ) {
         if (page < maxPage) {
           debouncePage(page + 1);
@@ -22,7 +22,7 @@ function usePaginateScroll(
     } else {
       if (
         target?.scrollTop + target?.clientHeight >=
-        target?.scrollHeight - 5
+        target?.scrollHeight - 50
       ) {
         if (page < maxPage) {
           debouncePage(page + 1);
@@ -31,7 +31,7 @@ function usePaginateScroll(
     }
   };
 
-  const scrollEvent: React.UIEventHandler<HTMLDivElement> | undefined = (
+  const paginateTrigger: React.UIEventHandler<HTMLDivElement> | undefined = (
     event
   ) => {
     handleScroll();
@@ -44,7 +44,7 @@ function usePaginateScroll(
     }
   };
 
-  return { page, setMaxPage, scrollEvent, reset };
+  return { page, setMaxPage, paginateTrigger, reset };
 }
 
 export default usePaginateScroll;

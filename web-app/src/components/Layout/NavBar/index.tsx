@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -30,6 +30,7 @@ import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../Input";
 import { ChatBubble, Search } from "@mui/icons-material";
+import socket from "../../../configs/socket";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function NavBar({ logged }: NavBarProps) {
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
+  const [pendingChats,setPendingChats] = useState()
   const { logout } = useAuth();
   const logoutMutation = useMutation(logout);
 
@@ -148,6 +150,17 @@ export default function NavBar({ logged }: NavBarProps) {
     navigate(`/explore`, { replace: true, state: search });
   });
 
+  useEffect(() => {
+    socket.on(`pending-chats-${authData?.userData?.id}`, (arg) => {
+      setPendingChats(arg)
+    });
+
+    return () => {
+      socket.off(`pending-chats-${authData?.userData?.id}`);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
   return (
     <AppBar
       elevation={1}
@@ -236,7 +249,7 @@ export default function NavBar({ logged }: NavBarProps) {
                   right: 10,
                 }}
               >
-                <Badge badgeContent={9} max={9} color="error" />
+                <Badge badgeContent={pendingChats} max={99} color="error" />
               </Typography>
             </IconButton>
           </Box>

@@ -44,6 +44,7 @@ export default function Chat() {
         <ChatList
           userData={authData?.userData}
           handleViewChat={setSelectedChat}
+          selected={selectedChat}
         />
         {selectedChat ? <Messages chat={selectedChat} /> : null}
       </ContentChat>

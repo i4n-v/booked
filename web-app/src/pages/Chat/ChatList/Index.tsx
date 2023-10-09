@@ -15,21 +15,23 @@ import usePaginateScroll from "../../../helpers/PaginateScroll";
 
 export default function ChatList({
   handleViewChat,
-  userData
+  userData,
+  selected
 }: {
   handleViewChat: React.Dispatch<React.SetStateAction<IChat | undefined>>;
-  userData: Partial<IUser> | undefined
+  userData: Partial<IUser> | undefined,
+  selected?: IChat
 }) {
   const form = useForm();
   const { getChats } = useChat();
   const [chatsToShow, setChatsToShow] = useState<IChat[]>([]);
   const targetRef= useRef(null)
-  const {page,setMaxPage,scrollEvent} = usePaginateScroll(targetRef)
+  const {page,setMaxPage,paginateTrigger} = usePaginateScroll(targetRef)
   useQuery(["getChats",page], () => getChats({ page, limit: 10 }), {
     onSuccess: (data) => {
       setMaxPage(data.totalPages)
       if (data.current > 1) {
-        setChatsToShow((curr) => [...data.items, ...curr]);
+        setChatsToShow((curr) => [...curr,...data.items ]);
         return;
       }
       setChatsToShow(data.items);
@@ -68,7 +70,7 @@ export default function ChatList({
           </form>
         </FormProvider>
       </SearchChat>
-      <ChatListBox ref={targetRef} onScrollCapture={scrollEvent}>
+      <ChatListBox ref={targetRef} onScrollCapture={paginateTrigger}>
         {chatsToShow.map((chat, index) => (
           <ChatItem
             key={index}
@@ -78,7 +80,7 @@ export default function ChatList({
                 ? chat.first_user.name
                 : chat.second_user.name
             }
-            active={true}
+            active={selected?.id === chat.id}
             unread_messages={chat.unreaded_messages}
             last_message={chat.messages[0]?.content}
           />

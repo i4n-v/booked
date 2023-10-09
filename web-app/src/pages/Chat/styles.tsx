@@ -3,10 +3,11 @@ import Content from "../../components/Layout/Content/styles";
 
 const ContainerChat = styled(Content)(({ theme }) => ({
   display: "grid",
-  maxWidth: "1536px",
+  maxWidth: "100%",
+  width: "100%",
   gridTemplateRows: "80px 1fr",
   rowGap: "0px",
-  padding: "0px 0px 120px 20px",
+  padding: "0px",
   [theme.breakpoints?.down("md")]: {
     // gridTemplateRows: "400px 1fr",
   },
@@ -23,7 +24,7 @@ const ContentChat = styled(Box)(({ theme }) => ({
   width: "100%",
   display: "grid",
   gridTemplateColumns: '40% 60%',
-  gridTemplateRows: "72vh",
+  gridTemplateRows: "minmax(auto, 75vh)",
 }));
 
 export {
