@@ -30,16 +30,16 @@ const meta: Meta = {
   },
   argTypes: {
     name: {
-      description: "",
+      description: "Specifies the name of an element.",
     },
-    opitons: {
-      description: "",
+    options: {
+      description: "Defines an option in a select list.",
     },
     description: {
-      description: "",
+      description: "Represents a legend for an item.",
     },
     onChange: {
-      description: "",
+      description: "Used to perform a certain action after some change.",
     },
   },
   args: {

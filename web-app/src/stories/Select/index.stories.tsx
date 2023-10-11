@@ -21,7 +21,7 @@ const meta: Meta<InputSelectProps<SelectOptions>> = {
         <>
           <Title />
           <Description>
-            Input component for forms that receive data from users.
+            The select element is used to create a drop-down list.
           </Description>
           <Subtitle>See the examples and put them into practice:</Subtitle>
           <Primary />
@@ -32,22 +32,22 @@ const meta: Meta<InputSelectProps<SelectOptions>> = {
   },
   argTypes: {
     name: {
-      description: "",
+      description: "Specifies the name of an element.",
     },
     options: {
-      description: "",
+      description: "Defines an option in a select list.",
     },
     optionLabel: {
-      description: "",
+      description: "Defines the value of an option.",
     },
     label: {
-      description: "",
+      description: "Represents a legend for an item.",
     },
     multiple: {
-      description: "",
+      description: "Specifies that the user is allowed to enter more than one value in the element.",
     },
     service: {
-      description: "",
+      description: "Is an optional attribute, used to search the server for options and dynamically populate the select element with the results.",
     },
   },
   args: {
