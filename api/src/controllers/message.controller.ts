@@ -135,7 +135,7 @@ class MessageController {
 
       await MessageRepository.deleteById(params.id);
 
-      io.emit(`deleted-message-${message.receiver_id}`, message.id);
+      io.emit(`deleted-message-${message.chat_id}-${message.receiver_id}`, message.id);
 
       return response.json({ message: messages.delete('Mensagem') });
     } catch (error) {
