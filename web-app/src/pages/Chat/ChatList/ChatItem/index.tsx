@@ -2,11 +2,13 @@ import { AccountCircle } from "@mui/icons-material";
 import { Badge, Box, Typography } from "@mui/material";
 import { ChatItemProps } from "./types";
 import { useEffect, useState } from "react";
+import TimePast from "../../../../helpers/TimePast";
 export default function ChatItem({
   active,
   username,
   last_message,
   unread_messages,
+  last_update,
   onClick,
 }: ChatItemProps) {
   const [unread, setUnread] = useState<number>();
@@ -27,6 +29,7 @@ export default function ChatItem({
         height: "104px",
         display: "flex",
         alignItems: "center",
+        overflow:"hidden",
         paddingLeft: "68px",
         cursor: "pointer",
         ":hover": {
@@ -39,7 +42,7 @@ export default function ChatItem({
       <Box
         sx={{
           paddingLeft: "20px",
-          paddingRight: "13px",
+          paddingRight: "20px",
           width: "-webkit-fill-available",
           display: "flex",
           flexDirection: "column",
@@ -54,7 +57,7 @@ export default function ChatItem({
           }}
         >
           <Typography sx={{ font: (t) => t.font.md }}>{username}</Typography>
-          <Typography sx={{ font: (t) => t.font.sm }}>11h</Typography>
+          <Typography sx={{ font: (t) => t.font.sm }}>{TimePast(last_update)}</Typography>
         </Box>
         {last_message ? (
           <Box
@@ -67,10 +70,12 @@ export default function ChatItem({
             <Typography
               sx={{
                 font: (t) => t.font.xs,
-                maxWidth: "306px",
+                maxWidth: "280px",
                 overflow: "hidden",
+                width: "-webkit-fill-available",
                 textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+                whiteSpace: "normal",
+                maxHeight: '17px'
               }}
             >
               {last_message}

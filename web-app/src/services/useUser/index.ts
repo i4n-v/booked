@@ -1,4 +1,6 @@
 import IUser from "../../commons/IUser";
+import { IWrapper } from "../../commons/IWrapper";
+import { Params } from "../../commons/Params";
 import { ResponseMessage } from "../../commons/ResponseMessage";
 import api from "../../configs/api";
 import { PasswordChange } from "../../pages/Profile/Settings/Security/types";
@@ -9,6 +11,15 @@ export default function useUser() {
   async function getUser(id: string): Promise<IUser> {
     try {
       const result = await api.get<IUser>(`${DPath}/${id}`);
+      return result.data;
+    } catch (error: any) {
+      return error.response?.data?.message;
+    }
+  }
+
+  async function getUsers(params: Params): Promise<IWrapper<IUser>> {
+    try {
+      const result = await api.get<IWrapper<IUser>>(`${DPath}`, {params});
       return result.data;
     } catch (error: any) {
       return error.response?.data?.message;
@@ -66,5 +77,6 @@ export default function useUser() {
     createUser,
     updateUser,
     passwordChange,
+    getUsers
   };
 }

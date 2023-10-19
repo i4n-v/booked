@@ -7,4 +7,6 @@ export interface IChat {
   second_user: IUser;
   unreaded_messages: number;
   messages: IMessage[];
+  updatedAt?: Date;
+  createdAt?:Date
 }

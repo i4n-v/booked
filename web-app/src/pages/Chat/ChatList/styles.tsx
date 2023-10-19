@@ -19,6 +19,8 @@ const ChatListContainer = styled(Paper)(({ theme }) => ({
     width: "100%",
     "& > form": {
       width: "100%",
+      height: '100%',
+      maxHeight: '44px',
       display: "flex",
       alignItems: "center",
       columnGap: "20px",

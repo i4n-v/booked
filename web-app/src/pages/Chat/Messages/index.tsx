@@ -39,18 +39,19 @@ export default function Messages({ chat }: { chat: IChat }) {
     true
   );
   useQuery(
-    ["chatMessages", chat.id, page],
+    ["chatMessages", chat, page],
     () => getMessages(chat.id as string, { page, limit: 10 }),
     {
       onSuccess: (data) => {
-        setMaxPage(data.totalPages);
+        setMaxPage(data?.totalPages);
         if (data.current > 1) {
           setMessagesToShow((curr) => [...curr, ...data.items]);
         } else {
-          setMessagesToShow(data.items);
+          setMessagesToShow(data.items || []);
         }
       },
       suspense: false,
+      enabled: !!chat
     }
   );
   const sendMutation = useMutation({
@@ -79,6 +80,9 @@ export default function Messages({ chat }: { chat: IChat }) {
             { content: message, sender: authData?.userData } as IMessage,
             ...curr,
           ]);
+          if(!chat.id){
+            chat.id = data.chat_id
+          }
         },
       }
     );
@@ -90,7 +94,6 @@ export default function Messages({ chat }: { chat: IChat }) {
 
   useEffect(() => {
     socket.on(`receive-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
-      console.log(arg)
       if (arg.chat_id === chat.id) {
         socket.emit("enter-in-chat", chat.id);
         setMessagesToShow((curr) => [arg, ...curr]);
@@ -100,7 +103,7 @@ export default function Messages({ chat }: { chat: IChat }) {
       socket.off(`receive-message-${chat.id}-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chat.id]);
 
   return (
     <ChatMessagesContainer>

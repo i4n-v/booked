@@ -151,6 +151,7 @@ export default function NavBar({ logged }: NavBarProps) {
   });
 
   useEffect(() => {
+    if(!authData?.valid) return
     socket.on(`pending-chats-${authData?.userData?.id}`, (arg) => {
       setPendingChats(arg)
     });
@@ -159,7 +160,7 @@ export default function NavBar({ logged }: NavBarProps) {
       socket.off(`pending-chats-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[authData])
 
   return (
     <AppBar

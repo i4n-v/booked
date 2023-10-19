@@ -9,7 +9,8 @@ const ContainerChat = styled(Content)(({ theme }) => ({
   rowGap: "0px",
   padding: "0px",
   [theme.breakpoints?.down("md")]: {
-    // gridTemplateRows: "400px 1fr",
+    padding: "0px",
+    gridTemplateRows: "80px 1fr",
   },
 }));
 const BarChat = styled(Paper)(({ theme }) => ({
