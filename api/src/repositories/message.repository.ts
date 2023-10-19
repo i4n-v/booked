@@ -94,7 +94,7 @@ class MessageRepository {
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'desc']],
       attributes: {
         exclude: ['sender_id', 'receiver_id'],
       },
