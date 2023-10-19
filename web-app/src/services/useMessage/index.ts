@@ -12,7 +12,17 @@ export default function useMessage(){
         }
     }
 
+    async function deleteMessage(id: string){
+        try {
+        const response = await api.delete(`${DPath}/${id}`)
+            return response.data
+        } catch (error: any) {
+            return error.response?.data?.message;
+        }
+    }
+
     return {
-        createMessage
+        createMessage,
+        deleteMessage
     }
 }

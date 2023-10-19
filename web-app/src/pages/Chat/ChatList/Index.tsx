@@ -70,7 +70,6 @@ export default function ChatList({
   });
   useEffect(() => {
     socket.on(`receive-chat-${userData?.id}`, (arg) => {
-      console.log(arg)
       setChatsToShow((curr) => [
         arg,
         ...remove(curr, (item) => !(arg.id === item.id)),
@@ -83,12 +82,11 @@ export default function ChatList({
   }, []);
 
   const debounceSearch = useDebounce((value,findUser) => {
+    if(!value) return
     if (findUser) {
-      console.log(findUser );
       reset();
       setFilters({ user: { name: value } });
     } else {
-      console.log(findUser );
       reset();
       setFilters({ chat: { name: value } });
     }
@@ -170,7 +168,7 @@ export default function ChatList({
                   handleViewChat({
                     first_user: userData as IUser,
                     second_user: user,
-                    id: user.chats?.[0].id
+                    id: user.chats?.[0]?.id
                   } as IChat)
                 }
                 username={user.name}

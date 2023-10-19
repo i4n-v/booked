@@ -14,6 +14,8 @@ import { IMessage } from "../../../services/useMessage/types";
 import socket from "../../../configs/socket";
 import IUser from "../../../commons/IUser";
 import usePaginateScroll from "../../../helpers/PaginateScroll";
+import { DropdownOptions } from "../../../components/Dropdown/type";
+import useNotifier from "../../../helpers/Notify";
 
 export default function Messages({ chat }: { chat: IChat }) {
   const form = useForm({
@@ -23,7 +25,6 @@ export default function Messages({ chat }: { chat: IChat }) {
   });
 
   const [messagesToShow, setMessagesToShow] = useState<IMessage[]>([]);
-
   const [authData] = useContext(AuthContext);
 
   const receiver: IUser =
@@ -31,13 +32,18 @@ export default function Messages({ chat }: { chat: IChat }) {
       ? chat.first_user
       : chat.second_user;
 
-  const { createMessage } = useMessage();
+  const { createMessage ,deleteMessage} = useMessage();
   const { getMessages } = useChat();
+  const notify = useNotifier()
   const targetRef = useRef(null);
   const { page, paginateTrigger, setMaxPage, reset } = usePaginateScroll(
     targetRef,
     true
   );
+  const deleteMutation = useMutation({
+    mutationKey: "MessageDelete",
+    mutationFn: deleteMessage
+  })
   useQuery(
     ["chatMessages", chat, page],
     () => getMessages(chat.id as string, { page, limit: 10 }),
@@ -88,6 +94,14 @@ export default function Messages({ chat }: { chat: IChat }) {
     );
   });
 
+  function messageDelete(id:string){
+    deleteMutation.mutate(id,{
+      onSuccess: (data) => {
+        setMessagesToShow(value => value.filter(i => i.id !== id))
+        notify(data.message,"success")
+      }
+    })
+  }
   useEffect(() => {
     socket.emit("enter-in-chat", chat.id);
   },[chat])
@@ -99,8 +113,13 @@ export default function Messages({ chat }: { chat: IChat }) {
         setMessagesToShow((curr) => [arg, ...curr]);
       }
     });
+
+    socket.on(`deleted-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
+      setMessagesToShow(value => value.filter(i => i.id !== arg))
+    } )
     return () => {
       socket.off(`receive-message-${chat.id}-${authData?.userData?.id}`);
+      socket.off(`deleted-message-${chat.id}-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat.id]);
@@ -136,6 +155,13 @@ export default function Messages({ chat }: { chat: IChat }) {
               content={message.content}
               showAccount={showProfile}
               response={!itsMine}
+              id={index}
+              actionsOptions={[
+                {
+                  label: "Delete",
+                  handler: () => messageDelete(message.id)
+                }
+              ]}
             />
           );
         })}
