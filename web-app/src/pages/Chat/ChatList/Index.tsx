@@ -170,7 +170,7 @@ export default function ChatList({
                   handleViewChat({
                     first_user: userData as IUser,
                     second_user: user,
-                
+                    id: user.chats?.[0].id
                   } as IChat)
                 }
                 username={user.name}
