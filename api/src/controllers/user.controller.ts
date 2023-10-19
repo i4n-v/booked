@@ -5,6 +5,8 @@ import UserUpdateDto from '../dto/user/userUpdate.dto';
 import messages from '../config/messages.config';
 import { encrypt, fileSystem } from '../utils';
 import userUpdatePasswordDto from '../dto/user/userUpdatePassword.dto';
+import paginationWrapper from '../utils/paginationWrapper';
+import { Op } from 'sequelize';
 
 class UserController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -22,6 +24,29 @@ class UserController {
       response.json({
         message: messages.create('Usuário'),
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async index(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { query } = request;
+      const page = query.page ? parseInt(query.page as unknown as string) : 1;
+      const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
+      const whereStatement: any = {};
+
+      if (query.name) {
+        whereStatement['name'] = {
+          [Op.iLike]: `${query.name}%`,
+        };
+      }
+
+      const users = await UserRepository.findAndCountAll(page, limit, request, whereStatement);
+
+      const wrappedUsers = paginationWrapper(users, page, limit);
+
+      return response.json(wrappedUsers);
     } catch (error) {
       next(error);
     }

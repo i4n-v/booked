@@ -7,6 +7,7 @@ const migration: Migration = {
         id: {
           type: Sequelize.DataTypes.UUID,
           defaultValue: Sequelize.DataTypes.UUIDV4,
+          primaryKey: true,
         },
         user_id: {
           type: Sequelize.DataTypes.UUID,
@@ -23,6 +24,16 @@ const migration: Migration = {
             key: 'id',
           },
           allowNull: false,
+        },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.fn('NOW'),
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.fn('NOW'),
         },
       });
     } catch (error: any) {

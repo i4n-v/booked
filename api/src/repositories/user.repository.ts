@@ -3,9 +3,10 @@ import UserCreateDto from '../dto/user/userCreate.dto';
 import UserUpdateDto from '../dto/user/userUpdate.dto';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { Repository } from 'sequelize-typescript';
-import { FindOptions, Op } from 'sequelize';
+import { FindOptions, Op, WhereOptions } from 'sequelize';
 import userUpdatePasswordDto from '../dto/user/userUpdatePassword.dto';
 import UserDto from '../dto/user/user.dto';
+import { Request } from 'express';
 
 class UserRepository {
   private repository: Repository<User>;
@@ -39,6 +40,42 @@ class UserRepository {
           [Op.iLike]: `${name}%`,
         },
       },
+    });
+  }
+
+  async findAndCountAll(
+    page: number,
+    limit: number,
+    request: Request,
+    options?: WhereOptions<UserDto>
+  ) {
+    const {
+      headers: { host },
+    } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
+
+    return await this.repository.findAndCountAll({
+      limit,
+      offset: (page - 1) * limit,
+      order: [['name', 'ASC']],
+      attributes: {
+        exclude: ['password', 'salt', 'updatedAt'],
+        include: [
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "User".photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', "User".photo_url)
+                ELSE "User".photo_url
+              END
+          `),
+            'photo_url',
+          ],
+        ],
+      },
+      where: options,
     });
   }
 

@@ -6,6 +6,8 @@ import BookCategory from './bookCategory.model';
 import Comment from './comment.model';
 import Assessment from './assessment.model';
 import Acquisition from './acquisition.model';
+import Chat from './chat.model';
+import Message from './message.model';
 
 const models: any[] = [
   User,
@@ -16,6 +18,8 @@ const models: any[] = [
   Assessment,
   Comment,
   Acquisition,
+  Chat,
+  Message,
 ];
 
 export default models;
