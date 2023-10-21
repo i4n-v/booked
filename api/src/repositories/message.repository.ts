@@ -97,6 +97,19 @@ class MessageRepository {
       order: [['createdAt', 'ASC']],
       attributes: {
         exclude: ['sender_id', 'receiver_id'],
+        include: [
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN messages.photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', messages.photo_url)
+                ELSE messages.photo_url
+              END
+          `),
+            'photo_url',
+          ],
+        ],
       },
       where: options,
       include: [

@@ -7,6 +7,7 @@ import MessageCreateDto from '../dto/message/messageCreate.dto';
 import UserRepository from '../repositories/user.repository';
 import { io } from '../setup';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
+import { fileSystem } from '../utils';
 
 class MessageController {
   async index(request: Request, response: Response, next: NextFunction) {
@@ -47,22 +48,33 @@ class MessageController {
 
   async store(request: Request, response: Response, next: NextFunction) {
     try {
-      const { body, auth } = request;
+      const { body, auth, file } = request;
       const { receiver_id, content }: MessageCreateDto = body;
+      let photo_url: string | null = null;
 
       if (receiver_id === auth.id) {
+        if (file) await fileSystem.removeFile(file.path);
+
         return response
           .status(400)
           .json({ message: 'Não é possível enviar uma mensagem para o mesmo usuário.' });
       }
 
-      if (!content) {
-        return response.status(400).json({ message: 'O conteúdo da mensagem é requerido.' });
+      if (!content || !file) {
+        return response
+          .status(400)
+          .json({ message: 'Um conteúdo ou imagem da mensagem deve ser informado.' });
+      }
+
+      if (file) {
+        photo_url = fileSystem.filePathToUpload(file.path);
       }
 
       const receiver = await UserRepository.findById(receiver_id);
 
       if (!receiver) {
+        if (file) await fileSystem.removeFile(file.path);
+
         return response.status(400).json({ message: messages.unknown('Usuário') });
       }
 
@@ -85,6 +97,7 @@ class MessageController {
             sender_id: auth.id,
             receiver_id,
             content,
+            photo_url,
           },
           transaction
         );

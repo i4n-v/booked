@@ -29,9 +29,13 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
   })
   read: boolean;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING(7000))
   content: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  photo_url: string;
 
   @AllowNull(false)
   @Column(DataType.UUID)
