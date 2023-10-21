@@ -94,8 +94,15 @@ class MessageController {
           request,
           transaction
         );
-        const chatWithLasMessage = await ChatRepository.findByIdWithUsers(
+        const senderChatWithLastMessage = await ChatRepository.findByIdWithUsers(
           chat.id,
+          auth.id,
+          request,
+          transaction
+        );
+        const receiverChatWithLastMessage = await ChatRepository.findByIdWithUsers(
+          chat.id,
+          receiver_id,
           request,
           transaction
         );
@@ -104,12 +111,12 @@ class MessageController {
           transaction
         );
 
-        io.emit(`receive-chat-${receiver_id}`, chatWithLasMessage);
-        io.emit(`receive-chat-${auth.id}`, chatWithLasMessage);
+        io.emit(`receive-chat-${receiver_id}`, receiverChatWithLastMessage);
+        io.emit(`receive-chat-${auth.id}`, senderChatWithLastMessage);
         io.emit(`pending-chats-${receiver_id}`, unreadedChats);
         io.emit(`receive-message-${chat.id}-${receiver_id}`, message);
 
-        return response.json({ message: messages.create('Mensagem') });
+        return response.json({ message: messages.create('Mensagem'), chat_id: chat.id });
       });
     } catch (error) {
       next(error);
@@ -128,7 +135,7 @@ class MessageController {
 
       await MessageRepository.deleteById(params.id);
 
-      io.emit(`deleted-message-${message.receiver_id}`, message.id);
+      io.emit(`deleted-message-${message.chat_id}-${message.receiver_id}`, message.id);
 
       return response.json({ message: messages.delete('Mensagem') });
     } catch (error) {

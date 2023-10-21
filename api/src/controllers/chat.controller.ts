@@ -17,8 +17,19 @@ class ChatController {
       };
 
       if (query.name) {
-        whereStatement['name'] = {
-          [Op.iLike]: `${query.name}%`,
+        whereStatement[Op.and] = {
+          [Op.or]: [
+            {
+              '$"first_user".name$': {
+                [Op.iLike]: `${query.name}%`,
+              },
+            },
+            {
+              '$"second_user".name$': {
+                [Op.iLike]: `${query.name}%`,
+              },
+            },
+          ],
         };
       }
 

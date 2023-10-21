@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,6 +12,7 @@ import {
   Book,
 } from "../../../assets/SVG";
 import {
+  Badge,
   Button,
   IconButton,
   Typography,
@@ -28,7 +29,8 @@ import Cookies from "js-cookie";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../Input";
-import { Search } from "@mui/icons-material";
+import { ChatBubble, Search } from "@mui/icons-material";
+import socket from "../../../configs/socket";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ export default function NavBar({ logged }: NavBarProps) {
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
+  const [pendingChats,setPendingChats] = useState()
   const { logout } = useAuth();
   const logoutMutation = useMutation(logout);
 
@@ -147,6 +150,18 @@ export default function NavBar({ logged }: NavBarProps) {
     navigate(`/explore`, { replace: true, state: search });
   });
 
+  useEffect(() => {
+    if(!authData?.valid) return
+    socket.on(`pending-chats-${authData?.userData?.id}`, (arg) => {
+      setPendingChats(arg)
+    });
+
+    return () => {
+      socket.off(`pending-chats-${authData?.userData?.id}`);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[authData])
+
   return (
     <AppBar
       elevation={1}
@@ -223,6 +238,20 @@ export default function NavBar({ logged }: NavBarProps) {
                 {authData?.userData?.user_name}
               </Typography>
               <Account />
+            </IconButton>
+
+            <IconButton sx={{}} onClick={() => navigate("/chat")}>
+              <ChatBubble color="primary" />
+              <Typography
+                component={"div"}
+                sx={{
+                  position: "absolute",
+                  top: 3,
+                  right: 10,
+                }}
+              >
+                <Badge badgeContent={pendingChats} max={99} color="error" />
+              </Typography>
             </IconButton>
           </Box>
         )}
