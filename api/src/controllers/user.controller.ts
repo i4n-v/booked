@@ -97,7 +97,7 @@ class UserController {
         });
       }
 
-      if (photo === null) photo_url = null;
+      if (!photo) photo_url = null;
 
       const user = await UserRepository.findById(id);
 

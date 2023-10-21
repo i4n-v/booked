@@ -20,6 +20,7 @@ import Authentication from './authentication.model';
 import Comment from './comment.model';
 import Chat from './chat.model';
 import Message from './message.model';
+import Solicitation from './solicitation.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -112,6 +113,9 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @BelongsToMany(() => Book, () => Acquisition, 'user_id', 'book_id')
   acquisitions: Acquisition[];
+
+  @BelongsToMany(() => Book, () => Solicitation, 'user_id', 'book_id')
+  solicitations: Solicitation[];
 
   @HasMany(() => Authentication, { foreignKey: 'user_id', onDelete: 'CASCADE' })
   authentications: Authentication[];
