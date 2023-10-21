@@ -51,6 +51,7 @@ class UserRepository {
   ) {
     const {
       headers: { host },
+      auth,
     } = request;
 
     const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
@@ -75,6 +76,25 @@ class UserRepository {
           ],
         ],
       },
+      include: [
+        {
+          model: sequelizeConnection.model('Chat'),
+          attributes: ['id'],
+          required: false,
+          on: {
+            [Op.or]: [
+              { '$User.id$': { [Op.col]: 'chats.first_user_id' } },
+              { '$User.id$': { [Op.col]: 'chats.second_user_id' } },
+            ],
+          },
+          where: {
+            [Op.or]: [
+              {first_user_id: auth.id},
+              {second_user_id: auth.id},
+            ],
+          },
+        },
+      ],
       where: options,
     });
   }

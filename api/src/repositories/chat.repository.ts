@@ -17,7 +17,7 @@ class ChatRepository {
     return await this.repository.findByPk(id);
   }
 
-  async findByIdWithUsers(id: string, request: Request, transaction?: Transaction) {
+  async findByIdWithUsers(id: string, receiver_id: string, request: Request, transaction?: Transaction) {
     const {
       headers: { host },
     } = request;
@@ -33,7 +33,9 @@ class ChatRepository {
               `(
                 SELECT COUNT(id)
                 FROM "Messages"
-                WHERE "Messages".chat_id = "Chat".id
+                WHERE 
+                  "Messages".chat_id = "Chat".id
+                  AND "Messages".receiver_id = '${receiver_id}' and "Messages".read = false
               )`
             ),
             'unreaded_messages',
@@ -173,7 +175,7 @@ class ChatRepository {
                 FROM "Messages"
                 WHERE
                   "Messages".chat_id = "Chat".id
-                  AND "Messages".receiver_id = '${auth.id}'
+                  AND "Messages".receiver_id = '${auth.id}' and "Messages".read = false
               )`
             ),
             'unreaded_messages',

@@ -1,87 +1,102 @@
-import { lazy } from 'react';
-import { RouteObject } from 'react-router-dom';
-import Layout from '../components/Layout';
-import NotFound from '../pages/NotFound';
-const Home = lazy(() => import('../pages/Home'));
-const Acquisitions = lazy(() => import('../pages/Books/Acquisitions'));
-const BooksExplore = lazy(() => import('../pages/Books/Explore'));
-const BookViewContent = lazy(() => import('../pages/Books/View/Content'));
-const BooksView = lazy(() => import('../pages/Books/View'));
-const Questions = lazy(() => import('../pages/Questions'));
-const SignUp = lazy(() => import('../pages/SignUp'));
-const SignIn = lazy(() => import('../pages/SignIn'));
-const ProfileSettings = lazy(() => import('../pages/Profile/Settings'));
-const Profile = lazy(() => import('../pages/Profile'));
-const RequireAuth = lazy(() => import('./RequireAuth'));
+import { lazy } from "react";
+import { RouteObject } from "react-router-dom";
+import Layout from "../components/Layout";
+import NotFound from "../pages/NotFound";
+import Chat from "../pages/Chat";
+const Home = lazy(() => import("../pages/Home"));
+const Acquisitions = lazy(() => import("../pages/Books/Acquisitions"));
+const BooksExplore = lazy(() => import("../pages/Books/Explore"));
+const BookViewContent = lazy(() => import("../pages/Books/View/Content"));
+const BooksView = lazy(() => import("../pages/Books/View"));
+const Questions = lazy(() => import("../pages/Questions"));
+const SignUp = lazy(() => import("../pages/SignUp"));
+const SignIn = lazy(() => import("../pages/SignIn"));
+const ProfileSettings = lazy(() => import("../pages/Profile/Settings"));
+const Profile = lazy(() => import("../pages/Profile"));
+const RequireAuth = lazy(() => import("./RequireAuth"));
 
 const routes: RouteObject[] = [
   {
-    path: '',
+    path: "",
     element: <Layout />,
     children: [
       {
         index: true,
-        element: <Home />
+        element: <Home />,
       },
       {
-        path: 'login',
-        element: <SignIn />
+        path: "login",
+        element: <SignIn />,
       },
       {
-        path: 'register',
-        element: <SignUp />
+        path: "register",
+        element: <SignUp />,
       },
       {
-        path: 'profile',
+        path: "profile",
         children: [
           {
             index: true,
-            element: <RequireAuth><Profile /></RequireAuth>
+            element: (
+              <RequireAuth>
+                <Profile />
+              </RequireAuth>
+            ),
           },
           {
-            path: 'settings',
-            element: <RequireAuth><ProfileSettings /></RequireAuth>
-          }
-        ]
-
+            path: "settings",
+            element: (
+              <RequireAuth>
+                <ProfileSettings />
+              </RequireAuth>
+            ),
+          },
+        ],
       },
       {
-        path: 'explore',
+        path: "explore",
         children: [
           {
             index: true,
             element: <BooksExplore />,
           },
           {
-            path: ':bookId',
+            path: ":bookId",
             children: [
               {
                 index: true,
                 element: <BooksView />,
               },
               {
-                path: 'content',
-                element: <BookViewContent />
-              }
-
-            ]
+                path: "content",
+                element: <BookViewContent />,
+              },
+            ],
           },
-        ]
+        ],
       },
       {
-        path: 'questions',
-        element: <Questions />
+        path: "questions",
+        element: <Questions />,
+      },
+      {
+        path: "chat",
+        element: (
+          <RequireAuth>
+            <Chat />
+          </RequireAuth>
+        ),
       },
       {
         path: "acquisitions",
         element: <Acquisitions />,
       },
       {
-        path: '*',
-        element: <NotFound />
-      }
-    ]
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
   },
-]
+];
 
 export default routes;

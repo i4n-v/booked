@@ -1,3 +1,5 @@
+import { IChat } from "../services/useChat/types";
+
 interface UserCommom {
   email?: string;
 }
@@ -23,6 +25,7 @@ interface User extends UserCommom {
   description?: string;
   total_books?: number;
   total_acquitions?: number;
+  chats?: IChat[]
 }
 
 interface UserUpdate extends User {
