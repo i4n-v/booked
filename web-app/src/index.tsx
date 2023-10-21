@@ -3,17 +3,11 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./contexts/AuthContext";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./configs/Theme/theme";
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      suspense: true,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+import queryClient from "./configs/queryCLient";
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
