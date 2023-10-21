@@ -6,8 +6,10 @@ import { Op } from 'sequelize';
 import { endOfDay, parseISO, startOfDay } from 'date-fns';
 import paginationWrapper from '../utils/paginationWrapper';
 import AcquisitionUpdateDto from '../dto/acquisition/acquisitionUpdate.dto';
+import SolicitationRepository from '../repositories/solicitation.repository';
+import { io } from '../setup';
 
-class CommentController {
+class AcquisitionController {
   async store(request: Request, response: Response, next: NextFunction) {
     try {
       const { auth, params } = request;
@@ -20,9 +22,19 @@ class CommentController {
       }
 
       if (Number(book.price) !== 0) {
-        return response
-          .status(400)
-          .json({ message: 'Não é possível adquirir livros pagos no momento.' });
+        await SolicitationRepository.create({
+          book_id: bookId,
+          user_id: auth.id,
+          status: 'pending',
+        });
+
+        const pendingSolicitations = await SolicitationRepository.countPendingsByReceiverId(
+          book.user_id
+        );
+
+        io.emit(`pending-solicitations-${book.user_id}`, pendingSolicitations);
+
+        return response.json({ message: messages.create('Solicitação') });
       }
 
       await AcquisitionRepository.create({
@@ -115,4 +127,4 @@ class CommentController {
   }
 }
 
-export default new CommentController();
+export default new AcquisitionController();

@@ -23,7 +23,7 @@ class AuthenticationController {
 
       if (!user) return response.status(404).json({ message: messages.unknown('Usuário') });
 
-      const isValidPassword = await encrypt.compare(user.password, userData.password, user.salt);
+      const isValidPassword = await encrypt.compare(user.password, userData.password);
 
       if (!isValidPassword) {
         return response.status(401).json({ message: 'Usuário ou senha inválidos.' });

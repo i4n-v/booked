@@ -8,6 +8,7 @@ import Assessment from './assessment.model';
 import Acquisition from './acquisition.model';
 import Chat from './chat.model';
 import Message from './message.model';
+import Solicitation from './solicitation.model';
 
 const models: any[] = [
   User,
@@ -20,6 +21,7 @@ const models: any[] = [
   Acquisition,
   Chat,
   Message,
+  Solicitation,
 ];
 
 export default models;

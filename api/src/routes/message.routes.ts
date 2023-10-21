@@ -1,6 +1,7 @@
 import router from '../config/router.config';
 import MessageController from '../controllers/message.controller';
 import authMidleware from '../midlewares/auth.midleware';
+import uploadMidleware from '../midlewares/upload.midleware';
 
 /**
  * @openapi
@@ -25,9 +26,10 @@ import authMidleware from '../midlewares/auth.midleware';
  *                 type: string
  *               content:
  *                 type: string
+ *               photo:
+ *                 $ref: '#/components/schemas/Image'
  *             required:
  *               - receiver_id
- *               - content
  *           examples:
  *             create_message:
  *               value:
@@ -41,7 +43,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *       401:
  *         $ref: '#/components/responses/error'
  */
-router.post('/messages', authMidleware, MessageController.store);
+router.post('/messages', authMidleware, uploadMidleware.single('photo'), MessageController.store);
 
 /**
  * @openapi

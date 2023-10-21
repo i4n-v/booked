@@ -12,6 +12,7 @@
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],

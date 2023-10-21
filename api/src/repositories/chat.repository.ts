@@ -53,13 +53,13 @@ class ChatRepository {
             'user_name',
             [
               sequelizeConnection.literal(`
-              CASE
-                WHEN first_user.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', first_user.photo_url)
-                ELSE first_user.photo_url
-              END
-          `),
+                CASE
+                  WHEN first_user.photo_url IS NOT NULL THEN CONCAT('${
+                    protocol + '://' + host
+                  }', first_user.photo_url)
+                  ELSE first_user.photo_url
+                END
+            `),
               'photo_url',
             ],
           ],
@@ -73,13 +73,13 @@ class ChatRepository {
             'user_name',
             [
               sequelizeConnection.literal(`
-              CASE
-                WHEN second_user.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', second_user.photo_url)
-                ELSE second_user.photo_url
-              END
-          `),
+                CASE
+                  WHEN second_user.photo_url IS NOT NULL THEN CONCAT('${
+                    protocol + '://' + host
+                  }', second_user.photo_url)
+                  ELSE second_user.photo_url
+                END
+            `),
               'photo_url',
             ],
           ],
@@ -87,7 +87,24 @@ class ChatRepository {
         {
           model: sequelizeConnection.model('Message'),
           as: 'messages',
-          attributes: ['id', 'sender_id', 'read', 'content', 'createdAt'],
+          attributes: [
+            'id',
+            'sender_id',
+            'read',
+            'content',
+            'createdAt',
+            [
+              sequelizeConnection.literal(`
+                CASE
+                  WHEN messages.photo_url IS NOT NULL THEN CONCAT('${
+                    protocol + '://' + host
+                  }', messages.photo_url)
+                  ELSE messages.photo_url
+                END
+            `),
+              'photo_url',
+            ],
+          ],
           order: [['createdAt', 'DESC']],
           limit: 1,
         },

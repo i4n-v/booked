@@ -4,7 +4,8 @@ export default class MessageDto {
   sender_id: string;
   receiver_id: string;
   read: boolean;
-  content: string;
+  content?: string;
+  photo_url?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
