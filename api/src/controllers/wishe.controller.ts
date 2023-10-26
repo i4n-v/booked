@@ -21,7 +21,7 @@ class WisheController {
         book_id: bookId,
       });
 
-      return response.json({ message: 'Livro favoritado com sucesso!' });
+      return response.json({ message: 'Livro adicionado na lista de desejos com sucesso!' });
     } catch (error) {
       next(error);
     }
@@ -46,6 +46,35 @@ class WisheController {
       return response.json(wrappedBooks);
     } catch (error) {
       // Em caso de erro, chama a próxima função de middleware de tratamento de erros (Express.js)
+      next(error);
+    }
+  }
+
+  async delete(request: Request, response: Response, next: NextFunction) {
+    try {
+      /* const {
+        auth,
+        params: { id },
+      } = request; */
+      const { auth, params } = request;
+      const wisheId = params.id;
+
+      const wishe = await WisheRepository.findById(wisheId);
+
+      if (!wishe) return response.status(404).json({ message: messages.unknown('Livro') });
+
+      if (wishe.user_id !== auth.id) {
+        return response.status(401).json({ message: messages.unauthorized() });
+      }
+
+      const isDeleted = await WisheRepository.deleteById(wisheId);
+
+      if (!isDeleted) {
+        return response.status(400).json({ message: 'Não foi possível excluir o livro.' });
+      }
+
+      return response.json({ message: messages.delete('ihjjoijuh') });
+    } catch (error) {
       next(error);
     }
   }

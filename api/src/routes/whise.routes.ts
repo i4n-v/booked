@@ -18,7 +18,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *       - access_token: []
  *     responses:
  *       200:
- *         description: Return the list of acquired books.
+ *         description: Return the list of wishes books.
  *         content:
  *           application/json:
  *             schema:
@@ -92,5 +92,35 @@ router.get('/wishe/books', authMidleware, WisheController.index);
  *         $ref: '#/components/responses/error'
  */
 router.post('/wishe/books/:id', authMidleware, WisheController.store);
+
+/**
+ * @openapi
+ * /wishe/{id}:
+ *   delete:
+ *     summary: Delete a specific book.
+ *     description: This route delete a wishe if exists.
+ *     tags:
+ *       - Wishe
+ *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
+ *       - name: id
+ *         description: The id of wishe
+ *         in: path
+ *         schema:
+ *           type: string;
+ *     security:
+ *       - access_token: []
+ *     responses:
+ *       200:
+ *         $ref: '#components/responses/success'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ *       404:
+ *         $ref: '#/components/responses/error'
+ */
+router.delete('/wishe/:id', authMidleware, WisheController.delete);
 
 export default router;

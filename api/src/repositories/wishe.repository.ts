@@ -23,6 +23,14 @@ class WisheRepository {
   async create(whise: WisheCreateDto) {
     return await this.repository.create(whise);
   }
+
+  async deleteById(id: string) {
+    return await this.repository.destroy({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 export default new WisheRepository();
