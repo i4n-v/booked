@@ -21,6 +21,7 @@ import Comment from './comment.model';
 import Chat from './chat.model';
 import Message from './message.model';
 import Solicitation from './solicitation.model';
+import Wishe from './wishe.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -116,6 +117,9 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @BelongsToMany(() => Book, () => Solicitation, 'user_id', 'book_id')
   solicitations: Solicitation[];
+
+  @BelongsToMany(() => Book, () => Wishe, 'user_id', 'book_id')
+  wishes: Wishe[];
 
   @HasMany(() => Authentication, { foreignKey: 'user_id', onDelete: 'CASCADE' })
   authentications: Authentication[];

@@ -61,19 +61,15 @@ class WisheController {
 
       const wishe = await WisheRepository.findById(wisheId);
 
-      if (!wishe) return response.status(404).json({ message: messages.unknown('Livro') });
+      if (!wishe) return response.status(404).json({ message: messages.unknown('Desejo') });
 
       if (wishe.user_id !== auth.id) {
         return response.status(401).json({ message: messages.unauthorized() });
       }
 
-      const isDeleted = await WisheRepository.deleteById(wisheId);
+      await WisheRepository.deleteById(wisheId);
 
-      if (!isDeleted) {
-        return response.status(400).json({ message: 'Não foi possível excluir o livro.' });
-      }
-
-      return response.json({ message: messages.delete('ihjjoijuh') });
+      return response.json({ message: messages.delete('Desejo') });
     } catch (error) {
       next(error);
     }

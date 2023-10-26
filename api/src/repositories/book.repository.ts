@@ -177,6 +177,14 @@ class BookRepository {
             attributes: [],
           },
         },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'wishes',
+          attributes: [],
+          through: {
+            attributes: [],
+          },
+        },
       ],
     });
   }
