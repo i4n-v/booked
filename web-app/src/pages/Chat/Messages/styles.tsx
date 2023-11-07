@@ -6,7 +6,9 @@ const ChatMessagesContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column-reverse",
   rowGap: "20px",
   height: "100%",
-  paddingtop: "30px"
+  paddingtop: "30px",
+  paddingBottom: "10px",
+  paddingRight: "22px",
 }));
 
 const ChatMessages = styled(Box)(({ theme }) => ({
@@ -17,7 +19,6 @@ const ChatMessages = styled(Box)(({ theme }) => ({
   gap: "12px",
   overflow: "auto",
   paddingLeft: "22px",
-  paddingRight: "22px",
 }));
 
 const NewMessage = styled(Box)(({ theme }) => ({

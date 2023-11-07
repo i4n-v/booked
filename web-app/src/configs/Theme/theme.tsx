@@ -138,6 +138,7 @@ const include: ThemeOptions = {
       styleOverrides: {
         root: {
           padding: "12px 24px",
+          height: "44px"
         },
         contained: {
           background: "linear-gradient(180deg, #9B51E0 0%, #720ECF 100%)",
@@ -165,10 +166,10 @@ const include: ThemeOptions = {
         },
         root: {
           "& .MuiOutlinedInput-root .MuiAutocomplete-input,.MuiOutlinedInput-root":
-            {
-              padding: "0 0 0 9px",
-              minHeight: "44px",
-            },
+          {
+            padding: "0 0 0 9px",
+            minHeight: "44px",
+          },
         },
       },
     },

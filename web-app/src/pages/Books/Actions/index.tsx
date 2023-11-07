@@ -9,10 +9,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import useCategory from "../../../services/useCategory";
 import useDebounce from "../../../helpers/Debounce";
 import Switch from "../../../components/Input/Switch";
+import { SolicitationsStatus } from "../../../commons/SolicitationStatus";
 
 export default function BooksActions({
   filter,
   publish,
+  solicitations,
   handleOpenPublish = (v: true) => null,
   handleFilter = (v: true) => null,
   dateLabels = {},
@@ -69,7 +71,15 @@ export default function BooksActions({
           >
             Publicar
           </Button>
+
         ) : null}
+        {solicitations ? (
+          <Box sx={{ display: "flex", columnGap: "20px" }}>
+            <Button variant="contained" sx={{ height: "44px" }}>SOLICITAÇÕES RECEBIDAS</Button>
+            <Button variant="contained">SOLICITAÇÕES ENVIADAS</Button>
+          </Box>
+        ) : null}
+
       </Box>
       <FormProvider {...form}>
         <form>
@@ -85,16 +95,30 @@ export default function BooksActions({
             label={dateLabels.maxDate || "Data máxima da publicação"}
             shrink
           />
-          <InputSelect
-            service={getCategories}
-            name="categories"
-            optionLabel={"name"}
-            label="Categorias"
-            multiple
-          />
-          <Input name="min_price" label={"Preço minimo"} type="number" />
-          <Input name="max_price" label={"Preço maximo"} type="number" />
-          <Switch name="free" label={"Gratuito"} />
+
+          {solicitations ?
+            <InputSelect
+              options={Object.values(SolicitationsStatus).map(i => ({ label: i, value: i }))}
+              name="categories"
+              optionLabel={"label"}
+              label="Categorias"
+              multiple
+            /> :
+            <>
+              <InputSelect
+                service={getCategories}
+                name="categories"
+                optionLabel={"name"}
+                label="Categorias"
+                multiple
+              />
+              <Input name="min_price" label={"Preço minimo"} type="number" />
+              <Input name="max_price" label={"Preço maximo"} type="number" />
+              <Switch name="free" label={"Gratuito"} />
+
+            </>
+
+          }
         </form>
       </FormProvider>
     </Actions>

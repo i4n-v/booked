@@ -9,6 +9,7 @@ export type BooksActionsProps = {
     minDate?: string;
     maxDate?: string;
   };
+  solicitations?: boolean;
 };
 
 export type BooksFilters = {
