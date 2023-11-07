@@ -51,7 +51,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *               createdAt: string
  *               updatedAt: string
  *               user: object
- *               solicitations: object
+ *               book: object
  *             examples:
  *               get_payload:
  *                 value:
@@ -62,7 +62,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *                       id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                       name: 'Filipe Andrade'
  *                       user_name: 'filipe#0'
- *                     solicitations:
+ *                     book:
  *                       id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                       user:
  *                         id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
@@ -78,17 +78,17 @@ router.get('/solicitations', authMidleware, SolicitationController.index);
 
 /**
  * @openapi
- * /acquisitions/{id}:
+ * /solicitations/{id}:
  *   put:
- *     summary: update a acquisition.
- *     description: This route update a book's acquisition.
+ *     summary: update a solicitation.
+ *     description: This route update a book's solicitation.
  *     tags:
- *       - Acquisition
+ *       - Solicitaiton
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'
  *       - name: id
- *         description: The id of acquisition
+ *         description: The id of solicitation
  *         in: path
  *         schema:
  *           type: string;
@@ -100,12 +100,12 @@ router.get('/solicitations', authMidleware, SolicitationController.index);
  *           schema:
  *             type: object
  *             properties:
- *               marked_page:
- *                 type: integer
+ *               status:
+ *                 type: string
  *           examples:
  *             send_payload:
  *               value:
- *                 marked_page: 5
+ *                 status: "accepted"
  *     responses:
  *       200:
  *         $ref: '#/components/responses/success'
@@ -114,6 +114,6 @@ router.get('/solicitations', authMidleware, SolicitationController.index);
  *       401:
  *         $ref: '#/components/responses/error'
  */
-router.put('/acquisitions/:id', authMidleware, SolicitationController.update);
+router.put('/solicitations/:id', authMidleware, SolicitationController.update);
 
 export default router;

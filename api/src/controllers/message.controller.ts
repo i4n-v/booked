@@ -60,7 +60,7 @@ class MessageController {
           .json({ message: 'Não é possível enviar uma mensagem para o mesmo usuário.' });
       }
 
-      if (!content || !file) {
+      if (!content && !file) {
         return response
           .status(400)
           .json({ message: 'Um conteúdo ou imagem da mensagem deve ser informado.' });

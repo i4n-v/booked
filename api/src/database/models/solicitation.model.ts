@@ -1,5 +1,6 @@
 import {
   AllowNull,
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -34,4 +35,10 @@ export default class Solicitation extends Model<SolicitationDto, SolicitationCre
   @Column(DataType.UUID)
   @ForeignKey(() => Book)
   book_id: string;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Book)
+  book: Book;
 }

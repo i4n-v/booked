@@ -43,9 +43,8 @@ class SolicitationRepository {
         },
         {
           model: sequelizeConnection.model('Book'),
-          as: 'solicitations',
+          as: 'book',
           attributes: ['id'],
-          through: { attributes: [] },
           include: [
             {
               model: sequelizeConnection.model('User'),
@@ -65,7 +64,7 @@ class SolicitationRepository {
       },
       include: {
         model: sequelizeConnection.model('Book'),
-        as: 'solicitations',
+        as: 'book',
         where: {
           user_id: id,
         },

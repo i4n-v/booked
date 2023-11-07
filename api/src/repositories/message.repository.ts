@@ -101,10 +101,10 @@ class MessageRepository {
           [
             sequelizeConnection.literal(`
               CASE
-                WHEN messages.photo_url IS NOT NULL THEN CONCAT('${
+                WHEN "Message".photo_url IS NOT NULL THEN CONCAT('${
                   protocol + '://' + host
-                }', messages.photo_url)
-                ELSE messages.photo_url
+                }', "Message".photo_url)
+                ELSE "Message".photo_url
               END
           `),
             'photo_url',
