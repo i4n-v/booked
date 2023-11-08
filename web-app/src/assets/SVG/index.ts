@@ -13,6 +13,7 @@ import { ReactComponent as Ellipse } from "./ellipse.svg";
 import { ReactComponent as ArrowDown } from "./arrow-down.svg";
 import { ReactComponent as ArrowUp } from "./arrow-up.svg";
 import { ReactComponent as Book } from "./book.svg";
+import { ReactComponent as Favorite } from "./favorite.svg";
 
 export {
   DarkLogo,
@@ -30,4 +31,5 @@ export {
   ArrowDown,
   ArrowUp,
   Book,
+  Favorite,
 };

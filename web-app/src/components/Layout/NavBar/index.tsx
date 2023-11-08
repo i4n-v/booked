@@ -10,6 +10,7 @@ import {
   Menu,
   User,
   Book,
+  Favorite
 } from "../../../assets/SVG";
 import {
   Badge,
@@ -109,6 +110,11 @@ export default function NavBar({ logged }: NavBarProps) {
       label: "Biblioteca",
       icon: <Book />,
       handler: () => navigate("acquisitions"),
+    },
+    {
+      label: "Lista de desejos",
+      icon: <Favorite />,
+      handler: () => navigate("wishes"),
     },
     {
       label: "Configurações",
