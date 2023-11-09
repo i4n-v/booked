@@ -6,6 +6,7 @@ import Chat from "../pages/Chat";
 const Home = lazy(() => import("../pages/Home"));
 const Acquisitions = lazy(() => import("../pages/Books/Acquisitions"));
 const BooksExplore = lazy(() => import("../pages/Books/Explore"));
+const Wish = lazy(() => import("../pages/Books/Wish"));
 const BookViewContent = lazy(() => import("../pages/Books/View/Content"));
 const BooksView = lazy(() => import("../pages/Books/View"));
 const Questions = lazy(() => import("../pages/Questions"));
@@ -31,6 +32,10 @@ const routes: RouteObject[] = [
       {
         path: "register",
         element: <SignUp />,
+      },
+      {
+        path: "wishes",
+        element: <Wish />,
       },
       {
         path: "profile",
