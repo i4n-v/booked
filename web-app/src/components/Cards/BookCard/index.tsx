@@ -3,6 +3,7 @@ import { BookCardProps } from "./types";
 import { Box, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
+import { FavoriteOutlined } from "../../../assets/SVG";
 import MoreOptions from "../../MoreOptions";
 
 export default function BookCard({
@@ -102,7 +103,8 @@ export default function BookCard({
         <BookImage>
           <img src={image || bookBackground} alt="Capa do livro." />
         </BookImage>
-        <Typography component="h6">{title}</Typography>
+        <FavoriteOutlined />
+        <Typography component="h6">{title}  </Typography>
         <Typography component="p">Autor: {author}</Typography>
         <InteractiveContainer>
           <Box>
