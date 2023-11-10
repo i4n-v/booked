@@ -18,7 +18,7 @@ export default function useAcquisitions() {
       );
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -27,7 +27,7 @@ export default function useAcquisitions() {
       const response = await api.post(`${DPath}/books/${id}`);
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -42,7 +42,7 @@ export default function useAcquisitions() {
       const response = await api.put(`${DPath}/${id}`, data);
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 

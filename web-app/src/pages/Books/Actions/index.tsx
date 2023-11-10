@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import useCategory from "../../../services/useCategory";
 import useDebounce from "../../../helpers/Debounce";
 import Switch from "../../../components/Input/Switch";
-import { SolicitationsStatus } from "../../../commons/SolicitationStatus";
+import { SolicitationStatus } from "../../../commons/ISolicitation";
 
 export default function BooksActions({
   filter,
@@ -25,23 +25,16 @@ export default function BooksActions({
       categories: [],
       max_date: undefined,
       min_date: undefined,
+      type: 'received'
     },
   });
   const debounceSearch = useDebounce(handleFilter, 700);
   const { getCategories } = useCategory();
 
-  const formValues = form.watch();
-  const didNotSearch = useRef(true);
+  form.watch((formValues) => {
+    debounceSearch({ ...formValues });
+  });
 
-  const search = useCallback(debounceSearch, [formValues, debounceSearch]);
-  useEffect(() => {
-    if (didNotSearch.current) return;
-    search({ ...formValues });
-  }, [formValues, search]);
-
-  useEffect(() => {
-    didNotSearch.current = !showFilters;
-  }, [showFilters]);
   return (
     <Actions showfilters={showFilters}>
       <Box>
@@ -75,8 +68,8 @@ export default function BooksActions({
         ) : null}
         {solicitations ? (
           <Box sx={{ display: "flex", columnGap: "20px" }}>
-            <Button variant="contained" sx={{ height: "44px" }}>SOLICITAÇÕES RECEBIDAS</Button>
-            <Button variant="contained">SOLICITAÇÕES ENVIADAS</Button>
+            <Button onClick={() => form.setValue("type", "received")} variant={form.watch('type') === "received" ? "contained" : "outlined"} sx={{ height: "44px" }}>SOLICITAÇÕES RECEBIDAS</Button>
+            <Button onClick={() => form.setValue("type", "sended")} variant={form.watch('type') === "sended" ? "contained" : "outlined"}>SOLICITAÇÕES ENVIADAS</Button>
           </Box>
         ) : null}
 
@@ -98,10 +91,11 @@ export default function BooksActions({
 
           {solicitations ?
             <InputSelect
-              options={Object.values(SolicitationsStatus).map(i => ({ label: i, value: i }))}
-              name="categories"
+              options={Object.entries(SolicitationStatus).map(i => ({ label: i[1], value: i[0] }))}
+              name="status"
               optionLabel={"label"}
               label="Categorias"
+              valueKey={"value"}
               multiple
             /> :
             <>

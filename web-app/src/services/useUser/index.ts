@@ -13,16 +13,16 @@ export default function useUser() {
       const result = await api.get<IUser>(`${DPath}/${id}`);
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
   async function getUsers(params: Params): Promise<IWrapper<IUser>> {
     try {
-      const result = await api.get<IWrapper<IUser>>(`${DPath}`, {params});
+      const result = await api.get<IWrapper<IUser>>(`${DPath}`, { params });
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -77,6 +77,6 @@ export default function useUser() {
     createUser,
     updateUser,
     passwordChange,
-    getUsers
+    getUsers,
   };
 }

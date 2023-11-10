@@ -13,7 +13,7 @@ export default function useBook() {
       const result = await api.get<IWrapper<IBook>>(`${DPath}`, { params });
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
   async function getBook(id: string): Promise<IBook> {
@@ -21,7 +21,7 @@ export default function useBook() {
       const result = await api.get<IBook>(`${DPath}/${id}`);
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -48,7 +48,7 @@ export default function useBook() {
       });
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -93,7 +93,7 @@ export default function useBook() {
       );
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -102,7 +102,7 @@ export default function useBook() {
       const result = await api.delete<ResponseMessage>(`${DPath}/${id}`);
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
