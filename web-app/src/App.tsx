@@ -29,31 +29,31 @@ function App() {
         },
       });
 
-      socket.on(`user-connect-${authData.userData.id}`, (arg) => {
+      socket.on(`user-connect-${authData.userData.id}`, (arg: any) => {
         console.log("user-connect:", arg);
       });
 
-      socket.on(`user-disconnect-${authData.userData.id}`, (arg) => {
+      socket.on(`user-disconnect-${authData.userData.id}`, (arg: any) => {
         console.log("user-disconnect:", arg);
       });
 
-      socket.on(`receive-message-${chatId}-${receiverId}`, (arg) => {
+      socket.on(`receive-message-${chatId}-${receiverId}`, (arg: any) => {
         console.log("receive-message:", arg);
       });
 
-      socket.on(`receive-chat-${receiverId}`, (arg) => {
+      socket.on(`receive-chat-${receiverId}`, (arg: any) => {
         console.log("receive-chat:", arg);
       });
 
-      socket.on(`update-messages-${receiverId}`, (arg) => {
+      socket.on(`update-messages-${receiverId}`, (arg: any) => {
         console.log("updated-messages:", arg);
       });
 
-      socket.on(`deleted-message-${receiverId}`, (arg) => {
+      socket.on(`deleted-message-${receiverId}`, (arg: any) => {
         console.log("deleted-message:", arg);
       });
 
-      socket.on(`pending-chats-${receiverId}`, (arg) => {
+      socket.on(`pending-chats-${receiverId}`, (arg: any) => {
         console.log("pending-chats:", arg);
       });
 

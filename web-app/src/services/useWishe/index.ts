@@ -3,46 +3,47 @@ import { Params } from "../../commons/Params";
 import api from "../../configs/api";
 import { IWishes } from "../../commons/IWishes";
 import { ResponseMessage } from "../../commons/ResponseMessage";
+
 export default function useWishes() {
-  const DPath = "wishe";
+  const path = "wishe";
 
   async function getWishes(
     params?: Params
   ): Promise<IWrapper<IWishes[] | null>> {
     try {
       const response = await api.get<IWrapper<IWishes[] | null>>(
-        `${DPath}/books`,
+        `${path}/books`,
         {
           params,
         }
       );
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
-  async function createWish(bookId: string): Promise<ResponseMessage> {
+  async function createWishe(bookId: string): Promise<ResponseMessage> {
     try {
-      const response = await api.post(`${DPath}/books/${bookId}`);
+      const response = await api.post(`${path}/books/${bookId}`);
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
-  async function deleteWish(id: string): Promise<ResponseMessage> {
+  async function deleteWishe(bookId: string): Promise<ResponseMessage> {
     try {
-      const response = await api.delete(`${DPath}/${id}`);
+      const response = await api.delete(`${path}/books/${bookId}`);
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
   return {
     getWishes,
-    createWish,
-    deleteWish,
+    createWishe,
+    deleteWishe,
   };
 }
