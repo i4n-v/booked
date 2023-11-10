@@ -56,7 +56,7 @@ export default function ChatList({
     }
   );
 
-  useQuery(["getUsers",page,filters.user ], () => getUsers({ page, limit: 10, ...filters.user }), {
+  useQuery(["getUsers", page, filters.user], () => getUsers({ page, limit: 10, ...filters.user }), {
     onSuccess: (data) => {
       setMaxPage(data?.totalPages);
       if (data.current > 1) {
@@ -66,10 +66,11 @@ export default function ChatList({
       setUsersToShow(data.items);
     },
     suspense: false,
-    enabled:  findUser,
+    enabled: findUser,
   });
   useEffect(() => {
     socket.on(`receive-chat-${userData?.id}`, (arg) => {
+      console.log(arg)
       setChatsToShow((curr) => [
         arg,
         ...remove(curr, (item) => !(arg.id === item.id)),
@@ -81,8 +82,8 @@ export default function ChatList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const debounceSearch = useDebounce((value,findUser) => {
-    if(!value) return
+  const debounceSearch = useDebounce((value, findUser) => {
+    if (!value) return
     if (findUser) {
       reset();
       setFilters({ user: { name: value } });
@@ -92,18 +93,18 @@ export default function ChatList({
     }
   }, 500);
 
-  const search = form.handleSubmit(({ search }) => debounceSearch(search,findUser));
+  const search = form.handleSubmit(({ search }) => debounceSearch(search, findUser));
 
   useEffect(() => {
-    const subscription = watch((value) => debounceSearch(value.search,findUser));
+    const subscription = watch((value) => debounceSearch(value.search, findUser));
     return () => subscription.unsubscribe();
-  }, [watch,findUser]);
+  }, [watch, findUser]);
 
   useEffect(() => {
     reset();
     form.reset()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[findUser])
+  }, [findUser])
 
   return (
     <ChatListContainer>
@@ -147,36 +148,36 @@ export default function ChatList({
       <ChatListBox ref={targetRef} onScrollCapture={paginateTrigger}>
         {!findUser
           ? chatsToShow?.map((chat, index) => (
-              <ChatItem
-                key={index}
-                onClick={() => handleViewChat(chat)}
-                username={
-                  chat.second_user.id === userData?.id
-                    ? chat.first_user.name
-                    : chat.second_user.name
-                }
-                active={selected?.id === chat.id}
-                unread_messages={chat.unreaded_messages}
-                last_message={chat.messages[0]?.content}
-                last_update={chat.messages[0]?.updatedAt || chat.messages[0]?.createdAt}
-              />
-            ))
+            <ChatItem
+              key={index}
+              onClick={() => handleViewChat(chat)}
+              username={
+                chat.second_user.id === userData?.id
+                  ? chat.first_user.name
+                  : chat.second_user.name
+              }
+              active={selected?.id === chat.id}
+              unread_messages={chat.unreaded_messages}
+              last_message={chat.messages[0]?.content}
+              last_update={chat.messages[0]?.updatedAt || chat.messages[0]?.createdAt}
+            />
+          ))
           : usersToShow?.map((user, index) => (
-              <ChatItem
-                key={index}
-                onClick={() =>
-                  handleViewChat({
-                    first_user: userData as IUser,
-                    second_user: user,
-                    id: user.chats?.[0]?.id
-                  } as IChat)
-                }
-                username={user.name}
-                active={selected?.second_user?.id === user.id}
-                unread_messages={0}
-                last_message={""}
-              />
-            ))}
+            <ChatItem
+              key={index}
+              onClick={() =>
+                handleViewChat({
+                  first_user: userData as IUser,
+                  second_user: user,
+                  id: user.chats?.[0]?.id
+                } as IChat)
+              }
+              username={user.name}
+              active={selected?.second_user?.id === user.id}
+              unread_messages={0}
+              last_message={""}
+            />
+          ))}
       </ChatListBox>
     </ChatListContainer>
   );

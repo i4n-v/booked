@@ -73,7 +73,11 @@ export default function Messages({ chat }: { chat: IChat }) {
   }, [chat]);
 
   const sendMessage = form.handleSubmit(({ message, image }) => {
-    // if (!message || ) return;
+    let photo_url: string = '';
+    if (image) {
+      photo_url = URL.createObjectURL(new Blob([image!]))
+    }
+    if (!message && !photo_url) return;
     sendMutation.mutate(
       {
         chat_id: chat.id as string,
@@ -85,8 +89,9 @@ export default function Messages({ chat }: { chat: IChat }) {
       {
         onSuccess: (data) => {
           form.reset();
+          form.resetField('image')
           setMessagesToShow((curr) => [
-            { content: message, sender: authData?.userData } as IMessage,
+            { content: message, photo_url: photo_url, sender: authData?.userData } as IMessage,
             ...curr,
           ]);
           if (!chat.id) {
@@ -111,6 +116,7 @@ export default function Messages({ chat }: { chat: IChat }) {
 
   useEffect(() => {
     socket.on(`receive-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
+      console.log(arg)
       if (arg.chat_id === chat.id) {
         socket.emit("enter-in-chat", chat.id);
         setMessagesToShow((curr) => [arg, ...curr]);

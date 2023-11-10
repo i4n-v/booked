@@ -36,8 +36,6 @@ export default function Message({ showAccount, response, content, id, actionsOpt
           borderRadius: "6px",
           wordBreak: "break-word",
           maxWidth: "550px",
-          // maxHeight: "100px",
-          height: "fit-content",
           marginLeft: showAccount || !response ? "initial" : "47px",
         }}
       >
