@@ -20,6 +20,14 @@ class WisheRepository {
     return await this.repository.findByPk(id);
   }
 
+  async findByBookId(id: string) {
+    return await this.repository.findOne({
+      where: {
+        book_id: id,
+      },
+    });
+  }
+
   async create(whise: WisheCreateDto) {
     return await this.repository.create(whise);
   }

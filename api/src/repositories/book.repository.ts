@@ -155,6 +155,16 @@ class BookRepository {
             'total_users_rating',
           ],
           [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "wishes->Wishe".id IS NOT NULL
+                  THEN true
+                  ELSE false
+              END
+            `),
+            'wished',
+          ],
         ],
       },
       include: [
