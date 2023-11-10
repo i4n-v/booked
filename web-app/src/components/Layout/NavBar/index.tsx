@@ -10,7 +10,7 @@ import {
   Menu,
   User,
   Book,
-  Favorite
+  Favorite,
 } from "../../../assets/SVG";
 import {
   Badge,
@@ -39,7 +39,7 @@ export default function NavBar({ logged }: NavBarProps) {
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
-  const [pendingChats,setPendingChats] = useState()
+  const [pendingChats, setPendingChats] = useState();
   const { logout } = useAuth();
   const logoutMutation = useMutation(logout);
 
@@ -157,16 +157,16 @@ export default function NavBar({ logged }: NavBarProps) {
   });
 
   useEffect(() => {
-    if(!authData?.valid) return
-    socket.on(`pending-chats-${authData?.userData?.id}`, (arg) => {
-      setPendingChats(arg)
+    if (!authData?.valid) return;
+    socket.on(`pending-chats-${authData?.userData?.id}`, (arg: any) => {
+      setPendingChats(arg);
     });
 
     return () => {
       socket.off(`pending-chats-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[authData])
+  }, [authData]);
 
   return (
     <AppBar

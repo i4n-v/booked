@@ -3,10 +3,14 @@ import { BookCardProps } from "./types";
 import { Box, Rating, Typography, styled, useTheme } from "@mui/material";
 import { toBRL } from "../../../utils";
 import bookBackground from "../../../assets/SVG/book-background.svg";
-import { FavoriteOutlined } from "../../../assets/SVG";
+import { FavoriteOutlined, Favorite } from "../../../assets/SVG";
 import MoreOptions from "../../MoreOptions";
+import useWishes from "../../../services/useWishe";
+import { useMutation } from "react-query";
+import useNotifier from "../../../helpers/Notify";
 
 export default function BookCard({
+  bookId,
   size,
   image,
   title,
@@ -16,9 +20,44 @@ export default function BookCard({
   price,
   actionsOptions,
   showPrice = true,
+  showWishe = true,
+  wished = false,
   onClick = () => null,
 }: BookCardProps) {
   const theme = useTheme();
+  const notify = useNotifier();
+  const [isWished, setIsWished] = useState(wished);
+
+  const { createWishe, deleteWishe } = useWishes();
+
+  const createWisheMutation = useMutation(createWishe);
+  const deleteWisheMutation = useMutation(deleteWishe);
+
+  function togleWishe(event: React.MouseEvent<SVGSVGElement, MouseEvent>) {
+    event.stopPropagation();
+
+    if (!isWished) {
+      createWisheMutation.mutate(bookId!, {
+        onSuccess(response) {
+          notify(response.message);
+          setIsWished(true);
+        },
+        onError(error: any) {
+          notify(error.message, "error");
+        },
+      });
+    } else {
+      deleteWisheMutation.mutate(bookId!, {
+        onSuccess(response) {
+          notify(response.message);
+          setIsWished(false);
+        },
+        onError(error: any) {
+          notify(error.message, "error");
+        },
+      });
+    }
+  }
 
   const BookImage = styled(Box)(({ theme }) => ({
     width: "100%",
@@ -46,18 +85,28 @@ export default function BookCard({
     transition: "0.3s",
     cursor: "pointer",
     position: "relative",
-    "& > h6": {
+    "& > div + div > h6": {
       font: theme.font[size === "lg" ? "md" : "sm"],
       color: theme.palette.secondary.A200,
-      marginTop: size === "lg" ? "20px" : "12px",
-      marginBottom: size === "lg" ? "12px" : "8px",
-      paddingLeft: size === "lg" ? "20px" : "12px",
+      maxWidth: "100%",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
     },
     "& > p": {
       font: theme.font[size === "lg" ? "sm" : "xs"],
       color: theme.palette.secondary[800],
       marginBottom: size === "lg" ? "20px" : "18px",
       paddingLeft: size === "lg" ? "20px" : "12px",
+    },
+    "& > div + div": {
+      display: "flex",
+      gap: 4,
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: size === "lg" ? "0 20px" : "0 12px",
+      marginTop: size === "lg" ? "20px" : "12px",
+      marginBottom: size === "lg" ? "12px" : "8px",
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -87,24 +136,31 @@ export default function BookCard({
     },
   }));
 
+  const FavoriteIcon = styled(isWished ? Favorite : FavoriteOutlined)(() => ({
+    width: "32px",
+    height: "32px",
+  }));
+
   const [dropdown, setDropdown] = useState(false);
 
   return (
     <Box sx={{ position: "relative" }}>
-      {actionsOptions ? (
+      {actionsOptions && (
         <MoreOptions
           options={actionsOptions}
           open={dropdown}
           handleOpen={setDropdown}
           id={`card-${title}-${author}`}
         />
-      ) : null}
+      )}
       <BookContainer onClick={() => onClick()}>
         <BookImage>
           <img src={image || bookBackground} alt="Capa do livro." />
         </BookImage>
-        <FavoriteOutlined />
-        <Typography component="h6">{title}  </Typography>
+        <Box>
+          <Typography component="h6">{title} </Typography>
+          {showWishe && <FavoriteIcon onClick={togleWishe} />}
+        </Box>
         <Typography component="p">Autor: {author}</Typography>
         <InteractiveContainer>
           <Box>
