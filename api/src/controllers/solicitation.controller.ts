@@ -29,7 +29,7 @@ class SolicitationController {
         });
       }
 
-      if (solicitation.user_id !== auth.id && book.user_id !== auth.id) {
+      if (solicitation.user_id !== auth.id && book.user.id !== auth.id) {
         return response.status(401).json({
           message: messages.unauthorized(),
         });
@@ -41,7 +41,7 @@ class SolicitationController {
         });
       }
 
-      if (book.user_id === auth.id && status === 'canceled') {
+      if (book.user.id === auth.id && status === 'canceled') {
         return response.status(401).json({
           message: 'Não é possível cancelar uma solicitação recebida.',
         });
@@ -58,10 +58,10 @@ class SolicitationController {
       });
 
       const pendingSolicitations = await SolicitationRepository.countPendingsByReceiverId(
-        book.user_id
+        book.user.id
       );
 
-      io.emit(`pending-solicitations-${book.user_id}`, pendingSolicitations);
+      io.emit(`pending-solicitations-${book.user.id}`, pendingSolicitations);
 
       return response.json({ message: messages.update('Aquisição') });
     } catch (error) {
@@ -79,7 +79,7 @@ class SolicitationController {
       const whereStatement: any = {};
 
       if (type === 'received') {
-        whereStatement['$solicitations.user_id$'] = auth.id;
+        whereStatement['$book->user.id$'] = auth.id;
       }
 
       if (type === 'sended') {

@@ -24,6 +24,19 @@ class MessageRepository {
     return await this.repository.findByPk(id, {
       attributes: {
         exclude: ['sender_id', 'receiver_id'],
+        include: [
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "Message".photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', "Message".photo_url)
+                ELSE "Message".photo_url
+              END
+          `),
+            'photo_url',
+          ],
+        ],
       },
       transaction,
       include: [

@@ -29,10 +29,10 @@ class AcquisitionController {
         });
 
         const pendingSolicitations = await SolicitationRepository.countPendingsByReceiverId(
-          book.user_id
+          book.user.id
         );
 
-        io.emit(`pending-solicitations-${book.user_id}`, pendingSolicitations);
+        io.emit(`pending-solicitations-${book.user.id}`, pendingSolicitations);
 
         return response.json({ message: messages.create('Solicitação') });
       }
