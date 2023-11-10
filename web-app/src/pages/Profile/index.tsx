@@ -116,6 +116,7 @@ export default function Profile() {
                   rating={book.rating}
                   price={book.price}
                   ratingQuantity={book.total_users_rating}
+                  showWishe={false}
                   title={book.name}
                   image={book.photo_url}
                   size="md"

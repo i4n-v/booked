@@ -12,7 +12,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 export default function BooksExplore() {
   const { getBooks } = useBook();
   const { state } = useLocation();
-  const { data: books } = useQuery(["getBooks", [state]], () => getBooks({ search: state }));
+  const { data: books } = useQuery(["getBooks", [state]], () =>
+    getBooks({ search: state })
+  );
   const navigate = useNavigate();
 
   const { getWishes } = useWishes();
@@ -23,8 +25,8 @@ export default function BooksExplore() {
       try {
         const wishlistData = await getWishes();
 
-        if (Array.isArray(wishlistData)) {
-          setWishlist(wishlistData);
+        if (Array.isArray(wishlistData.items)) {
+          setWishlist(wishlistData.items as any);
         }
       } catch (error) {
         console.error("Erro ao buscar lista de desejos", error);
@@ -51,6 +53,7 @@ export default function BooksExplore() {
                   author={book.user?.name}
                   rating={book.rating}
                   price={book.price}
+                  wished={book.wished}
                   ratingQuantity={book.total_users_rating}
                   title={book.name}
                   image={book.photo_url}

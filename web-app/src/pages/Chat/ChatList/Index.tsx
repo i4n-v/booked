@@ -38,7 +38,8 @@ export default function ChatList({
   const [chatsToShow, setChatsToShow] = useState<IChat[]>([]);
   const [usersToShow, setUsersToShow] = useState<IUser[]>([]);
   const targetRef = useRef(null);
-  const { page, setMaxPage, paginateTrigger, reset } = usePaginateScroll(targetRef);
+  const { page, setMaxPage, paginateTrigger, reset } =
+    usePaginateScroll(targetRef);
   useQuery(
     ["getChats", page, filters.chat],
     () => getChats({ page, limit: 10, ...filters.chat }),
@@ -52,24 +53,28 @@ export default function ChatList({
         setChatsToShow(data.items);
       },
       suspense: false,
-      enabled: !findUser
+      enabled: !findUser,
     }
   );
 
-  useQuery(["getUsers",page,filters.user ], () => getUsers({ page, limit: 10, ...filters.user }), {
-    onSuccess: (data) => {
-      setMaxPage(data?.totalPages);
-      if (data.current > 1) {
-        setUsersToShow((curr) => [...curr, ...data.items]);
-        return;
-      }
-      setUsersToShow(data.items);
-    },
-    suspense: false,
-    enabled:  findUser,
-  });
+  useQuery(
+    ["getUsers", page, filters.user],
+    () => getUsers({ page, limit: 10, ...filters.user }),
+    {
+      onSuccess: (data) => {
+        setMaxPage(data?.totalPages);
+        if (data.current > 1) {
+          setUsersToShow((curr) => [...curr, ...data.items]);
+          return;
+        }
+        setUsersToShow(data.items);
+      },
+      suspense: false,
+      enabled: findUser,
+    }
+  );
   useEffect(() => {
-    socket.on(`receive-chat-${userData?.id}`, (arg) => {
+    socket.on(`receive-chat-${userData?.id}`, (arg: any) => {
       setChatsToShow((curr) => [
         arg,
         ...remove(curr, (item) => !(arg.id === item.id)),
@@ -81,8 +86,8 @@ export default function ChatList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const debounceSearch = useDebounce((value,findUser) => {
-    if(!value) return
+  const debounceSearch = useDebounce((value, findUser) => {
+    if (!value) return;
     if (findUser) {
       reset();
       setFilters({ user: { name: value } });
@@ -92,18 +97,22 @@ export default function ChatList({
     }
   }, 500);
 
-  const search = form.handleSubmit(({ search }) => debounceSearch(search,findUser));
+  const search = form.handleSubmit(({ search }) =>
+    debounceSearch(search, findUser)
+  );
 
   useEffect(() => {
-    const subscription = watch((value) => debounceSearch(value.search,findUser));
+    const subscription = watch((value) =>
+      debounceSearch(value.search, findUser)
+    );
     return () => subscription.unsubscribe();
-  }, [watch,findUser]);
+  }, [watch, findUser]);
 
   useEffect(() => {
     reset();
-    form.reset()
+    form.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[findUser])
+  }, [findUser]);
 
   return (
     <ChatListContainer>
@@ -158,7 +167,9 @@ export default function ChatList({
                 active={selected?.id === chat.id}
                 unread_messages={chat.unreaded_messages}
                 last_message={chat.messages[0]?.content}
-                last_update={chat.messages[0]?.updatedAt || chat.messages[0]?.createdAt}
+                last_update={
+                  chat.messages[0]?.updatedAt || chat.messages[0]?.createdAt
+                }
               />
             ))
           : usersToShow?.map((user, index) => (
@@ -168,7 +179,7 @@ export default function ChatList({
                   handleViewChat({
                     first_user: userData as IUser,
                     second_user: user,
-                    id: user.chats?.[0]?.id
+                    id: user.chats?.[0]?.id,
                   } as IChat)
                 }
                 username={user.name}

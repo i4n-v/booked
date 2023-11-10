@@ -35,14 +35,16 @@ export default function BooksExplore() {
             {books?.items?.map((book: IBook, index) => {
               return (
                 <BookCard
+                  key={book.id}
+                  bookId={book.id}
                   author={book.user?.name}
                   rating={book.rating}
                   price={book.price}
+                  wished={book.wished}
                   ratingQuantity={book.total_users_rating}
                   title={book.name}
                   image={book.photo_url}
                   size="md"
-                  key={book.id}
                   onClick={() => navigate(`${book.id}`)}
                 ></BookCard>
               );

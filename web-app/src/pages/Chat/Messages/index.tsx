@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { ChatMessages, ChatMessagesContainer, NewMessage } from "./styles";
 import Input from "../../../components/Input";
-import {  Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import Message from "./Message";
 import useMessage from "../../../services/useMessage";
@@ -32,9 +32,9 @@ export default function Messages({ chat }: { chat: IChat }) {
       ? chat.first_user
       : chat.second_user;
 
-  const { createMessage ,deleteMessage} = useMessage();
+  const { createMessage, deleteMessage } = useMessage();
   const { getMessages } = useChat();
-  const notify = useNotifier()
+  const notify = useNotifier();
   const targetRef = useRef(null);
   const { page, paginateTrigger, setMaxPage, reset } = usePaginateScroll(
     targetRef,
@@ -42,8 +42,8 @@ export default function Messages({ chat }: { chat: IChat }) {
   );
   const deleteMutation = useMutation({
     mutationKey: "MessageDelete",
-    mutationFn: deleteMessage
-  })
+    mutationFn: deleteMessage,
+  });
   useQuery(
     ["chatMessages", chat, page],
     () => getMessages(chat.id as string, { page, limit: 10 }),
@@ -57,7 +57,7 @@ export default function Messages({ chat }: { chat: IChat }) {
         }
       },
       suspense: false,
-      enabled: !!chat
+      enabled: !!chat,
     }
   );
   const sendMutation = useMutation({
@@ -86,37 +86,43 @@ export default function Messages({ chat }: { chat: IChat }) {
             { content: message, sender: authData?.userData } as IMessage,
             ...curr,
           ]);
-          if(!chat.id){
-            chat.id = data.chat_id
+          if (!chat.id) {
+            chat.id = data.chat_id;
           }
         },
       }
     );
   });
 
-  function messageDelete(id:string){
-    deleteMutation.mutate(id,{
+  function messageDelete(id: string) {
+    deleteMutation.mutate(id, {
       onSuccess: (data) => {
-        setMessagesToShow(value => value.filter(i => i.id !== id))
-        notify(data.message,"success")
-      }
-    })
+        setMessagesToShow((value) => value.filter((i) => i.id !== id));
+        notify(data.message, "success");
+      },
+    });
   }
   useEffect(() => {
     socket.emit("enter-in-chat", chat.id);
-  },[chat])
+  }, [chat]);
 
   useEffect(() => {
-    socket.on(`receive-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
-      if (arg.chat_id === chat.id) {
-        socket.emit("enter-in-chat", chat.id);
-        setMessagesToShow((curr) => [arg, ...curr]);
+    socket.on(
+      `receive-message-${chat.id}-${authData?.userData?.id}`,
+      (arg: any) => {
+        if (arg.chat_id === chat.id) {
+          socket.emit("enter-in-chat", chat.id);
+          setMessagesToShow((curr) => [arg, ...curr]);
+        }
       }
-    });
+    );
 
-    socket.on(`deleted-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
-      setMessagesToShow(value => value.filter(i => i.id !== arg))
-    } )
+    socket.on(
+      `deleted-message-${chat.id}-${authData?.userData?.id}`,
+      (arg: any) => {
+        setMessagesToShow((value) => value.filter((i) => i.id !== arg));
+      }
+    );
     return () => {
       socket.off(`receive-message-${chat.id}-${authData?.userData?.id}`);
       socket.off(`deleted-message-${chat.id}-${authData?.userData?.id}`);
@@ -159,8 +165,8 @@ export default function Messages({ chat }: { chat: IChat }) {
               actionsOptions={[
                 {
                   label: "Delete",
-                  handler: () => messageDelete(message.id)
-                }
+                  handler: () => messageDelete(message.id),
+                },
               ]}
             />
           );
