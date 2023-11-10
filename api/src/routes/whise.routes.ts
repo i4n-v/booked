@@ -3,6 +3,7 @@ import WisheController from '../controllers/wishe.controller';
 import authMidleware from '../midlewares/auth.midleware';
 
 /**
+/**
  * @openapi
  * /wishe/books:
  *   get:
@@ -14,6 +15,30 @@ import authMidleware from '../midlewares/auth.midleware';
  *       - $ref: '#/components/parameters/access_token'
  *       - $ref: '#/components/parameters/page'
  *       - $ref: '#/components/parameters/limit'
+ *       - name: search
+ *         description: Is the name of book or name of author
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: min_date
+ *         description: Min date of wished books
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: max_date
+ *         description: Max date of wished books
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: categories
+ *         description: A array of category ids
+ *         in: query
+ *         style: form
+ *         explode: true
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
  *     security:
  *       - access_token: []
  *     responses:
@@ -55,9 +80,6 @@ import authMidleware from '../midlewares/auth.midleware';
  *                         name: 'Ação'
  *                       - id: 'a29fb524-6fea-4dc1-a8f0-66410097266b'
  *                         name: 'Aventura'
- *
- *
- *
  *       400:
  *         $ref: '#/components/responses/error'
  *       401:

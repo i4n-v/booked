@@ -3,6 +3,8 @@ import BookRepository from '../repositories/book.repository';
 import WisheRepository from '../repositories/wishe.repository';
 import messages from '../config/messages.config';
 import paginationWrapper from '../utils/paginationWrapper';
+import { endOfDay, parseISO, startOfDay } from 'date-fns';
+import { Op } from 'sequelize';
 
 class WisheController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -29,33 +31,51 @@ class WisheController {
 
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      // Desestruturação dos objetos de request
       const { auth, query } = request;
-
-      // Parse dos parâmetros da URL para paginação
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
 
-      // Consulta ao banco de dados para listar todos os livros
-      const books = await BookRepository.findAndCountAll(page, limit, request, {});
+      let whereStatement: any = {};
 
-      // Paginação dos resultados
+      const { search, min_date, max_date, categories } = query;
+
+      if (search) {
+        whereStatement = {
+          [Op.or]: [
+            {
+              name: {
+                [Op.iLike]: `%${search}%`,
+              },
+            },
+          ],
+        };
+      }
+
+      if (min_date || max_date) {
+        whereStatement['createdAt'] = {
+          [Op.gte]: startOfDay(min_date ? parseISO(min_date as string) : new Date()),
+          [Op.lte]: endOfDay(max_date ? parseISO(max_date as string) : new Date()),
+        };
+      }
+
+      if (categories) {
+        whereStatement['category'] = {
+          [Op.in]: categories,
+        };
+      }
+
+      const books = await BookRepository.findAndCountAll(page, limit, request, whereStatement);
+
       const wrappedBooks = paginationWrapper(books, page, limit);
 
-      // Retorna os resultados em formato JSON
       return response.json(wrappedBooks);
     } catch (error) {
-      // Em caso de erro, chama a próxima função de middleware de tratamento de erros (Express.js)
       next(error);
     }
   }
 
   async delete(request: Request, response: Response, next: NextFunction) {
     try {
-      /* const {
-        auth,
-        params: { id },
-      } = request; */
       const { auth, params } = request;
       const wisheId = params.id;
 
