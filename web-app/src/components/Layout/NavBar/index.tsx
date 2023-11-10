@@ -30,7 +30,7 @@ import Cookies from "js-cookie";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../Input";
-import { ChatBubble, Search } from "@mui/icons-material";
+import { ChatBubble, CurrencyExchange, Search } from "@mui/icons-material";
 import socket from "../../../configs/socket";
 
 export default function NavBar({ logged }: NavBarProps) {
@@ -39,7 +39,8 @@ export default function NavBar({ logged }: NavBarProps) {
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
-  const [pendingChats, setPendingChats] = useState();
+  const [pendingChats, setPendingChats] = useState()
+  const [pendingSolicitations, setPendingSolicitations] = useState()
   const { logout } = useAuth();
   const logoutMutation = useMutation(logout);
 
@@ -161,9 +162,12 @@ export default function NavBar({ logged }: NavBarProps) {
     socket.on(`pending-chats-${authData?.userData?.id}`, (arg: any) => {
       setPendingChats(arg);
     });
-
+    socket.on(`pending-solicitations-${authData?.userData?.id}`, (arg) => {
+      setPendingSolicitations(arg)
+    });
     return () => {
       socket.off(`pending-chats-${authData?.userData?.id}`);
+      socket.off(`pending-solicitations-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authData]);
@@ -257,6 +261,20 @@ export default function NavBar({ logged }: NavBarProps) {
                 }}
               >
                 <Badge badgeContent={pendingChats} max={99} color="error" />
+              </Typography>
+            </IconButton>
+
+            <IconButton sx={{}} onClick={() => navigate("/solicitations")}>
+              <CurrencyExchange color="primary" />
+              <Typography
+                component={"div"}
+                sx={{
+                  position: "absolute",
+                  top: 3,
+                  right: 10,
+                }}
+              >
+                <Badge badgeContent={pendingSolicitations} max={99} color="error" />
               </Typography>
             </IconButton>
           </Box>

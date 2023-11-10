@@ -9,10 +9,12 @@ export type BooksActionsProps = {
     minDate?: string;
     maxDate?: string;
   };
+  solicitations?: boolean;
 };
 
 export type BooksFilters = {
   min_date: string;
   max_date: string;
   categories: string[];
+  type: "received" | "sended";
 };

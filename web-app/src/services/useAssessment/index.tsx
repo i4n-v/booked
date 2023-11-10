@@ -11,7 +11,7 @@ export default function useAssessment() {
       const result = await api.post<ResponseMessage>(`${DPath}`, data);
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -20,7 +20,7 @@ export default function useAssessment() {
       const result = await api.put<ResponseMessage>(`${DPath}/${data?.id}`, data);
       return result.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 

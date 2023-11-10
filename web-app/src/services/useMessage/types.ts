@@ -7,6 +7,7 @@ interface Message {
   receiver: IUser;
   read: boolean;
   content: string;
+  photo_url: string;
   createdAt?: Date;
   updatedAt?: Date;
   [x: string]: any;
@@ -17,6 +18,7 @@ interface MessageCreate {
   sender_id: string;
   receiver_id: string;
   content: string;
+  photo?: File;
 }
 
 enum MessageTypes {

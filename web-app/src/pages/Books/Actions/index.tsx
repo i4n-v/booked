@@ -9,10 +9,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import useCategory from "../../../services/useCategory";
 import useDebounce from "../../../helpers/Debounce";
 import Switch from "../../../components/Input/Switch";
+import { SolicitationStatus } from "../../../commons/ISolicitation";
 
 export default function BooksActions({
   filter,
   publish,
+  solicitations,
   handleOpenPublish = (v: true) => null,
   handleFilter = (v: true) => null,
   dateLabels = {},
@@ -23,23 +25,16 @@ export default function BooksActions({
       categories: [],
       max_date: undefined,
       min_date: undefined,
+      type: 'received'
     },
   });
   const debounceSearch = useDebounce(handleFilter, 700);
   const { getCategories } = useCategory();
 
-  const formValues = form.watch();
-  const didNotSearch = useRef(true);
+  form.watch((formValues) => {
+    debounceSearch({ ...formValues });
+  });
 
-  const search = useCallback(debounceSearch, [formValues, debounceSearch]);
-  useEffect(() => {
-    if (didNotSearch.current) return;
-    search({ ...formValues });
-  }, [formValues, search]);
-
-  useEffect(() => {
-    didNotSearch.current = !showFilters;
-  }, [showFilters]);
   return (
     <Actions showfilters={showFilters}>
       <Box>
@@ -69,7 +64,15 @@ export default function BooksActions({
           >
             Publicar
           </Button>
+
         ) : null}
+        {solicitations ? (
+          <Box sx={{ display: "flex", columnGap: "20px" }}>
+            <Button onClick={() => form.setValue("type", "received")} variant={form.watch('type') === "received" ? "contained" : "outlined"} sx={{ height: "44px" }}>SOLICITAÇÕES RECEBIDAS</Button>
+            <Button onClick={() => form.setValue("type", "sended")} variant={form.watch('type') === "sended" ? "contained" : "outlined"}>SOLICITAÇÕES ENVIADAS</Button>
+          </Box>
+        ) : null}
+
       </Box>
       <FormProvider {...form}>
         <form>
@@ -85,16 +88,31 @@ export default function BooksActions({
             label={dateLabels.maxDate || "Data máxima da publicação"}
             shrink
           />
-          <InputSelect
-            service={getCategories}
-            name="categories"
-            optionLabel={"name"}
-            label="Categorias"
-            multiple
-          />
-          <Input name="min_price" label={"Preço minimo"} type="number" />
-          <Input name="max_price" label={"Preço maximo"} type="number" />
-          <Switch name="free" label={"Gratuito"} />
+
+          {solicitations ?
+            <InputSelect
+              options={Object.entries(SolicitationStatus).map(i => ({ label: i[1], value: i[0] }))}
+              name="status"
+              optionLabel={"label"}
+              label="Categorias"
+              valueKey={"value"}
+              multiple
+            /> :
+            <>
+              <InputSelect
+                service={getCategories}
+                name="categories"
+                optionLabel={"name"}
+                label="Categorias"
+                multiple
+              />
+              <Input name="min_price" label={"Preço minimo"} type="number" />
+              <Input name="max_price" label={"Preço maximo"} type="number" />
+              <Switch name="free" label={"Gratuito"} />
+
+            </>
+
+          }
         </form>
       </FormProvider>
     </Actions>

@@ -156,38 +156,38 @@ export default function ChatList({
       <ChatListBox ref={targetRef} onScrollCapture={paginateTrigger}>
         {!findUser
           ? chatsToShow?.map((chat, index) => (
-              <ChatItem
-                key={index}
-                onClick={() => handleViewChat(chat)}
-                username={
-                  chat.second_user.id === userData?.id
-                    ? chat.first_user.name
-                    : chat.second_user.name
-                }
-                active={selected?.id === chat.id}
-                unread_messages={chat.unreaded_messages}
-                last_message={chat.messages[0]?.content}
-                last_update={
-                  chat.messages[0]?.updatedAt || chat.messages[0]?.createdAt
-                }
-              />
-            ))
+            <ChatItem
+              key={index}
+              onClick={() => handleViewChat(chat)}
+              username={
+                chat.second_user.id === userData?.id
+                  ? chat.first_user.name
+                  : chat.second_user.name
+              }
+              active={selected?.id === chat.id}
+              unread_messages={chat.unreaded_messages}
+              last_message={chat.messages[0]?.content}
+              last_update={
+                chat.messages[0]?.updatedAt || chat.messages[0]?.createdAt
+              }
+            />
+          ))
           : usersToShow?.map((user, index) => (
-              <ChatItem
-                key={index}
-                onClick={() =>
-                  handleViewChat({
-                    first_user: userData as IUser,
-                    second_user: user,
-                    id: user.chats?.[0]?.id,
-                  } as IChat)
-                }
-                username={user.name}
-                active={selected?.second_user?.id === user.id}
-                unread_messages={0}
-                last_message={""}
-              />
-            ))}
+            <ChatItem
+              key={index}
+              onClick={() =>
+                handleViewChat({
+                  first_user: userData as IUser,
+                  second_user: user,
+                  id: user.chats?.[0]?.id,
+                } as IChat)
+              }
+              username={user.name}
+              active={selected?.second_user?.id === user.id}
+              unread_messages={0}
+              last_message={""}
+            />
+          ))}
       </ChatListBox>
     </ChatListContainer>
   );

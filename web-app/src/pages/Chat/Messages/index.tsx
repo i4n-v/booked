@@ -1,8 +1,8 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { ChatMessages, ChatMessagesContainer, NewMessage } from "./styles";
 import Input from "../../../components/Input";
-import { Button } from "@mui/material";
-import { Send } from "@mui/icons-material";
+import { Box, Button } from "@mui/material";
+import { Photo, Send } from "@mui/icons-material";
 import Message from "./Message";
 import useMessage from "../../../services/useMessage";
 import { useMutation, useQuery } from "react-query";
@@ -14,13 +14,15 @@ import { IMessage } from "../../../services/useMessage/types";
 import socket from "../../../configs/socket";
 import IUser from "../../../commons/IUser";
 import usePaginateScroll from "../../../helpers/PaginateScroll";
-import { DropdownOptions } from "../../../components/Dropdown/type";
 import useNotifier from "../../../helpers/Notify";
+import InputFile from "../../../components/Input/File";
+import MessageImagePreview from "./Image/Preview";
 
 export default function Messages({ chat }: { chat: IChat }) {
   const form = useForm({
     defaultValues: {
       message: "",
+      image: undefined,
     },
   });
 
@@ -70,20 +72,26 @@ export default function Messages({ chat }: { chat: IChat }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat]);
 
-  const sendMessage = form.handleSubmit(({ message }: { message: string }) => {
-    if (!message) return;
+  const sendMessage = form.handleSubmit(({ message, image }) => {
+    let photo_url: string = '';
+    if (image) {
+      photo_url = URL.createObjectURL(new Blob([image!]))
+    }
+    if (!message && !photo_url) return;
     sendMutation.mutate(
       {
         chat_id: chat.id as string,
         content: message,
+        photo: image,
         receiver_id: receiver.id as string,
         sender_id: authData?.userData?.id as string,
       },
       {
         onSuccess: (data) => {
           form.reset();
+          form.resetField('image')
           setMessagesToShow((curr) => [
-            { content: message, sender: authData?.userData } as IMessage,
+            { content: message, photo_url: photo_url, sender: authData?.userData } as IMessage,
             ...curr,
           ]);
           if (!chat.id) {
@@ -130,12 +138,32 @@ export default function Messages({ chat }: { chat: IChat }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat.id]);
 
+  form.watch(({ image, message }, { name }) => {
+    if (name === "image" && message) {
+      form.resetField("message");
+    }
+  });
+
   return (
     <ChatMessagesContainer>
       <NewMessage>
         <FormProvider {...form}>
           <form onSubmit={sendMessage}>
-            <Input type="text" name="message" inputProps={{ maxLength: 255 }} />
+            <Input
+              type="text"
+              name="message"
+              disabled={!!form.watch("image")}
+              inputProps={{ maxLength: 255 }}
+            />
+            <Box maxWidth={"74px"} position={"relative"}>
+              <InputFile
+                name="image"
+                accept="image/*"
+                button
+                hiddeFileName
+                customIcon={<Photo />}
+              />
+            </Box>
             <Button
               variant="contained"
               color="primary"
@@ -148,9 +176,20 @@ export default function Messages({ chat }: { chat: IChat }) {
         </FormProvider>
       </NewMessage>
       <ChatMessages ref={targetRef} onScrollCapture={paginateTrigger}>
-        {/* <Box sx={{textAlign: "center",font: t => t.font.xs}}>
-              Someone is typing...
-        </Box> */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            font: (t) => t.font.xs,
+          }}
+        >
+          <MessageImagePreview
+            image={form.watch("image") as unknown as ArrayBuffer}
+            removeImage={() => {
+              form.resetField("image");
+            }}
+          />
+        </Box>
         {messagesToShow?.map((message, index, array) => {
           const itsMine = message.sender?.id === authData?.userData?.id;
           const showProfile =
@@ -159,6 +198,7 @@ export default function Messages({ chat }: { chat: IChat }) {
             <Message
               key={index}
               content={message.content}
+              photo={message.photo_url}
               showAccount={showProfile}
               response={!itsMine}
               id={index}

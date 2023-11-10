@@ -2,12 +2,13 @@ import { AccountCircle, More } from "@mui/icons-material";
 import { Box, Paper } from "@mui/material";
 import { useState } from "react";
 import MoreOptions from "../../../../components/MoreOptions";
-import {MessageProps} from "./types"
+import { MessageProps } from "./types"
+import MessageImagePreview from "../Image/Preview";
 
-export default function Message({ showAccount, response, content,id, actionsOptions }: MessageProps) {
+export default function Message({ showAccount, response, content, id, actionsOptions, photo }: MessageProps) {
   const [showOptions, setShowOptions] = useState(false);
   const [dropdown, setDropdown] = useState(false);
-  
+
   return (
     <Box
       onMouseOver={() => setShowOptions(true)}
@@ -38,10 +39,10 @@ export default function Message({ showAccount, response, content,id, actionsOpti
           marginLeft: showAccount || !response ? "initial" : "47px",
         }}
       >
-        {content}
+        {photo ? <MessageImagePreview photoURL={photo} /> : content}
       </Paper>
-      {!response && <Box display={showOptions ? "flex" : "none"} position={"relative"} alignItems={"center"} sx={{cursor: "pointer"}}>
-      <MoreOptions
+      {!response && <Box display={showOptions ? "flex" : "none"} position={"relative"} alignItems={"center"} sx={{ cursor: "pointer" }}>
+        <MoreOptions
           options={actionsOptions}
           open={dropdown}
           handleOpen={setDropdown}

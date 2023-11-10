@@ -6,4 +6,5 @@ export type MessageProps = {
   content: string;
   id: string | number;
   actionsOptions: DropdownOptions[];
+  photo: string;
 };
