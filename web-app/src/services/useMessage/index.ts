@@ -16,7 +16,7 @@ export default function useMessage() {
       });
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 
@@ -25,7 +25,7 @@ export default function useMessage() {
       const response = await api.delete(`${DPath}/${id}`);
       return response.data;
     } catch (error: any) {
-      return error.response?.data?.message;
+      throw new Error(error.response?.data?.message);
     }
   }
 

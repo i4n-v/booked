@@ -39,7 +39,7 @@ export default function NavBar({ logged }: NavBarProps) {
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const [pendingChats, setPendingChats] = useState()
-  const [pendingSolicitations, setPendingSolicitations] = useState(2)
+  const [pendingSolicitations, setPendingSolicitations] = useState()
   const { logout } = useAuth();
   const logoutMutation = useMutation(logout);
 
@@ -156,9 +156,12 @@ export default function NavBar({ logged }: NavBarProps) {
     socket.on(`pending-chats-${authData?.userData?.id}`, (arg) => {
       setPendingChats(arg)
     });
-
+    socket.on(`pending-solicitations-${authData?.userData?.id}`, (arg) => {
+      setPendingSolicitations(arg)
+    });
     return () => {
       socket.off(`pending-chats-${authData?.userData?.id}`);
+      socket.off(`pending-solicitations-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authData])

@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
 import { IWrapper } from "../../../commons/IWrapper";
 import useDebounce from "../../../helpers/Debounce";
 
-export default function InputSelect<T>({ name, options, optionLabel, label, multiple, service }: InputSelectProps<T>) {
+export default function InputSelect<T>({ name, options, optionLabel, label, multiple, service, valueKey }: InputSelectProps<T>) {
     const { control, register, setValue, formState: { errors } } = useFormContext();
     const [filter, setFilter] = useState<InputSelectServiceFilter>({ limit: 10, page: 0 })
     const [optionsFromService, setOptionsFromService] = useState<T[]>([]);
@@ -20,7 +20,7 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
             retry: false,
             refetchOnWindowFocus: false,
             onSuccess: (data: IWrapper<T>) => {
-                if(!data) return
+                if (!data) return
                 data?.current === 1
                     ? setOptionsFromService(data?.items)
                     : setOptionsFromService(curr => [...curr, ...data?.items || []])
@@ -33,7 +33,11 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
     }, [register, name]);
 
     const handleChange = (_event: any, value: any) => {
-        setValue(name, value)
+        if (valueKey) {
+            setValue(name, value.map((i: any) => i[valueKey]))
+        } else {
+            setValue(name, value)
+        }
     };
 
     const handleScroll = useCallback((target: EventTarget & HTMLUListElement) => {
@@ -71,7 +75,7 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
                     onScrollCapture: ({ currentTarget }) => handleScroll(currentTarget),
                 }}
                 onOpen={onOpen}
-                isOptionEqualToValue={(option: T,value: T) => option[optionLabel] === value[optionLabel]}
+                isOptionEqualToValue={(option: T, value: T) => option[optionLabel] === value[optionLabel]}
                 getOptionLabel={(option) => option[optionLabel] as string}
                 noOptionsText={Service.isFetching ? `Solicitando ${label}...` : `Nenhum (a) ${label} encontradas(os)`}
                 onChange={handleChange}

@@ -19,6 +19,7 @@ const ChatMessages = styled(Box)(({ theme }) => ({
   gap: "12px",
   overflow: "auto",
   paddingLeft: "22px",
+  paddingRight: "22px",
 }));
 
 const NewMessage = styled(Box)(({ theme }) => ({

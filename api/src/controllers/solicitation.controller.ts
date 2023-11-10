@@ -57,11 +57,11 @@ class SolicitationController {
         status,
       });
 
-      const pendingSolicitations = await SolicitationRepository.countPendingsByReceiverId(
-        book.user_id
-      );
+      // const pendingSolicitations = await SolicitationRepository.countPendingsByReceiverId(
+      //   book.user_id
+      // );
 
-      io.emit(`pending-solicitations-${book.user_id}`, pendingSolicitations);
+      // io.emit(`pending-solicitations-${book.user_id}`, pendingSolicitations);
 
       return response.json({ message: messages.update('Aquisição') });
     } catch (error) {
@@ -79,7 +79,7 @@ class SolicitationController {
       const whereStatement: any = {};
 
       if (type === 'received') {
-        whereStatement['$solicitations.user_id$'] = auth.id;
+        whereStatement['user_id'] = auth.id;
       }
 
       if (type === 'sended') {
