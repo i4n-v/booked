@@ -9,7 +9,7 @@ import AssessmentRouter from './assessment.routes';
 import AcquisitionRouter from './acquisition.routes';
 import ChatRouter from './chat.routes';
 import MessageRouter from './message.routes';
-import WhiseRouter from './whise.routes';
+import WisheRouter from './wishe.routes';
 
 const routes: Router[] = [
   appRoutes,
@@ -22,7 +22,7 @@ const routes: Router[] = [
   AcquisitionRouter,
   ChatRouter,
   MessageRouter,
-  WhiseRouter,
+  WisheRouter,
 ];
 
 export default function initRoutes(app: Express) {

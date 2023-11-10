@@ -32,6 +32,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *               createdAt: string
  *               updatedAt: string
  *               rating: float
+ *               wished: boolean
  *               total_users_rating: integer
  *               categories: array
  *             examples:
@@ -50,14 +51,12 @@ import authMidleware from '../midlewares/auth.midleware';
  *                     updatedAt: '2023-05-15T01:48:16.006Z'
  *                     rating: 0
  *                     total_users_rating: 0
+ *                     wished: true
  *                     categories:
  *                       - id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                         name: 'Ação'
  *                       - id: 'a29fb524-6fea-4dc1-a8f0-66410097266b'
  *                         name: 'Aventura'
- *
- *
- *
  *       400:
  *         $ref: '#/components/responses/error'
  *       401:
@@ -69,15 +68,15 @@ router.get('/wishe/books', authMidleware, WisheController.index);
  * @openapi
  * /wishe/books/{id}:
  *   post:
- *     summary: Create a whise.
- *     description: This route create a book's whise to a user.
+ *     summary: Create a wishe.
+ *     description: This route create a book's wishe to a user.
  *     tags:
  *       - Wishe
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'
  *       - name: id
- *         description: The id of book
+ *         description: The id of book to wishe
  *         in: path
  *         schema:
  *           type: string;
@@ -88,16 +87,16 @@ router.get('/wishe/books', authMidleware, WisheController.index);
  *         $ref: '#/components/responses/success'
  *       400:
  *         $ref: '#/components/responses/error'
- *       401:
+ *       404:
  *         $ref: '#/components/responses/error'
  */
 router.post('/wishe/books/:id', authMidleware, WisheController.store);
 
 /**
  * @openapi
- * /wishe/{id}:
+ * /wishe/books/{id}:
  *   delete:
- *     summary: Delete a specific book.
+ *     summary: Delete a specific wishe of book.
  *     description: This route delete a wishe if exists.
  *     tags:
  *       - Wishe
@@ -105,7 +104,7 @@ router.post('/wishe/books/:id', authMidleware, WisheController.store);
  *       - name:
  *         $ref: '#/components/parameters/access_token'
  *       - name: id
- *         description: The id of wishe
+ *         description: The id of wished book
  *         in: path
  *         schema:
  *           type: string;
@@ -121,6 +120,6 @@ router.post('/wishe/books/:id', authMidleware, WisheController.store);
  *       404:
  *         $ref: '#/components/responses/error'
  */
-router.delete('/wishe/:id', authMidleware, WisheController.delete);
+router.delete('/wishe/books/:id', authMidleware, WisheController.delete);
 
 export default router;

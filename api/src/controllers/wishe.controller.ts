@@ -3,6 +3,7 @@ import BookRepository from '../repositories/book.repository';
 import WisheRepository from '../repositories/wishe.repository';
 import messages from '../config/messages.config';
 import paginationWrapper from '../utils/paginationWrapper';
+import { Op } from 'sequelize';
 
 class WisheController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -14,6 +15,12 @@ class WisheController {
 
       if (!book) {
         return response.status(404).json({ message: messages.unknown('Livro') });
+      }
+
+      const wishe = await WisheRepository.findByBookId(book.id);
+
+      if (wishe) {
+        return response.status(400).json({ message: 'O livro já foi marcado como desejado.' });
       }
 
       await WisheRepository.create({
@@ -29,45 +36,47 @@ class WisheController {
 
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      // Desestruturação dos objetos de request
-      const { auth, query } = request;
-
-      // Parse dos parâmetros da URL para paginação
+      const { query } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
+      const whereOptions = {
+        '$wishes->Wishe.id$': {
+          [Op.not]: null,
+        },
+      };
 
-      // Consulta ao banco de dados para listar todos os livros
-      const books = await BookRepository.findAndCountAll(page, limit, request, {});
+      const books = await BookRepository.findAndCountAll(page, limit, request, whereOptions);
 
-      // Paginação dos resultados
       const wrappedBooks = paginationWrapper(books, page, limit);
 
-      // Retorna os resultados em formato JSON
       return response.json(wrappedBooks);
     } catch (error) {
-      // Em caso de erro, chama a próxima função de middleware de tratamento de erros (Express.js)
       next(error);
     }
   }
 
   async delete(request: Request, response: Response, next: NextFunction) {
     try {
-      /* const {
-        auth,
-        params: { id },
-      } = request; */
       const { auth, params } = request;
-      const wisheId = params.id;
+      const bookId = params.id;
 
-      const wishe = await WisheRepository.findById(wisheId);
+      const book = await BookRepository.findById(bookId);
 
-      if (!wishe) return response.status(404).json({ message: messages.unknown('Desejo') });
+      if (!book) {
+        return response.status(404).json({ message: messages.unknown('Livro') });
+      }
+
+      const wishe = await WisheRepository.findByBookId(book.id);
+
+      if (!wishe) {
+        return response.status(400).json({ message: 'O livro não foi marcado como desejado.' });
+      }
 
       if (wishe.user_id !== auth.id) {
         return response.status(401).json({ message: messages.unauthorized() });
       }
 
-      await WisheRepository.deleteById(wisheId);
+      await WisheRepository.deleteById(wishe.id);
 
       return response.json({ message: messages.delete('Desejo') });
     } catch (error) {

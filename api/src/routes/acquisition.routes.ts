@@ -56,6 +56,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *               createdAt: string
  *               updatedAt: string
  *               rating: float
+ *               wished: boolean
  *               total_users_rating: integer
  *               categories: array
  *             examples:
@@ -71,6 +72,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *                     updatedAt: '2023-05-15T01:48:16.006Z'
  *                     rating: 0
  *                     total_users_rating: 0
+ *                     wished: true
  *                     categories:
  *                       - id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
  *                         name: 'Ação'
