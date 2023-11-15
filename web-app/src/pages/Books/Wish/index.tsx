@@ -19,7 +19,7 @@ export default function BooksExplore() {
   const { data: books } = useQuery(["getBooks", [state, filters]], () =>
     getBooks({ search: state, ...filters })
   );
-  
+
   const navigate = useNavigate();
 
   const { getWishes } = useWishes();
@@ -54,13 +54,15 @@ export default function BooksExplore() {
     <Content>
       <Typography component={"h1"}>Lista de desejos</Typography>
       <BooksContainer>
-      <BooksActions filter handleFilter={filterBooks} />
+        <BooksActions filter handleFilter={filterBooks} />
         <Divider />
         {wishlistBooks && wishlistBooks.length ? (
           <BooksCardsContainer>
             {wishlistBooks.map((book: IBook, index) => {
               return (
                 <BookCard
+                  key={book.id}
+                  bookId={book.id}
                   author={book.user?.name}
                   rating={book.rating}
                   price={book.price}
@@ -69,7 +71,6 @@ export default function BooksExplore() {
                   title={book.name}
                   image={book.photo_url}
                   size="md"
-                  key={book.id}
                   onClick={() => navigate(`${book.id}`)}
                 ></BookCard>
               );
