@@ -8,13 +8,18 @@ import { useQuery } from "react-query";
 import useBook from "../../../services/useBook";
 import useWishes from "../../../services/useWishe";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ICategory } from "../../../commons/ICategory";
+import { BooksFilters } from "../Actions/types";
+import BooksActions from "../Actions";
 
 export default function BooksExplore() {
   const { getBooks } = useBook();
   const { state } = useLocation();
-  const { data: books } = useQuery(["getBooks", [state]], () =>
-    getBooks({ search: state })
+  const [filters, setFilters] = useState<Partial<BooksFilters>>();
+  const { data: books } = useQuery(["getBooks", [state, filters]], () =>
+    getBooks({ search: state, ...filters })
   );
+  
   const navigate = useNavigate();
 
   const { getWishes } = useWishes();
@@ -40,10 +45,16 @@ export default function BooksExplore() {
     wishlist.some((wishlistItem: IBook) => wishlistItem.id === book.id)
   );
 
+  const filterBooks = (filters: any) => {
+    const categories = filters?.categories?.map((v: ICategory) => v.id);
+    setFilters({ ...filters, categories });
+  };
+
   return (
     <Content>
       <Typography component={"h1"}>Lista de desejos</Typography>
       <BooksContainer>
+      <BooksActions filter handleFilter={filterBooks} />
         <Divider />
         {wishlistBooks && wishlistBooks.length ? (
           <BooksCardsContainer>
