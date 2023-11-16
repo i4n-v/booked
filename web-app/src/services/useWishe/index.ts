@@ -1,7 +1,7 @@
 import { IWrapper } from "../../commons/IWrapper";
 import { Params } from "../../commons/Params";
 import api from "../../configs/api";
-import { IWishes } from "../../commons/IWishes";
+import IBook from "../../commons/IBook";
 import { ResponseMessage } from "../../commons/ResponseMessage";
 
 export default function useWishes() {
@@ -9,9 +9,9 @@ export default function useWishes() {
 
   async function getWishes(
     params?: Params
-  ): Promise<IWrapper<IWishes[] | null>> {
+  ): Promise<IWrapper<IBook[] | null>> {
     try {
-      const response = await api.get<IWrapper<IWishes[] | null>>(
+      const response = await api.get<IWrapper<IBook[] | null>>(
         `${path}/books`,
         {
           params,
