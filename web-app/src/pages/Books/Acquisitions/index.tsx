@@ -56,6 +56,7 @@ export default function Acquisitions() {
                 key={book.name}
                 onClick={() => navigate(`/explore/${book.id}`)}
                 showPrice={false}
+                showWishe={false}
               />
             );
           })}

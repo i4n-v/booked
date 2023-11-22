@@ -10,6 +10,7 @@ import {
   Menu,
   User,
   Book,
+  Favorite,
 } from "../../../assets/SVG";
 import {
   Badge,
@@ -112,6 +113,11 @@ export default function NavBar({ logged }: NavBarProps) {
       handler: () => navigate("acquisitions"),
     },
     {
+      label: "Lista de desejos",
+      icon: <Favorite />,
+      handler: () => navigate("wishes"),
+    },
+    {
       label: "Configurações",
       icon: <Config />,
       handler: () => navigate("profile/settings"),
@@ -152,9 +158,9 @@ export default function NavBar({ logged }: NavBarProps) {
   });
 
   useEffect(() => {
-    if (!authData?.valid) return
-    socket.on(`pending-chats-${authData?.userData?.id}`, (arg) => {
-      setPendingChats(arg)
+    if (!authData?.valid) return;
+    socket.on(`pending-chats-${authData?.userData?.id}`, (arg: any) => {
+      setPendingChats(arg);
     });
     socket.on(`pending-solicitations-${authData?.userData?.id}`, (arg) => {
       setPendingSolicitations(arg)
@@ -164,7 +170,7 @@ export default function NavBar({ logged }: NavBarProps) {
       socket.off(`pending-solicitations-${authData?.userData?.id}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authData])
+  }, [authData]);
 
   return (
     <AppBar

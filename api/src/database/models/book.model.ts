@@ -19,6 +19,7 @@ import BookDto from '../../dto/book/book.dto';
 import BookCreateDto from '../../dto/book/bookCreate.dto';
 import Comment from './comment.model';
 import Solicitation from './solicitation.model';
+import Wishe from './wishe.model';
 
 @Table
 export default class Book extends Model<BookDto, BookCreateDto> {
@@ -72,6 +73,9 @@ export default class Book extends Model<BookDto, BookCreateDto> {
 
   @BelongsToMany(() => User, () => Solicitation, 'book_id')
   solicitations: Solicitation[];
+
+  @BelongsToMany(() => User, () => Wishe, 'book_id')
+  wishes: Wishe[];
 
   @HasMany(() => Comment)
   comments: Comment[];

@@ -1,15 +1,16 @@
-import { Divider, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Typography, Divider } from "@mui/material";
 import Content from "../../../components/Layout/Content/styles";
 import { BooksCardsContainer, BooksContainer } from "../styles";
 import { BookCard } from "../../../components/Cards";
 import IBook from "../../../commons/IBook";
 import { useQuery } from "react-query";
 import useBook from "../../../services/useBook";
+import useWishes from "../../../services/useWishe";
 import { useLocation, useNavigate } from "react-router-dom";
-import BooksActions from "../Actions";
-import { BooksFilters } from "../Actions/types";
-import { useState } from "react";
 import { ICategory } from "../../../commons/ICategory";
+import { BooksFilters } from "../Actions/types";
+import BooksActions from "../Actions";
 
 export default function BooksExplore() {
   const { getBooks } = useBook();
@@ -18,21 +19,46 @@ export default function BooksExplore() {
   const { data: books } = useQuery(["getBooks", [state, filters]], () =>
     getBooks({ search: state, ...filters })
   );
+
   const navigate = useNavigate();
+
+  const { getWishes } = useWishes();
+  const [wishlist, setWishlist] = useState<IBook[]>([]);
+
+  useEffect(() => {
+    async function fetchWishlist() {
+      try {
+        const wishlistData = await getWishes();
+
+        if (Array.isArray(wishlistData.items)) {
+          setWishlist(wishlistData.items as any);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar lista de desejos", error);
+      }
+    }
+
+    fetchWishlist();
+  }, []);
+
+  const wishlistBooks = books?.items.filter((book: IBook) =>
+    wishlist.some((wishlistItem: IBook) => wishlistItem.id === book.id)
+  );
 
   const filterBooks = (filters: any) => {
     const categories = filters?.categories?.map((v: ICategory) => v.id);
     setFilters({ ...filters, categories });
   };
+
   return (
     <Content>
-      <Typography component={"h1"}>Resultados</Typography>
+      <Typography component={"h1"}>Lista de desejos</Typography>
       <BooksContainer>
         <BooksActions filter handleFilter={filterBooks} />
         <Divider />
-        {books?.items.length ? (
+        {wishlistBooks && wishlistBooks.length ? (
           <BooksCardsContainer>
-            {books?.items?.map((book: IBook, index) => {
+            {wishlistBooks.map((book: IBook, index) => {
               return (
                 <BookCard
                   key={book.id}
@@ -59,7 +85,7 @@ export default function BooksExplore() {
               color: (t) => t.palette.secondary[800],
             }}
           >
-            Nenhum livro encontrado.
+            Nenhum livro encontrado na lista de desejos.
           </Typography>
         )}
       </BooksContainer>
