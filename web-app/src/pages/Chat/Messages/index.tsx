@@ -158,7 +158,7 @@ export default function Messages({ chat }: { chat: IChat }) {
             <Box maxWidth={"74px"} position={"relative"}>
               <InputFile
                 name="image"
-                accept="image/*"
+                accept=".png, .jpg, .jpeg"
                 button
                 hiddeFileName
                 customIcon={<Photo />}
