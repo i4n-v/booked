@@ -5,6 +5,7 @@ import ChatCreateDto from '../dto/chat/chatCreate.dto';
 import { Transaction, WhereOptions } from 'sequelize';
 import ChatDto from '../dto/chat/chat.dto';
 import { Request } from 'express';
+import { Op } from 'sequelize';
 
 class ChatRepository {
   private repository: Repository<Chat>;
@@ -13,11 +14,25 @@ class ChatRepository {
     this.repository = sequelizeConnection.getRepository(Chat);
   }
 
-  async findById(id: string) {
-    return await this.repository.findByPk(id);
+  async findById(id: string, transaction?: Transaction) {
+    return await this.repository.findByPk(id, {
+      include: {
+        model: sequelizeConnection.model('User'),
+        as: 'users',
+        attributes: ['id'],
+        required: true,
+        through: { attributes: [] },
+      },
+      transaction,
+    });
   }
 
-  async findByIdWithUsers(id: string, receiver_id: string, request: Request, transaction?: Transaction) {
+  async findByIdWithUsers(
+    id: string,
+    sender_id: string,
+    request: Request,
+    transaction?: Transaction
+  ) {
     const {
       headers: { host },
     } = request;
@@ -35,7 +50,7 @@ class ChatRepository {
                 FROM "Messages"
                 WHERE
                   "Messages".chat_id = "Chat".id
-                  AND "Messages".receiver_id = '${receiver_id}' and "Messages".read = false
+                  AND "Messages".read = false AND NOT ("Messages".sender_id = '${sender_id})'
               )`
             ),
             'unreaded_messages',
@@ -46,43 +61,25 @@ class ChatRepository {
       include: [
         {
           model: sequelizeConnection.model('User'),
-          as: 'first_user',
+          as: 'users',
           attributes: [
             'id',
             'name',
             'user_name',
             [
               sequelizeConnection.literal(`
-                CASE
-                  WHEN first_user.photo_url IS NOT NULL THEN CONCAT('${
-                    protocol + '://' + host
-                  }', first_user.photo_url)
-                  ELSE first_user.photo_url
-                END
-            `),
+              CASE
+                WHEN users.photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', users.photo_url)
+                ELSE users.photo_url
+              END
+          `),
               'photo_url',
             ],
           ],
-        },
-        {
-          model: sequelizeConnection.model('User'),
-          as: 'second_user',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-                CASE
-                  WHEN second_user.photo_url IS NOT NULL THEN CONCAT('${
-                    protocol + '://' + host
-                  }', second_user.photo_url)
-                  ELSE second_user.photo_url
-                END
-            `),
-              'photo_url',
-            ],
-          ],
+          required: true,
+          through: { attributes: [] },
         },
         {
           model: sequelizeConnection.model('Message'),
@@ -112,15 +109,6 @@ class ChatRepository {
     });
   }
 
-  async findByUsers(first_user_id: string, second_user_id: string) {
-    return await this.repository.findOne({
-      where: {
-        first_user_id: [first_user_id, second_user_id],
-        second_user_id: [first_user_id, second_user_id],
-      },
-    });
-  }
-
   async countUnreadedByReceiverId(id: string, transaction?: Transaction) {
     return await this.repository.count({
       distinct: true,
@@ -131,7 +119,9 @@ class ChatRepository {
         attributes: [],
         where: {
           read: false,
-          receiver_id: id,
+          sender_id: {
+            [Op.not]: id,
+          },
         },
       },
     });
@@ -152,6 +142,7 @@ class ChatRepository {
 
     return await this.repository.findAndCountAll({
       limit,
+      distinct: true,
       offset: (page - 1) * limit,
       order: [
         [
@@ -166,7 +157,6 @@ class ChatRepository {
         ],
       ],
       attributes: {
-        exclude: ['first_user_id', 'second_user_id'],
         include: [
           [
             sequelizeConnection.literal(
@@ -186,7 +176,7 @@ class ChatRepository {
       include: [
         {
           model: sequelizeConnection.model('User'),
-          as: 'first_user',
+          as: 'users',
           attributes: [
             'id',
             'name',
@@ -194,35 +184,17 @@ class ChatRepository {
             [
               sequelizeConnection.literal(`
               CASE
-                WHEN first_user.photo_url IS NOT NULL THEN CONCAT('${
+                WHEN users.photo_url IS NOT NULL THEN CONCAT('${
                   protocol + '://' + host
-                }', first_user.photo_url)
-                ELSE first_user.photo_url
+                }', users.photo_url)
+                ELSE users.photo_url
               END
           `),
               'photo_url',
             ],
           ],
-        },
-        {
-          model: sequelizeConnection.model('User'),
-          as: 'second_user',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN second_user.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', second_user.photo_url)
-                ELSE second_user.photo_url
-              END
-          `),
-              'photo_url',
-            ],
-          ],
+          required: true,
+          through: { attributes: [] },
         },
         {
           model: sequelizeConnection.model('Message'),

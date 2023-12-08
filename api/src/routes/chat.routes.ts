@@ -31,10 +31,8 @@ import authMidleware from '../midlewares/auth.midleware';
  *               type: object
  *               id:
  *                 type: string
- *               first_user:
- *                  type: object
- *               second_user:
- *                  type: object
+ *               users:
+ *                  type: array
  *               not_readed_messages:
  *                 type: integer
  *               messages:
@@ -43,16 +41,15 @@ import authMidleware from '../midlewares/auth.midleware';
  *               get_payload:
  *                 value:
  *                   id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
- *                   first_user:
- *                     id: '449e0bd0-3b89-495c-b311-57acec53f702'
- *                     name: 'Maria Eduarda'
- *                     user_name: 'maria#0'
- *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
- *                   second_user:
- *                     id: 'badd7b31-53af-4936-8044-95ead27d783e'
- *                     name: 'João Gabriel'
- *                     user_name: 'joão#0'
- *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
+ *                   users:
+ *                     - id: '449e0bd0-3b89-495c-b311-57acec53f702'
+ *                       name: 'Maria Eduarda'
+ *                       user_name: 'maria#0'
+ *                       photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
+ *                     - id: 'badd7b31-53af-4936-8044-95ead27d783e'
+ *                       name: 'João Gabriel'
+ *                       user_name: 'joão#0'
+ *                       photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
  *                   unreaded_messages: 8
  *                   messages:
  *                     - id: 'a01835c6-0db7-4bd0-b1df-402c5b71bdf8'

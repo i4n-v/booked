@@ -21,6 +21,7 @@ import Comment from './comment.model';
 import Chat from './chat.model';
 import Message from './message.model';
 import Solicitation from './solicitation.model';
+import UserChat from './userChat.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -52,7 +53,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @Unique
   @AllowNull(false)
   @Column(DataType.STRING)
-  user_name: boolean;
+  user_name: string;
 
   @Unique({
     name: 'Users_email_key',
@@ -123,7 +124,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @HasMany(() => Comment)
   comments: Comment[];
 
-  @HasMany(() => Chat)
+  @BelongsToMany(() => Chat, () => UserChat, 'user_id', 'chat_id')
   chats: Chat[];
 
   @HasMany(() => Message, 'sender_id')
