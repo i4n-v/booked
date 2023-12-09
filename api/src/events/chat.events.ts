@@ -1,11 +1,12 @@
 import AuthenticationRepository from '../repositories/authentication.repository';
-import { io } from '../setup';
 import jwt from 'jsonwebtoken';
 import Auth from '../interfaces/auth.interface';
 import MessageRepository from '../repositories/message.repository';
 import chatRepository from '../repositories/chat.repository';
 import { ISocketEvent } from '../interfaces/socketEvent.interface';
 import { Op } from 'sequelize';
+import ReadedMessageRepository from '../repositories/readedMessage.repository';
+import { sequelizeConnection } from '../config/sequelizeConnection.config';
 
 const chatEvents: ISocketEvent[] = [
   {
@@ -27,35 +28,34 @@ const chatEvents: ISocketEvent[] = [
 
         const authData = jwt.verify(token, process.env.JWT_PRIVATE_KEY as string) as Auth;
 
-        const date = new Date().toISOString();
-
-        await MessageRepository.update(
-          { read: true },
-          {
-            chat_id: chat.id,
-            receiver_id: authData.id,
-            read: false,
-          }
-        );
-
-        const updatedMessages = await MessageRepository.findAll({
+        const unreadedMessages = await MessageRepository.findAll({
           attributes: ['id'],
           where: {
             chat_id: chat.id,
-            receiver_id: authData.id,
-            read: true,
-            updatedAt: {
-              [Op.gte]: date,
+            sender_id: {
+              [Op.not]: authData.id,
             },
           },
+          include: [
+            {
+              model: sequelizeConnection.model('ReadedMessage'),
+              as: 'readed_messages',
+              attributes: [],
+              where: {
+                user_id: {
+                  [Op.not]: authData.id,
+                },
+              },
+            },
+          ],
         });
 
-        const messages = updatedMessages.map(({ id }) => id);
+        const messagesToRead = unreadedMessages.map((message) => ({
+          message_id: message.id,
+          user_id: authData.id,
+        }));
 
-        const senderId =
-          chat.first_user_id !== authData.id ? chat.first_user_id : chat.second_user_id;
-
-        io.emit(`updated-messages-${senderId}`, messages);
+        await ReadedMessageRepository.bulkCreate(messagesToRead);
       } catch (error) {
         console.log(error);
       }

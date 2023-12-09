@@ -112,11 +112,6 @@ router.get('/chats', authMidleware, ChatController.index);
  *                     name: 'Maria Eduarda'
  *                     user_name: 'maria#0'
  *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
- *                   receiver:
- *                     id: 'badd7b31-53af-4936-8044-95ead27d783e'
- *                     name: 'João Gabriel'
- *                     user_name: 'joão#0'
- *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
  *       400:
  *         $ref: '#/components/responses/error'
  *       401:

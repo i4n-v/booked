@@ -10,6 +10,7 @@ import Chat from './chat.model';
 import Message from './message.model';
 import Solicitation from './solicitation.model';
 import UserChat from './userChat.model';
+import ReadedMessage from './readedMessage.model';
 
 const models: any[] = [
   User,
@@ -24,6 +25,7 @@ const models: any[] = [
   Message,
   Solicitation,
   UserChat,
+  ReadedMessage,
 ];
 
 export default models;

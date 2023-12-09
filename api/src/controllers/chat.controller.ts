@@ -21,7 +21,11 @@ class ChatController {
           SELECT "UserChats".chat_id
           FROM "UserChats"
           WHERE "UserChats".user_id = '${auth.id}'
-        ) ${query.name ? `AND "UsersWithChat".name ILIKE '${query.name}%'` : ''}
+        ) ${
+          query.name
+            ? `AND "UsersWithChat".name ILIKE '${query.name}%' OR "Chat".name ILIKE '${query.name}%'`
+            : ''
+        }
       )`;
 
       const whereStatement: any = {

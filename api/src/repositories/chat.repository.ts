@@ -47,10 +47,11 @@ class ChatRepository {
             sequelizeConnection.literal(
               `(
                 SELECT COUNT(id)
-                FROM "Messages"
+                FROM "Messages" INNER JOIN "ReadedMessages"
+                  ON "Messages".id = "ReadedMessages".message_id AND "ReadedMessages".user_id <> '${sender_id}'
                 WHERE
                   "Messages".chat_id = "Chat".id
-                  AND "Messages".read = false AND NOT ("Messages".sender_id = '${sender_id})'
+                  AND "Messages".sender_id <> '${sender_id}'
               )`
             ),
             'unreaded_messages',
@@ -162,10 +163,11 @@ class ChatRepository {
             sequelizeConnection.literal(
               `(
                 SELECT COUNT(id)
-                FROM "Messages"
+                FROM "Messages" INNER JOIN "ReadedMessages"
+                  ON "Messages".id = "ReadedMessages".message_id AND "ReadedMessages".user_id <> '${auth.id}'
                 WHERE
                   "Messages".chat_id = "Chat".id
-                  AND "Messages".receiver_id = '${auth.id}' and "Messages".read = false
+                  AND "Messages".sender_id <> '${auth.id}'
               )`
             ),
             'unreaded_messages',
