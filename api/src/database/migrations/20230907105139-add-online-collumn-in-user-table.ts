@@ -3,7 +3,7 @@ import { Migration } from 'sequelize-cli';
 const migration: Migration = {
   async up(queryInterface, sequelize) {
     try {
-      queryInterface.addColumn('Users', 'online', {
+      await queryInterface.addColumn('Users', 'online', {
         type: sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
