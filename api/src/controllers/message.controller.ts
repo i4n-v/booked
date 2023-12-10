@@ -8,9 +8,11 @@ import { io } from '../setup';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import { fileSystem } from '../utils';
 import UserChatRepository from '../repositories/userChat.repository';
+import MessageBookRepository from '../repositories/messageBook.repository';
 
 interface ICreateMessageBody extends MessageCreateDto {
   receiver_id: string;
+  books: string[];
 }
 
 class MessageController {
@@ -55,7 +57,7 @@ class MessageController {
   async store(request: Request, response: Response, next: NextFunction) {
     try {
       const { body, auth, file } = request;
-      const { content, receiver_id, chat_id }: ICreateMessageBody = body;
+      const { content, receiver_id, chat_id, books }: ICreateMessageBody = body;
       let photo_url: string | null = null;
 
       if (!content && !file) {
@@ -99,6 +101,15 @@ class MessageController {
             },
             transaction
           );
+
+          if (Array.isArray(books)) {
+            const booksToCreate = books.map((bookId) => ({
+              book_id: bookId,
+              message_id: createdMessage.id,
+            }));
+
+            await MessageBookRepository.bulkCreate(booksToCreate, { transaction });
+          }
 
           const message = await MessageRepository.findByIdWithUsers(
             createdMessage.id,

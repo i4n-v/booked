@@ -11,6 +11,7 @@ import Message from './message.model';
 import Solicitation from './solicitation.model';
 import UserChat from './userChat.model';
 import ReadedMessage from './readedMessage.model';
+import MessageBook from './messageBook.model';
 
 const models: any[] = [
   User,
@@ -26,6 +27,7 @@ const models: any[] = [
   Solicitation,
   UserChat,
   ReadedMessage,
+  MessageBook,
 ];
 
 export default models;

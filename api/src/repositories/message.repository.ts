@@ -59,6 +59,58 @@ class MessageRepository {
             ],
           ],
         },
+        {
+          model: sequelizeConnection.model('Book'),
+          as: 'books',
+          through: { attributes: [] },
+          attributes: {
+            exclude: ['user_id', 'file_url'],
+            include: [
+              [
+                sequelizeConnection.literal(`
+                  CASE
+                    WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
+                      protocol + '://' + host
+                    }', "Book".photo_url)
+                    ELSE "Book".photo_url
+                  END
+              `),
+                'photo_url',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT
+                      CASE
+                        WHEN (SUM(number) / COUNT(id)) IS NULL THEN 0
+                        ELSE (SUM(number) / COUNT(id))
+                      END
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "Book".id
+                  )`
+                ),
+                'rating',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT COUNT(id)
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "Book".id
+                  )`
+                ),
+                'total_users_rating',
+              ],
+            ],
+          },
+          include: [
+            {
+              model: sequelizeConnection.model('User'),
+              as: 'user',
+              attributes: ['id', 'name', 'user_name'],
+            },
+          ],
+        },
       ],
     });
   }
@@ -133,6 +185,58 @@ class MessageRepository {
           `),
               'photo_url',
             ],
+          ],
+        },
+        {
+          model: sequelizeConnection.model('Book'),
+          as: 'books',
+          through: { attributes: [] },
+          attributes: {
+            exclude: ['user_id', 'file_url'],
+            include: [
+              [
+                sequelizeConnection.literal(`
+                  CASE
+                    WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
+                      protocol + '://' + host
+                    }', "Book".photo_url)
+                    ELSE "Book".photo_url
+                  END
+              `),
+                'photo_url',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT
+                      CASE
+                        WHEN (SUM(number) / COUNT(id)) IS NULL THEN 0
+                        ELSE (SUM(number) / COUNT(id))
+                      END
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "Book".id
+                  )`
+                ),
+                'rating',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT COUNT(id)
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "Book".id
+                  )`
+                ),
+                'total_users_rating',
+              ],
+            ],
+          },
+          include: [
+            {
+              model: sequelizeConnection.model('User'),
+              as: 'user',
+              attributes: ['id', 'name', 'user_name'],
+            },
           ],
         },
       ],

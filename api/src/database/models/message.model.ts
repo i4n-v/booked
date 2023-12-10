@@ -44,19 +44,14 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
   @ForeignKey(() => User)
   sender_id: string;
 
-  @AllowNull(true)
-  @Column(DataType.UUID)
-  @ForeignKey(() => Book)
-  book_id: string;
-
   @BelongsTo(() => Chat)
   chat: Chat;
 
   @BelongsTo(() => User, 'sender_id')
   sender: User;
 
-  @BelongsTo(() => Book, 'book_id')
-  book: Book;
+  @BelongsToMany(() => Book, () => Book, 'message_id', 'book_id')
+  books: Book;
 
   @BelongsToMany(() => User, () => ReadedMessage, 'message_id', 'user_id')
   readers: User[];
