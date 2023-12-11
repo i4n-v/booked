@@ -26,6 +26,14 @@ class FollowerRepository {
       },
     });
   }
+
+  async deleteById(id: string) {
+    return await this.repository.destroy({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 export default new FollowerRepository();

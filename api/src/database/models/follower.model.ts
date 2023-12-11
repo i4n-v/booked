@@ -9,9 +9,10 @@ import {
 } from 'sequelize-typescript';
 import User from './user.model';
 import FollowerCreateDto from '../../dto/follower/followerCreate.dto';
+import FollowerDto from '../../dto/follower/follower.dto';
 
 @Table
-export default class Follower extends Model<FollowerCreateDto> {
+export default class Follower extends Model<FollowerDto, FollowerCreateDto> {
   @PrimaryKey
   @Column({
     type: DataType.UUID,
