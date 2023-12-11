@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import UserRepository from '../repositories/user.repository';
 import messages from '../config/messages.config';
-import FollowerCreateDto from '../dto/follower/followerCreate.dto';
 import userRepository from '../repositories/user.repository';
 import followerRepository from '../repositories/follower.repository';
 
