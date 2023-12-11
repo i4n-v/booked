@@ -10,17 +10,20 @@ class FollowerController {
 
       const followedId = params.id;
 
-      const followed = await userRepository.findById(followedId);
+      const userFollowed = await userRepository.findById(followedId);
 
-      if (!followed) {
+      if (!userFollowed) {
         return response.status(404).json({ message: messages.unknown('Usuário') });
       }
 
-      if (auth.id === followed.id) {
+      if (auth.id === userFollowed.id) {
         return response.status(400).json({ message: 'Você não pode seguir a si mesmo.' });
       }
 
-      const existingFollower = await followerRepository.findByUserAndFollowed(auth.id, followed.id);
+      const existingFollower = await followerRepository.findByUserAndFollowed(
+        auth.id,
+        userFollowed.id
+      );
 
       if (existingFollower) {
         return response.status(400).json({ message: 'Você já está seguindo esse usuário.' });
@@ -28,10 +31,35 @@ class FollowerController {
 
       await followerRepository.create({
         user_id: auth.id,
-        followed_id: followed.id,
+        followed_id: userFollowed.id,
       });
 
       return response.json({ message: messages.create('Seguidor') });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { auth, params } = request;
+      const followedId = params.id;
+
+      const followed = await followerRepository.findById(followedId);
+
+      console.log('followed', followed);
+
+      if (!followed) {
+        return response.status(404).json({ message: messages.unknown('Usuário') });
+      }
+
+      if (followed.user_id !== auth.id) {
+        return response.status(401).json({ message: messages.unauthorized() });
+      }
+
+      await followerRepository.deleteById(followed.id);
+
+      return response.json({ message: 'Usuário deixado de seguir com sucesso' });
     } catch (error) {
       next(error);
     }
