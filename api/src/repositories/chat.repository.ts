@@ -212,6 +212,10 @@ class ChatRepository {
   async create(chat: ChatCreateDto, transaction?: Transaction) {
     return await this.repository.create(chat, { transaction });
   }
+
+  async update(chat: ChatCreateDto, transaction?: Transaction) {
+    return await this.repository.create(chat, { transaction });
+  }
 }
 
 export default new ChatRepository();
