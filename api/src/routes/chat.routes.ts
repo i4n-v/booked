@@ -174,4 +174,45 @@ router.get('/chats/:id/messages', authMidleware, MessageController.index);
  */
 router.post('/chats', authMidleware, ChatController.store);
 
+/**
+ * @openapi
+ * /books:
+ *   post:
+ *     summary: Update a chat.
+ *     description: This route update a chat if not exists.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
+ *     security:
+ *       - access_token: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               users:
+ *                 type: array
+ *           examples:
+ *             send_payload:
+ *               value:
+ *                 name: 'Vendas e divulgações'
+ *                 users:
+ *                   - 34dd53ba-d45d-4721-a15c-497e41f0c280
+ *                   - f4f7c237-e14d-4f27-8e2d-cacc16497db1
+ *                   - 67eb0237-fd66-4ebe-8840-539b5cbc5f49
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/success'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ */
+router.post('/chats/:id', authMidleware, ChatController.update);
+
 export default router;

@@ -213,8 +213,13 @@ class ChatRepository {
     return await this.repository.create(chat, { transaction });
   }
 
-  async update(chat: ChatCreateDto, transaction?: Transaction) {
-    return await this.repository.create(chat, { transaction });
+  async update(id: string, chat: ChatCreateDto, transaction?: Transaction) {
+    return await this.repository.update(chat, {
+      where: {
+        id: id,
+      },
+      transaction,
+    });
   }
 }
 

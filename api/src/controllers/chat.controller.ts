@@ -87,17 +87,27 @@ class ChatController {
 
   async update(request: Request, response: Response, next: NextFunction) {
     try {
-      const { body, auth } = request;
+      const {
+        body,
+        auth,
+        params: { id },
+      } = request;
       const { name, users }: IChatBody = body;
+
+      const chat = await ChatRepository.findById(id);
+
+      if (!chat) {
+        return response.status(404).json({ message: 'O grupo não foi encontrado.' });
+      }
 
       if (!name && (!Array.isArray(users) || users.length >= 1)) {
         return response
           .status(400)
-          .json({ message: 'O nome ou participants do grupo devem ser especificados.' });
+          .json({ message: 'O nome ou participantes do grupo devem ser especificados.' });
       }
 
       await sequelizeConnection.transaction(async (transaction) => {
-        const chat = await ChatRepository.update({ name }, transaction);
+        await ChatRepository.update(chat.id, { name }, transaction);
 
         if (Array.isArray(users)) {
           users.push(auth.id);
