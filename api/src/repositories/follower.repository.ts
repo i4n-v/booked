@@ -18,10 +18,10 @@ class FollowerRepository {
     return await this.repository.create(follower);
   }
 
-  async findByUserAndFollowed(user_id: string, followed_id: string) {
+  async findByUserAndFollowed(follower_id: string, followed_id: string) {
     return await this.repository.findOne({
       where: {
-        user_id,
+        follower_id,
         followed_id,
       },
     });

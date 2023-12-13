@@ -23,7 +23,7 @@ export default class Follower extends Model<FollowerDto, FollowerCreateDto> {
   @AllowNull(false)
   @Column(DataType.UUID)
   @ForeignKey(() => User)
-  user_id: string;
+  follower_id: string;
 
   @AllowNull(false)
   @Column(DataType.UUID)

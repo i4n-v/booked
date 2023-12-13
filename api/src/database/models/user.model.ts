@@ -22,6 +22,7 @@ import Chat from './chat.model';
 import Message from './message.model';
 import Solicitation from './solicitation.model';
 import Wishe from './wishe.model';
+import Follower from './follower.model';
 
 @Table
 export default class User extends Model<UserDto, UserCreateDto> {
@@ -135,6 +136,12 @@ export default class User extends Model<UserDto, UserCreateDto> {
 
   @HasMany(() => Message, 'receiver_id')
   receiver_messages: Message[];
+
+  @BelongsToMany(() => User, () => Follower, 'follower_id', 'followed_id')
+  followeds: User[];
+
+  @BelongsToMany(() => User, () => Follower, 'followed_id', 'follower_id')
+  followers: User[];
 
   @BeforeValidate
   static async hashPasswordBeforeValidate(user: UserCreateDto) {

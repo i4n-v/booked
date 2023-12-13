@@ -30,7 +30,7 @@ class FollowerController {
       }
 
       await followerRepository.create({
-        user_id: auth.id,
+        follower_id: auth.id,
         followed_id: userFollowed.id,
       });
 
@@ -53,7 +53,7 @@ class FollowerController {
         return response.status(404).json({ message: messages.unknown('Usuário') });
       }
 
-      if (followed.user_id !== auth.id) {
+      if (followed.follower_id !== auth.id) {
         return response.status(401).json({ message: messages.unauthorized() });
       }
 

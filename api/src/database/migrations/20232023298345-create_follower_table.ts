@@ -9,7 +9,7 @@ const migration: Migration = {
           defaultValue: Sequelize.DataTypes.UUIDV4,
           primaryKey: true,
         },
-        user_id: {
+        follower_id: {
           type: Sequelize.DataTypes.UUID,
           references: {
             model: 'Users',
