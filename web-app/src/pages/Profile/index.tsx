@@ -22,6 +22,8 @@ import DefaultImage from "../../assets/SVG/account.svg";
 import BooksActions from "../Books/Actions";
 import { BooksFilters } from "../Books/Actions/types";
 import useNotifier from "../../helpers/Notify";
+import { useConfirm } from "../../helpers/Confirm"
+import Message from "../../helpers/messages"
 import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
@@ -34,6 +36,7 @@ export default function Profile() {
   const [bookToEdit, setBookToEdit] = useState<string>();
   const notify = useNotifier();
   const navigate = useNavigate();
+  const confirm = useConfirm()
   const { data: user, refetch: userRefetch } = useQuery(
     "getUser",
     () => getUser(authData?.userData?.id as string),
@@ -131,10 +134,13 @@ export default function Profile() {
                         },
                       },
                       {
-                        label: "Deletar",
+                        label: "Excluir",
                         handler() {
-                          deleteMutation(book.id as string);
+                          confirm(Message.DELETE_QUESTION(book.name), () => {
+                            deleteMutation(book.id as string);
+                          });
                         },
+
                       },
                     ]}
                   />
