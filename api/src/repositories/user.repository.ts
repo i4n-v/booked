@@ -88,10 +88,7 @@ class UserRepository {
             ],
           },
           where: {
-            [Op.or]: [
-              {first_user_id: auth.id},
-              {second_user_id: auth.id},
-            ],
+            [Op.or]: [{ first_user_id: auth.id }, { second_user_id: auth.id }],
           },
         },
       ],
@@ -123,6 +120,16 @@ class UserRepository {
               )
             `),
             'total_acquitions',
+          ],
+          [
+            sequelizeConnection.literal(`
+              (
+                SELECT COUNT(id)
+                FROM "Followers"
+                WHERE "Followers".followed_id = "User".id
+              )
+            `),
+            'total_followers',
           ],
         ],
       },
