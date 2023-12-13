@@ -25,6 +25,7 @@ interface User extends UserCommom {
   description?: string;
   total_books?: number;
   total_acquitions?: number;
+  total_followers?: number;
   chats?: IChat[]
 }
 

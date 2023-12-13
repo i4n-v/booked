@@ -89,6 +89,9 @@ export default function Profile() {
             <span id="user_name">@{user?.user_name}</span>
           </IdentityInfo>
           <LibraryInfo>
+          <LibraryInfoBadge>
+              <span>{user?.total_followers}</span>Seguidores
+            </LibraryInfoBadge>
             <LibraryInfoBadge>
               <span>{user?.total_books}</span>Livros
             </LibraryInfoBadge>
