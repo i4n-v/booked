@@ -1,43 +1,43 @@
-import { Box, Divider, Pagination, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Typography, Divider, Box, Pagination } from "@mui/material";
 import Content from "../../../components/Layout/Content/styles";
 import { BooksCardsContainer, BooksContainer } from "../styles";
 import { BookCard } from "../../../components/Cards";
 import IBook from "../../../commons/IBook";
 import { useQuery } from "react-query";
 import useBook from "../../../services/useBook";
+import useWishes from "../../../services/useWishe";
 import { useLocation, useNavigate } from "react-router-dom";
-import BooksActions from "../Actions";
-import { BooksFilters } from "../Actions/types";
-import { useState } from "react";
 import { ICategory } from "../../../commons/ICategory";
+import { BooksFilters } from "../Actions/types";
+import BooksActions from "../Actions";
 
 export default function BooksExplore() {
-  const { getBooks } = useBook();
+  const { getWishes } = useWishes();
   const { state } = useLocation();
-  const [page, setPage] = useState(1)
   const [filters, setFilters] = useState<Partial<BooksFilters>>();
-  const { data: books, isFetching } = useQuery(["getBooks", [state, filters, page]], () =>
-    getBooks({ search: state, ...filters, page, limit: 12 }),
-    {
-      keepPreviousData: true,
-    }
+  const [page, setPage] = useState(1)
+  const { data: wishlist } = useQuery(["getWishes", [state, filters, page]], () =>
+    getWishes({ search: state, ...filters, page })
   );
+
   const navigate = useNavigate();
 
   const filterBooks = (filters: any) => {
     const categories = filters?.categories?.map((v: ICategory) => v.id);
     setFilters({ ...filters, categories });
   };
+
   return (
     <Content>
-      <Typography component={"h1"}>Resultados</Typography>
+      <Typography component={"h1"}>Lista de desejos</Typography>
       <BooksContainer>
         <BooksActions filter handleFilter={filterBooks} />
         <Divider />
         <Box display={'flex'} flexDirection={"column"} rowGap={4}>
-          {books?.items.length ? (
+          {wishlist?.items.length ? (
             <BooksCardsContainer>
-              {books?.items?.map((book: IBook, index) => {
+              {wishlist?.items?.map((book, index) => {
                 return (
                   <BookCard
                     key={book.id}
@@ -50,12 +50,11 @@ export default function BooksExplore() {
                     title={book.name}
                     image={book.photo_url}
                     size="md"
-                    onClick={() => navigate(`${book.id}`)}
+                    onClick={() => navigate(`/explore/${book.id}`)}
                   ></BookCard>
                 );
               })}
             </BooksCardsContainer>
-
           ) : (
             <Typography
               sx={{
@@ -65,11 +64,11 @@ export default function BooksExplore() {
                 color: (t) => t.palette.secondary[800],
               }}
             >
-              Nenhum livro encontrado.
+              Nenhum livro encontrado na lista de desejos.
             </Typography>
           )}
           <Box display={"flex"} justifyContent={"center"}>
-            <Pagination page={page} onChange={(_, value) => setPage(value)} count={books?.totalPages} showFirstButton showLastButton />
+            <Pagination page={page} onChange={(_, value) => setPage(value)} count={wishlist?.totalPages} showFirstButton showLastButton />
           </Box>
         </Box>
       </BooksContainer>

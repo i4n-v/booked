@@ -47,7 +47,7 @@ const meta: Meta<InputFileProps> = {
   args: {
     name: "File",
     button: true,
-    accept: "image/*",
+    accept: ".png, .jpg, .jpeg",
     label: "Label of Input",
   },
 };

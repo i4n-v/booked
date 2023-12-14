@@ -20,6 +20,8 @@ import useAssessment from "../../../services/useAssessment";
 import useNotifier from "../../../helpers/Notify";
 import useAcquisitions from "../../../services/useAcquisition";
 import { useConfirm } from "../../../helpers/Confirm";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 export default function BooksView() {
   const { bookId } = useParams();
@@ -30,6 +32,7 @@ export default function BooksView() {
   const notify = useNotifier();
   const confirm = useConfirm();
   const acquisintionMutation = useMutation(createAcquisition);
+  const [authData] = useContext(AuthContext)
 
   const { data: book, refetch } = useQuery(["getBook", [bookId]], () =>
     getBook(bookId as string)
@@ -39,8 +42,8 @@ export default function BooksView() {
 
   const bookAcquisition = () => {
     acquisintionMutation.mutate(book?.id as string, {
-      onSuccess() {
-        notify("Livro adquirido e já se encontra em sua biblioteca.");
+      onSuccess(data) {
+        notify(data.message);
         refetch();
       },
       onError(error: any) {
@@ -92,7 +95,7 @@ export default function BooksView() {
             />
           </BookImageContainer>
           <Box display={"flex"} rowGap={"12px"} flexDirection={"column"}>
-            {book?.acquisition_id ? (
+            {book?.acquisition_id || book?.user.id === authData?.userData?.id ? (
               <Button
                 onClick={() => navigate("content")}
                 fullWidth

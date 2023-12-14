@@ -13,7 +13,7 @@ const Input = styled("input")({
 const InputFile = ({
   name,
   button,
-  accept = "image/*",
+  accept = ".png, .jpg, .jpeg",
   label,
   hiddeFileName = false,
   customIcon,

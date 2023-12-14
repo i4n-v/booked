@@ -155,6 +155,16 @@ class BookRepository {
             'total_users_rating',
           ],
           [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "wishes->Wishe".id IS NOT NULL
+                  THEN true
+                  ELSE false
+              END
+            `),
+            'wished',
+          ],
         ],
       },
       include: [
@@ -172,6 +182,14 @@ class BookRepository {
         {
           model: sequelizeConnection.model('User'),
           as: 'acquisitions',
+          attributes: [],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'wishes',
           attributes: [],
           through: {
             attributes: [],

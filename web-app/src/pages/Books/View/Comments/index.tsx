@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { CommentsContainerProps, CommentsPros, IComment, ToOpenForm } from "./types"
 import { DropdownOptions } from "../../../../components/Dropdown/type"
-import { Box, Button, Divider, Typography } from "@mui/material"
+import { Box, Button, Divider, Pagination, Typography } from "@mui/material"
 import MoreOptions from "../../../../components/MoreOptions"
 import { CommentBox, CommentsContainer, CommentsContainerHeader, CommentsList } from "./styles"
 import { Account } from "../../../../assets/SVG"
@@ -17,12 +17,13 @@ import Message from "../../../../helpers/messages"
 const Comment = ({ openAnswer = () => null, refetchFn, answer, loggedUser, ...comment }: CommentsPros) => {
     const [openOptions, setOpenOptions] = useState(false)
     const [seeAnswers, setSeeAnswers] = useState(false)
+    const [responsesPage, setComentsPage] = useState(1)
     const [authData] = useContext(AuthContext)
     const { getComments, deleteComment } = useComment()
     const deleteMutation = useMutation(deleteComment)
     const notify = useNotifier()
     const confirm = useConfirm()
-    const { data: responses, refetch } = useQuery([`${comment.id}-answer`, [seeAnswers, comment.id]], () => getComments({ comment_id: comment.id }), {
+    const { data: responses, refetch } = useQuery([`${comment.id}-answer`, [seeAnswers, comment.id, responsesPage]], () => getComments({ comment_id: comment.id, page: responsesPage, limit: 5 }), {
         retry: false,
         enabled: seeAnswers,
         suspense: false,
@@ -80,9 +81,9 @@ const Comment = ({ openAnswer = () => null, refetchFn, answer, loggedUser, ...co
                     </Typography>
                 </Box>
             </CommentBox>
-            {!answer ? <Typography
+            {!answer && comment.total_responses ? <Typography
                 component={"a"}
-                onClick={() => setSeeAnswers(true)}
+                onClick={() => setSeeAnswers(!seeAnswers)}
                 sx={{
                     font: t => t.font.xs,
                     color: t => t.palette.secondary[800],
@@ -91,11 +92,18 @@ const Comment = ({ openAnswer = () => null, refetchFn, answer, loggedUser, ...co
                 }}>
                 {`Visualizar respostas ( ${responses?.totalItems || comment.total_responses} )`}
             </Typography> : null}
-            {!answer && seeAnswers ? <CommentsList>
-                {responses?.items?.map((comment) => (
-                    <Comment answer refetchFn={refetch} loggedUser={loggedUser} openAnswer={openAnswer} key={comment.id} {...comment} />
-                ))}
-            </CommentsList> : null}
+            {!answer && seeAnswers ?
+                <Box display={'flex'} flexDirection={"column"} rowGap={2}>
+                    <CommentsList>
+                        {responses?.items?.map((comment) => (
+                            <Comment answer refetchFn={refetch} loggedUser={loggedUser} openAnswer={openAnswer} key={comment.id} {...comment} />
+                        ))}
+                    </CommentsList>
+                    <Box display={"flex"} justifyContent={"end"}>
+                        <Pagination page={responsesPage} onChange={(_, value) => setComentsPage(value)} count={responses?.totalPages} showFirstButton showLastButton />
+                    </Box>
+                </Box>
+                : null}
         </Box>
     )
 }
@@ -103,9 +111,10 @@ const Comment = ({ openAnswer = () => null, refetchFn, answer, loggedUser, ...co
 export default function Comments({ bookId, bookName }: CommentsContainerProps) {
     const [openForm, setOpenForm] = useState<ToOpenForm>()
     const [authData] = useContext(AuthContext)
+    const [page, setPage] = useState(1)
 
     const { getComments } = useComment();
-    const { data: comments, refetch } = useQuery(['getBookComments'], () => getComments({ book_id: bookId }))
+    const { data: comments, refetch } = useQuery(['getBookComments', page], () => getComments({ book_id: bookId, page, limit: 12 }))
 
     return (
         <CommentsContainer>
@@ -122,17 +131,22 @@ export default function Comments({ bookId, bookName }: CommentsContainerProps) {
                 </CommentsContainerHeader>
                 <Divider />
             </Box>
-            <CommentsList>
-                {comments?.items?.map((comment: IComment) =>
-                    <Comment
-                        {...comment}
-                        openAnswer={setOpenForm}
-                        loggedUser={authData?.userData}
-                        key={comment.id}
-                        refetchFn={refetch}
-                    />)}
-                <Box></Box>
-            </CommentsList>
+            <Box display={'flex'} flexDirection={"column"} rowGap={4}>
+                <CommentsList>
+                    {comments?.items?.map((comment: IComment) =>
+                        <Comment
+                            {...comment}
+                            openAnswer={setOpenForm}
+                            loggedUser={authData?.userData}
+                            key={comment.id}
+                            refetchFn={refetch}
+                        />)}
+                    <Box></Box>
+                </CommentsList>
+                <Box display={"flex"} justifyContent={"center"}>
+                    <Pagination page={page} onChange={(_, value) => setPage(value)} count={comments?.totalPages} showFirstButton showLastButton />
+                </Box>
+            </Box>
         </CommentsContainer>
     )
 }

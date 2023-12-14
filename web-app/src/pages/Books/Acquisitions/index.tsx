@@ -1,4 +1,4 @@
-import { Divider, Typography } from "@mui/material";
+import { Box, Divider, Pagination, Typography } from "@mui/material";
 import Content from "../../../components/Layout/Content/styles";
 import { BooksCardsContainer, BooksContainer } from "../styles";
 import BooksActions from "../Actions";
@@ -15,12 +15,14 @@ export default function Acquisitions() {
   const { getAcquisitions } = useAcquisition();
   const [filters, setFilters] = useState<Partial<BooksFilters>>({});
   const navigate = useNavigate();
+  const [page, setPage] = useState(1)
 
   const { data: acquisitions } = useQuery(
     ["getAcquisitions", filters],
-    () => getAcquisitions(),
+    () => getAcquisitions({ page, limit: 12 }),
     {
       refetchOnWindowFocus: false,
+      keepPreviousData: true,
     }
   );
 
@@ -42,24 +44,30 @@ export default function Acquisitions() {
           }}
         />
         <Divider />
-        <BooksCardsContainer>
-          {acquisitions?.items.map((book: IAcquisitions) => {
-            return (
-              <BookCard
-                author={book.user.name}
-                rating={book.rating}
-                price={book.price}
-                ratingQuantity={book.total_users_rating}
-                title={book.name}
-                image={book.photo_url}
-                size="md"
-                key={book.name}
-                onClick={() => navigate(`/explore/${book.id}`)}
-                showPrice={false}
-              />
-            );
-          })}
-        </BooksCardsContainer>
+        <Box display={'flex'} flexDirection={"column"} rowGap={4}>
+          <BooksCardsContainer>
+            {acquisitions?.items.map((book: IAcquisitions) => {
+              return (
+                <BookCard
+                  author={book.user.name}
+                  rating={book.rating}
+                  price={book.price}
+                  ratingQuantity={book.total_users_rating}
+                  title={book.name}
+                  image={book.photo_url}
+                  size="md"
+                  key={book.name}
+                  onClick={() => navigate(`/explore/${book.id}`)}
+                  showPrice={false}
+                  showWishe={false}
+                />
+              );
+            })}
+          </BooksCardsContainer>
+          <Box display={"flex"} justifyContent={"center"}>
+            <Pagination page={page} onChange={(_, value) => setPage(value)} count={acquisitions?.totalPages} showFirstButton showLastButton />
+          </Box>
+        </Box>
       </BooksContainer>
     </Content>
   );

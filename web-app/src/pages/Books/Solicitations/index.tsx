@@ -18,7 +18,7 @@ export default function Solicitations() {
         mutationKey: "solicitation-calcel-mutation",
         mutationFn: cancelSolicitation
     })
-    const solicitationsQuery = useQuery(["getSolicitations", page, filter], () => getSolicitations({ page, limit: 10, type: "received", ...filter }), {
+    const { data: solicitations, refetch } = useQuery(["getSolicitations", page, filter], () => getSolicitations({ page, limit: 10, type: "received", ...filter }), {
         onSuccess() {
             // window.scrollTo(0, 0);
         },
@@ -27,7 +27,7 @@ export default function Solicitations() {
     function updateStatus(id: string, status: ISolicitationStatus) {
         cancelMutation.mutate({ id, status }, {
             onSuccess: (data) => {
-                solicitationsQuery.refetch()
+                refetch()
                 notify(data.message)
             },
             onError(data: any) {
@@ -47,15 +47,28 @@ export default function Solicitations() {
                 }}
                 solicitations
             />
-            <SolicitationsContainer>
-                {solicitationsQuery.data?.items?.map((solicitation) => (
-                    <SolicitationCard key={solicitation.id} {...solicitation} updateStatus={updateStatus} ></SolicitationCard>
-                )
-                )}
-            </SolicitationsContainer>
-            <Box display={"flex"} justifyContent={"center"}>
-                <Pagination page={page} onChange={(_, value) => setPage(value)} count={solicitationsQuery.data?.totalPages} showFirstButton showLastButton />
-            </Box>
+            {solicitations?.items.length ?
+                <>
+                    <SolicitationsContainer>
+                        {solicitations?.items?.map((solicitation) => (
+                            <SolicitationCard key={solicitation.id} {...solicitation} updateStatus={updateStatus} ></SolicitationCard>
+                        )
+                        )}
+                    </SolicitationsContainer>
+                    <Box display={"flex"} justifyContent={"center"}>
+                        <Pagination page={page} onChange={(_, value) => setPage(value)} count={solicitations?.totalPages} showFirstButton showLastButton />
+                    </Box>
+                </>
+                : <Typography
+                    sx={{
+                        width: "100%",
+                        textAlign: "center",
+                        padding: "15px",
+                        color: (t) => t.palette.secondary[800],
+                    }}
+                >
+                    Nenhuma solicitação encontrada.
+                </Typography>}
         </Content>
     )
 }

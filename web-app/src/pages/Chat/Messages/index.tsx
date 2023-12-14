@@ -115,17 +115,22 @@ export default function Messages({ chat }: { chat: IChat }) {
   }, [chat]);
 
   useEffect(() => {
-    socket.on(`receive-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
-      console.log(arg)
-      if (arg.chat_id === chat.id) {
-        socket.emit("enter-in-chat", chat.id);
-        setMessagesToShow((curr) => [arg, ...curr]);
+    socket.on(
+      `receive-message-${chat.id}-${authData?.userData?.id}`,
+      (arg: any) => {
+        if (arg.chat_id === chat.id) {
+          socket.emit("enter-in-chat", chat.id);
+          setMessagesToShow((curr) => [arg, ...curr]);
+        }
       }
-    });
+    );
 
-    socket.on(`deleted-message-${chat.id}-${authData?.userData?.id}`, (arg) => {
-      setMessagesToShow((value) => value.filter((i) => i.id !== arg));
-    });
+    socket.on(
+      `deleted-message-${chat.id}-${authData?.userData?.id}`,
+      (arg: any) => {
+        setMessagesToShow((value) => value.filter((i) => i.id !== arg));
+      }
+    );
     return () => {
       socket.off(`receive-message-${chat.id}-${authData?.userData?.id}`);
       socket.off(`deleted-message-${chat.id}-${authData?.userData?.id}`);
@@ -153,7 +158,7 @@ export default function Messages({ chat }: { chat: IChat }) {
             <Box maxWidth={"74px"} position={"relative"}>
               <InputFile
                 name="image"
-                accept="image/*"
+                accept=".png, .jpg, .jpeg"
                 button
                 hiddeFileName
                 customIcon={<Photo />}

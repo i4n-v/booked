@@ -1,15 +1,16 @@
 import router from '../config/router.config';
-import AcquisitionController from '../controllers/acquisition.controller';
+import WisheController from '../controllers/wishe.controller';
 import authMidleware from '../midlewares/auth.midleware';
 
 /**
+/**
  * @openapi
- * /acquisitions/books:
+ * /wishe/books:
  *   get:
- *     summary: List acquired books.
- *     description: This route list acquired books with pagination.
+ *     summary: List wishes books.
+ *     description: This route list wishes books with pagination.
  *     tags:
- *       - Acquisition
+ *       - Wishe
  *     parameters:
  *       - $ref: '#/components/parameters/access_token'
  *       - $ref: '#/components/parameters/page'
@@ -20,15 +21,30 @@ import authMidleware from '../midlewares/auth.midleware';
  *         schema:
  *           type: string
  *       - name: min_date
- *         description: Min date of acquired books
+ *         description: Min date of published books
  *         in: query
  *         schema:
  *           type: string
  *       - name: max_date
- *         description: Max date of acquired books
+ *         description: Max date of published books
  *         in: query
  *         schema:
  *           type: string
+ *       - name: free
+ *         description: Free published books
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: min_price
+ *         description: Min price of published books
+ *         in: query
+ *         schema:
+ *           type: float
+ *       - name: max_price
+ *         description: Max price of published books
+ *         in: query
+ *         schema:
+ *           type: float
  *       - name: categories
  *         description: A array of category ids
  *         in: query
@@ -42,7 +58,7 @@ import authMidleware from '../midlewares/auth.midleware';
  *       - access_token: []
  *     responses:
  *       200:
- *         description: Return the list of acquired books.
+ *         description: Return the list of wishes books.
  *         content:
  *           application/json:
  *             schema:
@@ -67,7 +83,10 @@ import authMidleware from '../midlewares/auth.midleware';
  *                     description: 'Um grande mundo mágico.'
  *                     price: 12.56
  *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
- *                     user_id: 'a99fb524-6fea-4dc1-a8f0-66410097266b'
+ *                     user_id:
+ *                         id: 'a99fb524-6fea-4dc1-a8f0-66410097266b'
+ *                         name: 'amanda'
+ *                         user_name: 'amanda#0'
  *                     createdAt: '2023-05-15T01:48:16.006Z'
  *                     updatedAt: '2023-05-15T01:48:16.006Z'
  *                     rating: 0
@@ -78,27 +97,26 @@ import authMidleware from '../midlewares/auth.midleware';
  *                         name: 'Ação'
  *                       - id: 'a29fb524-6fea-4dc1-a8f0-66410097266b'
  *                         name: 'Aventura'
- *
  *       400:
  *         $ref: '#/components/responses/error'
  *       401:
  *         $ref: '#/components/responses/error'
  */
-router.get('/acquisitions/books', authMidleware, AcquisitionController.index);
+router.get('/wishe/books', authMidleware, WisheController.index);
 
 /**
  * @openapi
- * /acquisitions/books/{id}:
+ * /wishe/books/{id}:
  *   post:
- *     summary: Create a acquisition.
- *     description: This route create a book's acquisition to a user.
+ *     summary: Create a wishe.
+ *     description: This route create a book's wishe to a user.
  *     tags:
- *       - Acquisition
+ *       - Wishe
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'
  *       - name: id
- *         description: The id of book
+ *         description: The id of book to wishe
  *         in: path
  *         schema:
  *           type: string;
@@ -109,49 +127,39 @@ router.get('/acquisitions/books', authMidleware, AcquisitionController.index);
  *         $ref: '#/components/responses/success'
  *       400:
  *         $ref: '#/components/responses/error'
- *       401:
+ *       404:
  *         $ref: '#/components/responses/error'
  */
-router.post('/acquisitions/books/:id', authMidleware, AcquisitionController.store);
+router.post('/wishe/books/:id', authMidleware, WisheController.store);
 
 /**
  * @openapi
- * /acquisitions/{id}:
- *   put:
- *     summary: update a acquisition.
- *     description: This route update a book's acquisition.
+ * /wishe/books/{id}:
+ *   delete:
+ *     summary: Delete a specific wishe of book.
+ *     description: This route delete a wishe if exists.
  *     tags:
- *       - Acquisition
+ *       - Wishe
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'
  *       - name: id
- *         description: The id of acquisition
+ *         description: The id of wished book
  *         in: path
  *         schema:
  *           type: string;
  *     security:
  *       - access_token: []
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               marked_page:
- *                 type: integer
- *           examples:
- *             send_payload:
- *               value:
- *                 marked_page: 5
  *     responses:
  *       200:
- *         $ref: '#/components/responses/success'
+ *         $ref: '#components/responses/success'
  *       400:
  *         $ref: '#/components/responses/error'
  *       401:
  *         $ref: '#/components/responses/error'
+ *       404:
+ *         $ref: '#/components/responses/error'
  */
-router.put('/acquisitions/:id', authMidleware, AcquisitionController.update);
+router.delete('/wishe/books/:id', authMidleware, WisheController.delete);
 
 export default router;

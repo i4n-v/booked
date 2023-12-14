@@ -103,6 +103,7 @@ export default function Home() {
                 key={book.id}
                 onClick={() => navigate(`/explore/${book.id}`)}
                 size="lg"
+                showWishe={false}
               />
             )}
           />

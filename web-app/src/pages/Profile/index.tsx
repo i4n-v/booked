@@ -12,7 +12,7 @@ import {
   UserProfileInfo,
 } from "./styles";
 import { useMutation, useQuery } from "react-query";
-import { Divider, Typography } from "@mui/material";
+import { Box, Divider, Pagination, Typography } from "@mui/material";
 import { BookCard } from "../../components/Cards";
 import BooksForm from "../Books/Form";
 import useBook from "../../services/useBook";
@@ -29,6 +29,7 @@ export default function Profile() {
   const { getBooks, deleteBook } = useBook();
   const [authData] = useContext(AuthContext);
   const [open, handleOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const [filters, handleFilters] = useState<Partial<BooksFilters>>({});
   const [bookToEdit, setBookToEdit] = useState<string>();
   const notify = useNotifier();
@@ -43,8 +44,8 @@ export default function Profile() {
   );
 
   const { data: books, refetch: booksRefetch } = useQuery(
-    ["getUserBooks", [filters]],
-    () => getBooks({ user_id: authData?.userData?.id, ...filters }),
+    ["getUserBooks", [filters, page]],
+    () => getBooks({ user_id: authData?.userData?.id, ...filters, page, limit: 12 }),
     {
       refetchOnWindowFocus: false,
     }
@@ -106,52 +107,58 @@ export default function Profile() {
           handleFilter={handleFilters}
         />
         <Divider />
-
-        {books?.items.length ? (
-          <BooksCardsContainer>
-            {books?.items.map((book: IBook, index) => {
-              return (
-                <BookCard
-                  author={book.user?.name}
-                  rating={book.rating}
-                  price={book.price}
-                  ratingQuantity={book.total_users_rating}
-                  title={book.name}
-                  image={book.photo_url}
-                  size="md"
-                  key={`${book.id}-${index}`}
-                  onClick={() => navigate(`/explore/${book.id}`)}
-                  actionsOptions={[
-                    {
-                      label: "Editar",
-                      handler() {
-                        setBookToEdit(book.id);
+        <Box display={'flex'} flexDirection={"column"} rowGap={4}>
+          {books?.items.length ? (
+            <BooksCardsContainer>
+              {books?.items.map((book: IBook, index) => {
+                return (
+                  <BookCard
+                    author={book.user?.name}
+                    rating={book.rating}
+                    price={book.price}
+                    ratingQuantity={book.total_users_rating}
+                    showWishe={false}
+                    title={book.name}
+                    image={book.photo_url}
+                    size="md"
+                    key={`${book.id}-${index}`}
+                    onClick={() => navigate(`/explore/${book.id}`)}
+                    actionsOptions={[
+                      {
+                        label: "Editar",
+                        handler() {
+                          setBookToEdit(book.id);
+                        },
                       },
-                    },
-                    {
-                      label: "Deletar",
-                      handler() {
-                        deleteMutation(book.id as string);
+                      {
+                        label: "Deletar",
+                        handler() {
+                          deleteMutation(book.id as string);
+                        },
                       },
-                    },
-                  ]}
-                />
-              );
-            })}
-          </BooksCardsContainer>
-        ) : (
-          <Typography
-            sx={{
-              width: "100%",
-              textAlign: "center",
-              padding: "15px",
-              color: (t) => t.palette.secondary[800],
-            }}
-          >
-            Nenhum livro publicado.
-          </Typography>
-        )}
+                    ]}
+                  />
+                );
+              })}
+            </BooksCardsContainer>
+          ) : (
+            <Typography
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                padding: "15px",
+                color: (t) => t.palette.secondary[800],
+              }}
+            >
+              Nenhum livro publicado.
+            </Typography>
+          )}
+          <Box display={"flex"} justifyContent={"center"}>
+            <Pagination page={page} onChange={(_, value) => setPage(value)} count={books?.totalPages} showFirstButton showLastButton />
+          </Box>
+        </Box>
       </BooksContainer>
+
     </ContainerProfile>
   );
 }

@@ -25,10 +25,11 @@ function App() {
   useEffect(() => {
     if (authData && authData.valid && authData.userData) {
 
-      socket.on(`user-connect-${authData.userData.id}`, (arg) => {
+      socket.on(`user-connect-${authData.userData.id}`, (arg: any) => {
         console.log("user-connect:", arg);
       });
-      socket.on(`user-disconnect-${authData.userData.id}`, (arg) => {
+
+      socket.on(`user-disconnect-${authData.userData.id}`, (arg: any) => {
         console.log("user-disconnect:", arg);
       });
 

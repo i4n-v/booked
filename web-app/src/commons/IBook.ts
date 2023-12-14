@@ -16,6 +16,7 @@ type Book = {
   total_users_rating: number;
   acquisition_id?: string;
   marked_page?: number;
+  wished: boolean;
   user_raters?: {
     id: string;
     assessment: IAssessment;

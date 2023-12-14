@@ -67,7 +67,7 @@ export default function AccountSettings() {
       <ContentContainer onSubmit={onSubmit}>
         <PhotoInputContainer>
           <PhotoInputArea>
-            <InputFile name="photo" accept="image/*" />
+            <InputFile name="photo" accept=".png, .jpg, .jpeg" />
           </PhotoInputArea>
           <Typography
             sx={{
