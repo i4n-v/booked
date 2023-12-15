@@ -30,6 +30,9 @@ export default class Chat extends Model<ChatDto, ChatCreateDto> {
   @BelongsToMany(() => User, () => UserChat, 'chat_id', 'user_id')
   users: User[];
 
+  @HasMany(() => UserChat, 'chat_id')
+  user_chats: Message[];
+
   @HasMany(() => Message)
   messages: Message[];
 }

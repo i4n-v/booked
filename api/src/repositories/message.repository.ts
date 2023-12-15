@@ -69,10 +69,10 @@ class MessageRepository {
               [
                 sequelizeConnection.literal(`
                   CASE
-                    WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
+                    WHEN "books".photo_url IS NOT NULL THEN CONCAT('${
                       protocol + '://' + host
-                    }', "Book".photo_url)
-                    ELSE "Book".photo_url
+                    }', "books".photo_url)
+                    ELSE "books".photo_url
                   END
               `),
                 'photo_url',
@@ -86,7 +86,7 @@ class MessageRepository {
                         ELSE (SUM(number) / COUNT(id))
                       END
                     FROM "Assessments"
-                    WHERE "Assessments".book_id = "Book".id
+                    WHERE "Assessments".book_id = "books".id
                   )`
                 ),
                 'rating',
@@ -96,7 +96,7 @@ class MessageRepository {
                   `(
                     SELECT COUNT(id)
                     FROM "Assessments"
-                    WHERE "Assessments".book_id = "Book".id
+                    WHERE "Assessments".book_id = "books".id
                   )`
                 ),
                 'total_users_rating',
@@ -197,10 +197,10 @@ class MessageRepository {
               [
                 sequelizeConnection.literal(`
                   CASE
-                    WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
+                    WHEN "books".photo_url IS NOT NULL THEN CONCAT('${
                       protocol + '://' + host
-                    }', "Book".photo_url)
-                    ELSE "Book".photo_url
+                    }', "books".photo_url)
+                    ELSE "books".photo_url
                   END
               `),
                 'photo_url',
@@ -214,7 +214,7 @@ class MessageRepository {
                         ELSE (SUM(number) / COUNT(id))
                       END
                     FROM "Assessments"
-                    WHERE "Assessments".book_id = "Book".id
+                    WHERE "Assessments".book_id = "books".id
                   )`
                 ),
                 'rating',
@@ -224,7 +224,7 @@ class MessageRepository {
                   `(
                     SELECT COUNT(id)
                     FROM "Assessments"
-                    WHERE "Assessments".book_id = "Book".id
+                    WHERE "Assessments".book_id = "books".id
                   )`
                 ),
                 'total_users_rating',

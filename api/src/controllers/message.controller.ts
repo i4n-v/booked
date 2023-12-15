@@ -143,9 +143,9 @@ class MessageController {
               io.emit(`pending-chats-${user.id}`, unreadedChats);
               io.emit(`receive-chat-${user.id}`, receiveChatWithLastMessage);
             }
-
-            io.emit(`receive-message-${chat.id}`, message);
           }
+
+          io.emit(`receive-message-${chat.id}`, message);
 
           return response.json({ message: messages.create('Mensagem'), chat_id: chat.id });
         }

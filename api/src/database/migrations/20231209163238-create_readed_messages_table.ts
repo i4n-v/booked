@@ -15,6 +15,7 @@ const migration: Migration = {
             model: 'Users',
             key: 'id',
           },
+          unique: false,
           allowNull: false,
         },
         message_id: {

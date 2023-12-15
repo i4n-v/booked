@@ -81,17 +81,29 @@ class UserRepository {
           model: sequelizeConnection.model('Chat'),
           attributes: ['id'],
           required: false,
-          on: {
-            [Op.or]: [
-              { '$User.id$': { [Op.col]: 'chats.first_user_id' } },
-              { '$User.id$': { [Op.col]: 'chats.second_user_id' } },
-            ],
+          as: 'chats',
+          through: {
+            attributes: [],
           },
           where: {
-            [Op.or]: [
-              {first_user_id: auth.id},
-              {second_user_id: auth.id},
-            ],
+            id: {
+              [Op.and]: [
+                {
+                  [Op.in]: sequelizeConnection.literal(`(
+                    SELECT "UserChats".chat_id
+                    FROM "UserChats"
+                    WHERE "UserChats".user_id = "User".id
+                  )`),
+                },
+                {
+                  [Op.in]: sequelizeConnection.literal(`(
+                    SELECT "UserChats".chat_id
+                    FROM "UserChats"
+                    WHERE "UserChats".user_id = '${auth.id}'
+                  )`),
+                },
+              ],
+            },
           },
         },
       ],

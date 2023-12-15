@@ -56,6 +56,6 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
   @BelongsToMany(() => User, () => ReadedMessage, 'message_id', 'user_id')
   readers: User[];
 
-  @HasMany(() => User, 'message_id')
+  @HasMany(() => ReadedMessage, 'message_id')
   readed_messages: ReadedMessage[];
 }

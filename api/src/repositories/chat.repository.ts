@@ -46,12 +46,13 @@ class ChatRepository {
           [
             sequelizeConnection.literal(
               `(
-                SELECT COUNT(id)
-                FROM "Messages" INNER JOIN "ReadedMessages"
-                  ON "Messages".id = "ReadedMessages".message_id AND "ReadedMessages".user_id <> '${sender_id}'
+                SELECT COUNT("Messages".id)
+                FROM "Messages" LEFT JOIN "ReadedMessages"
+                  ON "Messages".id = "ReadedMessages".message_id
                 WHERE
                   "Messages".chat_id = "Chat".id
                   AND "Messages".sender_id <> '${sender_id}'
+                  AND "ReadedMessages".user_id IS NULL
               )`
             ),
             'unreaded_messages',
@@ -88,7 +89,6 @@ class ChatRepository {
           attributes: [
             'id',
             'sender_id',
-            'read',
             'content',
             'createdAt',
             [
@@ -102,6 +102,15 @@ class ChatRepository {
             `),
               'photo_url',
             ],
+            [
+              sequelizeConnection.literal(`
+                EXISTS (
+                  SELECT id FROM "ReadedMessages"
+                  WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id <> '${sender_id}'
+                )
+            `),
+              'read',
+            ],
           ],
           order: [['createdAt', 'DESC']],
           limit: 1,
@@ -114,17 +123,38 @@ class ChatRepository {
     return await this.repository.count({
       distinct: true,
       transaction,
-      include: {
-        model: sequelizeConnection.model('Message'),
-        as: 'messages',
-        attributes: [],
-        where: {
-          read: false,
-          sender_id: {
-            [Op.not]: id,
+      where: {
+        '$messages->readed_messages.user_id$': null,
+      },
+      include: [
+        {
+          model: sequelizeConnection.model('UserChat'),
+          attributes: [],
+          as: 'user_chats',
+          where: {
+            user_id: id,
           },
         },
-      },
+        {
+          required: true,
+          model: sequelizeConnection.model('Message'),
+          as: 'messages',
+          attributes: [],
+          where: {
+            sender_id: {
+              [Op.not]: id,
+            },
+          },
+          include: [
+            {
+              required: false,
+              model: sequelizeConnection.model('ReadedMessage'),
+              attributes: [],
+              as: 'readed_messages',
+            },
+          ],
+        },
+      ],
     });
   }
 
@@ -162,12 +192,13 @@ class ChatRepository {
           [
             sequelizeConnection.literal(
               `(
-                SELECT COUNT(id)
-                FROM "Messages" INNER JOIN "ReadedMessages"
-                  ON "Messages".id = "ReadedMessages".message_id AND "ReadedMessages".user_id <> '${auth.id}'
+                SELECT COUNT("Messages".id)
+                FROM "Messages" LEFT JOIN "ReadedMessages"
+                  ON "Messages".id = "ReadedMessages".message_id
                 WHERE
                   "Messages".chat_id = "Chat".id
                   AND "Messages".sender_id <> '${auth.id}'
+                  AND "ReadedMessages".user_id IS NULL
               )`
             ),
             'unreaded_messages',
@@ -201,7 +232,21 @@ class ChatRepository {
         {
           model: sequelizeConnection.model('Message'),
           as: 'messages',
-          attributes: ['id', 'sender_id', 'read', 'content', 'createdAt'],
+          attributes: [
+            'id',
+            'sender_id',
+            'content',
+            'createdAt',
+            [
+              sequelizeConnection.literal(`
+              EXISTS (
+                SELECT id FROM "ReadedMessages"
+                WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id <> '${auth.id}'
+              )
+          `),
+              'read',
+            ],
+          ],
           order: [['createdAt', 'DESC']],
           limit: 1,
         },

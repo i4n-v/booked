@@ -136,7 +136,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
   sender_messages: Message[];
 
   @BelongsToMany(() => Message, () => ReadedMessage, 'user_id', 'message_id')
-  readed_messages: Book;
+  readed_messages: Message[];
 
   @BeforeValidate
   static async hashPasswordBeforeValidate(user: UserCreateDto) {
