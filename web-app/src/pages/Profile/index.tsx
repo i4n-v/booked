@@ -12,7 +12,7 @@ import {
   UserProfileInfo,
 } from "./styles";
 import { useMutation, useQuery } from "react-query";
-import { Box, Divider, Pagination, Typography } from "@mui/material";
+import { Box, Divider, Pagination, Typography, Button } from "@mui/material";
 import { BookCard } from "../../components/Cards";
 import BooksForm from "../Books/Form";
 import useBook from "../../services/useBook";
@@ -23,6 +23,8 @@ import BooksActions from "../Books/Actions";
 import { BooksFilters } from "../Books/Actions/types";
 import useNotifier from "../../helpers/Notify";
 import { useNavigate } from "react-router-dom";
+import { Follow } from "../../assets/SVG";
+
 
 export default function Profile() {
   const { getUser } = useUser();
@@ -89,7 +91,19 @@ export default function Profile() {
             <span id="user_name">@{user?.user_name}</span>
           </IdentityInfo>
           <LibraryInfo>
-          <LibraryInfoBadge>
+            <Button
+              variant="outlined"
+              sx={{
+                height: '30px',
+                padding: '6px 12px',
+                fontSize: (theme) => theme.typography.fontSize,
+                textTransform: 'none',
+              }}
+            >
+              Seguir
+              <Follow />
+            </Button>
+            <LibraryInfoBadge>
               <span>{user?.total_followers}</span>Seguidores
             </LibraryInfoBadge>
             <LibraryInfoBadge>
