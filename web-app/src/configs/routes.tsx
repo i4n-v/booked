@@ -16,6 +16,7 @@ const SignIn = lazy(() => import("../pages/SignIn"));
 const ProfileSettings = lazy(() => import("../pages/Profile/Settings"));
 const Profile = lazy(() => import("../pages/Profile"));
 const RequireAuth = lazy(() => import("./RequireAuth"));
+const SearchUsers = lazy(() => import("../pages/SearchUsers"));
 
 const routes: RouteObject[] = [
   {
@@ -104,6 +105,10 @@ const routes: RouteObject[] = [
       {
         path: "acquisitions",
         element: <Acquisitions />,
+      },
+      {
+        path: "search-users",
+        element: <SearchUsers />,
       },
       {
         path: "*",
