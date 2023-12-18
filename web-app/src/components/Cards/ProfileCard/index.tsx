@@ -1,16 +1,56 @@
+import { useState } from "react";
 import { ProfileCardProps } from "./types";
 import { Box, Typography, styled, useTheme, Button } from "@mui/material";
 import DefaultImage from "../../../assets/SVG/account.svg";
 import { Follow } from "../../../assets/SVG";
+import useFollow from "../../../services/useFollow";
+import useNotifier from "../../../helpers/Notify";
+import { useMutation } from "react-query";
 
 export default function ProfileCard({
   size,
+  id,
   name,
   user_name,
   photo_url,
   description,
 }: ProfileCardProps) {
   const theme = useTheme();
+  const notify = useNotifier();
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const { followUser, unfollowUser } = useFollow();
+
+  const followUserMutation = useMutation(followUser);
+  const unfollowUserMutation = useMutation(unfollowUser);
+  console.log('id:', id);
+
+  const toggleFollow = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
+
+    if (!isFollowing) {
+      followUserMutation.mutate(id!, {
+        onSuccess(response) {
+          notify(response.message);
+          setIsFollowing(true);
+        },
+        onError(error: any) {
+          notify(error.message, "error");
+        },
+      });
+    } else {
+      unfollowUserMutation.mutate(id!, {
+        onSuccess(response) {
+          notify(response.message);
+          setIsFollowing(false);
+        },
+        onError(error: any) {
+          notify(error.message, "error");
+        },
+      });
+    }
+  }
 
   const ProfileImage = styled(Box)({
     width: '60px',
@@ -75,6 +115,7 @@ export default function ProfileCard({
           <ButtonWrapper>
             <Button
               variant="outlined"
+              onClick={toggleFollow}
               sx={{
                 height: '30px',
                 padding: '6px 12px',
@@ -82,7 +123,7 @@ export default function ProfileCard({
                 textTransform: 'none',
               }}
             >
-              Seguir
+              {isFollowing ? 'Seguindo' : 'Seguir'}
               <Follow />
             </Button>
           </ButtonWrapper>
