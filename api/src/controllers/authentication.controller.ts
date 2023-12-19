@@ -19,7 +19,7 @@ class AuthenticationController {
 
       if (!userData.password) return response.status(400).json({ messages: 'Senha requerida.' });
 
-      const user = await UserRepository.findByCredentials(userData.user_login || null);
+      const user = await UserRepository.findByCredentials(userData.user_login || null, request);
 
       if (!user) return response.status(404).json({ message: messages.unknown('Usuário') });
 
@@ -29,7 +29,7 @@ class AuthenticationController {
         return response.status(401).json({ message: 'Usuário ou senha inválidos.' });
       }
 
-      const { id, user_name, email } = user;
+      const { id, user_name, email, photo_url } = user;
 
       const findedToken = await AuthenticationRepository.findByUserId(id);
 
@@ -52,6 +52,7 @@ class AuthenticationController {
         user_name,
         email,
         token,
+        photo_url,
       });
     } catch (error) {
       next(error);

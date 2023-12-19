@@ -142,8 +142,30 @@ class UserRepository {
     });
   }
 
-  async findByCredentials(userLogin: string) {
+  async findByCredentials(userLogin: string, request: Request) {
+    const {
+      headers: { host },
+    } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
+
     return await this.repository.findOne({
+      attributes: {
+        exclude: ['photo_url'],
+        include: [
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "User".photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', "User".photo_url)
+                ELSE "User".photo_url
+              END
+          `),
+            'photo_url',
+          ],
+        ],
+      },
       where: {
         [Op.or]: [{ user_name: userLogin }, { email: userLogin }],
       },

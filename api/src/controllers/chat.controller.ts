@@ -61,7 +61,7 @@ class ChatController {
         return response.status(400).json({ message: 'O nome do grupo deve ser especificado.' });
       }
 
-      if (!Array.isArray(users) || users.length >= 1) {
+      if (!Array.isArray(users) || users.length <= 1) {
         return response
           .status(400)
           .json({ message: 'Ao menos dois participantes do grupo devem ser especificados.' });
@@ -112,7 +112,7 @@ class ChatController {
         return response.status(404).json({ message: 'O grupo não foi encontrado.' });
       }
 
-      if (!name && (!Array.isArray(users) || users.length >= 1)) {
+      if (!name && (!Array.isArray(users) || users.length <= 1)) {
         return response
           .status(400)
           .json({ message: 'O nome ou participantes do grupo devem ser especificados.' });

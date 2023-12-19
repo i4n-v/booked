@@ -213,6 +213,6 @@ router.post('/chats', authMidleware, ChatController.store);
  *       401:
  *         $ref: '#/components/responses/error'
  */
-router.post('/chats/:id', authMidleware, ChatController.update);
+router.put('/chats/:id', authMidleware, ChatController.update);
 
 export default router;
