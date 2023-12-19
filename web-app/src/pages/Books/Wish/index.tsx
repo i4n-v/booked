@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Typography, Divider, Box, Pagination } from "@mui/material";
 import Content from "../../../components/Layout/Content/styles";
 import { BooksCardsContainer, BooksContainer } from "../styles";
 import { BookCard } from "../../../components/Cards";
-import IBook from "../../../commons/IBook";
 import { useQuery } from "react-query";
-import useBook from "../../../services/useBook";
 import useWishes from "../../../services/useWishe";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ICategory } from "../../../commons/ICategory";
@@ -16,9 +14,10 @@ export default function BooksExplore() {
   const { getWishes } = useWishes();
   const { state } = useLocation();
   const [filters, setFilters] = useState<Partial<BooksFilters>>();
-  const [page, setPage] = useState(1)
-  const { data: wishlist } = useQuery(["getWishes", [state, filters, page]], () =>
-    getWishes({ search: state, ...filters, page })
+  const [page, setPage] = useState(1);
+  const { data: wishlist } = useQuery(
+    ["getWishes", [state, filters, page]],
+    () => getWishes({ search: state, ...filters, page })
   );
 
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ export default function BooksExplore() {
       <BooksContainer>
         <BooksActions filter handleFilter={filterBooks} />
         <Divider />
-        <Box display={'flex'} flexDirection={"column"} rowGap={4}>
+        <Box display={"flex"} flexDirection={"column"} rowGap={4}>
           {wishlist?.items.length ? (
             <BooksCardsContainer>
               {wishlist?.items?.map((book, index) => {
@@ -68,7 +67,13 @@ export default function BooksExplore() {
             </Typography>
           )}
           <Box display={"flex"} justifyContent={"center"}>
-            <Pagination page={page} onChange={(_, value) => setPage(value)} count={wishlist?.totalPages} showFirstButton showLastButton />
+            <Pagination
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              count={wishlist?.totalPages}
+              showFirstButton
+              showLastButton
+            />
           </Box>
         </Box>
       </BooksContainer>

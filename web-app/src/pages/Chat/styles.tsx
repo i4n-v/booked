@@ -19,6 +19,7 @@ const BarChat = styled(Paper)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   font: theme.font.sm,
+  columnGap: "40px"
 }));
 
 const ContentChat = styled(Box)(({ theme }) => ({

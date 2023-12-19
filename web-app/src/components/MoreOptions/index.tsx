@@ -5,7 +5,7 @@ import { MoreOptionsProps } from "./types";
 
 export default function MoreOptions({ open, options, id, handleOpen }: MoreOptionsProps) {
     return (
-        <Box sx={{ zIndex: 5, position: 'absolute', right: 0 }}>
+        <Box id={id} sx={{ zIndex: 5, position: 'absolute', right: 0 }}>
             <IconButton id={id} onClick={() => handleOpen(true)} color="primary" >
                 <MoreVert />
             </IconButton>

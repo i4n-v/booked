@@ -8,6 +8,8 @@ export type InputSelectProps<T> = {
   multiple?: boolean;
   service?: (...args: any) => Promise<IWrapper<T>>;
   valueKey?: string;
+  inputProps?: any;
+  disabled?: boolean;
 };
 
 export type InputSelectServiceFilter = {

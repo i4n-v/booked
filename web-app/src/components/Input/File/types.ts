@@ -7,4 +7,5 @@ export interface InputFileProps {
   label?: string;
   hiddeFileName?: boolean;
   customIcon?: ReactNode;
+  disabled?: boolean;
 }

@@ -3,7 +3,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import {
-  Account,
   Config,
   DarkLogo,
   Logout,
@@ -30,8 +29,14 @@ import Cookies from "js-cookie";
 import { AuthActionsKind } from "../../../contexts/AuthContext/types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "../../Input";
-import { ChatBubble, CurrencyExchange, Search } from "@mui/icons-material";
+import {
+  AccountCircle,
+  ChatBubble,
+  CurrencyExchange,
+  Search,
+} from "@mui/icons-material";
 import socket from "../../../configs/socket";
+import ProfilePhoto from "../../../pages/Chat/ProfilePhoto";
 
 export default function NavBar({ logged }: NavBarProps) {
   const navigate = useNavigate();
@@ -39,8 +44,8 @@ export default function NavBar({ logged }: NavBarProps) {
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
-  const [pendingChats, setPendingChats] = useState()
-  const [pendingSolicitations, setPendingSolicitations] = useState()
+  const [pendingChats, setPendingChats] = useState();
+  const [pendingSolicitations, setPendingSolicitations] = useState();
   const { logout } = useAuth();
   const logoutMutation = useMutation(logout);
 
@@ -163,7 +168,7 @@ export default function NavBar({ logged }: NavBarProps) {
       setPendingChats(arg);
     });
     socket.on(`pending-solicitations-${authData?.userData?.id}`, (arg) => {
-      setPendingSolicitations(arg)
+      setPendingSolicitations(arg);
     });
     return () => {
       socket.off(`pending-chats-${authData?.userData?.id}`);
@@ -171,7 +176,7 @@ export default function NavBar({ logged }: NavBarProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authData]);
-
+  console.log(authData);
   return (
     <AppBar
       elevation={1}
@@ -247,7 +252,14 @@ export default function NavBar({ logged }: NavBarProps) {
               >
                 {authData?.userData?.user_name}
               </Typography>
-              <Account />
+              {authData?.userData?.photo_url ? (
+                <ProfilePhoto
+                  src={authData?.userData?.photo_url}
+                  size={"32px"}
+                />
+              ) : (
+                <AccountCircle color="primary" sx={{ fontSize: "32px" }} />
+              )}
             </IconButton>
 
             <IconButton sx={{}} onClick={() => navigate("/chat")}>
@@ -274,7 +286,11 @@ export default function NavBar({ logged }: NavBarProps) {
                   right: 10,
                 }}
               >
-                <Badge badgeContent={pendingSolicitations} max={99} color="error" />
+                <Badge
+                  badgeContent={pendingSolicitations}
+                  max={99}
+                  color="error"
+                />
               </Typography>
             </IconButton>
           </Box>

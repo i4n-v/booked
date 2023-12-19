@@ -3,10 +3,21 @@ import { IMessage } from "../useMessage/types";
 
 export interface IChat {
   id?: string;
-  first_user: IUser;
-  second_user: IUser;
+  users: IUser[];
   unreaded_messages: number;
   messages: IMessage[];
   updatedAt?: Date;
-  createdAt?:Date
+  createdAt?: Date;
+  name: string;
+}
+
+export interface GroupChatCreate {
+  name: string;
+  users: string[];
+}
+
+export interface GroupChatUpdate {
+  id: string;
+  name: string;
+  users: string[];
 }

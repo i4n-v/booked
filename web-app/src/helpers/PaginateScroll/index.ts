@@ -44,7 +44,14 @@ function usePaginateScroll(
     }
   };
 
-  return { page, setMaxPage, paginateTrigger, reset };
+  return {
+    page,
+    setMaxPage,
+    paginateTrigger,
+    reset,
+    maxPage,
+    setPage: debouncePage,
+  };
 }
 
 export default usePaginateScroll;

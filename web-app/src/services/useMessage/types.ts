@@ -1,3 +1,4 @@
+import IBook from "../../commons/IBook";
 import IUser from "../../commons/IUser";
 
 interface Message {
@@ -8,6 +9,7 @@ interface Message {
   read: boolean;
   content: string;
   photo_url: string;
+  books: IBook[];
   createdAt?: Date;
   updatedAt?: Date;
   [x: string]: any;
@@ -19,6 +21,7 @@ interface MessageCreate {
   receiver_id: string;
   content: string;
   photo?: File;
+  books?: string[];
 }
 
 enum MessageTypes {
