@@ -28,6 +28,8 @@ import uploadMidleware from '../midlewares/upload.midleware';
  *                 type: string
  *               photo:
  *                 $ref: '#/components/schemas/Image'
+ *               books:
+ *                 type: array
  *             required:
  *               - receiver_id
  *           examples:
@@ -35,6 +37,8 @@ import uploadMidleware from '../midlewares/upload.midleware';
  *               value:
  *                 receiver_id: 'a98fb524-bfea-4dc1-a8f0-66410097263a'
  *                 content: 'Olá, tudo bem?'
+ *                 photo_url: null
+ *                 books: null
  *     responses:
  *       200:
  *         $ref: '#/components/responses/success'

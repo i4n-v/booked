@@ -81,17 +81,29 @@ class UserRepository {
           model: sequelizeConnection.model('Chat'),
           attributes: ['id'],
           required: false,
-          on: {
-            [Op.or]: [
-              { '$User.id$': { [Op.col]: 'chats.first_user_id' } },
-              { '$User.id$': { [Op.col]: 'chats.second_user_id' } },
-            ],
+          as: 'chats',
+          through: {
+            attributes: [],
           },
           where: {
-            [Op.or]: [
-              {first_user_id: auth.id},
-              {second_user_id: auth.id},
-            ],
+            id: {
+              [Op.and]: [
+                {
+                  [Op.in]: sequelizeConnection.literal(`(
+                    SELECT "UserChats".chat_id
+                    FROM "UserChats"
+                    WHERE "UserChats".user_id = "User".id
+                  )`),
+                },
+                {
+                  [Op.in]: sequelizeConnection.literal(`(
+                    SELECT "UserChats".chat_id
+                    FROM "UserChats"
+                    WHERE "UserChats".user_id = '${auth.id}'
+                  )`),
+                },
+              ],
+            },
           },
         },
       ],
@@ -130,8 +142,30 @@ class UserRepository {
     });
   }
 
-  async findByCredentials(userLogin: string) {
+  async findByCredentials(userLogin: string, request: Request) {
+    const {
+      headers: { host },
+    } = request;
+
+    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
+
     return await this.repository.findOne({
+      attributes: {
+        exclude: ['photo_url'],
+        include: [
+          [
+            sequelizeConnection.literal(`
+              CASE
+                WHEN "User".photo_url IS NOT NULL THEN CONCAT('${
+                  protocol + '://' + host
+                }', "User".photo_url)
+                ELSE "User".photo_url
+              END
+          `),
+            'photo_url',
+          ],
+        ],
+      },
       where: {
         [Op.or]: [{ user_name: userLogin }, { email: userLogin }],
       },

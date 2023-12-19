@@ -1,9 +1,8 @@
 import {
   AllowNull,
-  BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
-  ForeignKey,
   HasMany,
   Model,
   PrimaryKey,
@@ -13,6 +12,7 @@ import User from './user.model';
 import ChatDto from '../../dto/chat/chat.dto';
 import ChatCreateDto from '../../dto/chat/chatCreate.dto';
 import Message from './message.model';
+import UserChat from './userChat.model';
 
 @Table
 export default class Chat extends Model<ChatDto, ChatCreateDto> {
@@ -23,21 +23,15 @@ export default class Chat extends Model<ChatDto, ChatCreateDto> {
   })
   id: string;
 
-  @AllowNull(false)
-  @Column(DataType.UUID)
-  @ForeignKey(() => User)
-  first_user_id: string;
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  name: string;
 
-  @AllowNull(false)
-  @Column(DataType.UUID)
-  @ForeignKey(() => User)
-  second_user_id: string;
+  @BelongsToMany(() => User, () => UserChat, 'chat_id', 'user_id')
+  users: User[];
 
-  @BelongsTo(() => User, 'first_user_id')
-  first_user: User;
-
-  @BelongsTo(() => User, 'second_user_id')
-  second_user: User;
+  @HasMany(() => UserChat, 'chat_id')
+  user_chats: Message[];
 
   @HasMany(() => Message)
   messages: Message[];

@@ -4,11 +4,8 @@ import { Box, Typography, useTheme } from "@mui/material";
 import MoreOptions from "../../../../components/MoreOptions";
 import { useContext, useEffect, useState } from "react";
 import { SolicitationCardProps } from "./types";
-import { ISolicitationStatus, SolicitationStatus } from "../../../../commons/ISolicitation";
+import { SolicitationStatus } from "../../../../commons/ISolicitation";
 import { DropdownOptions } from "../../../../components/Dropdown/type";
-import { useSolicitation } from "../../../../services/useSolicitation";
-import { useMutation } from "react-query";
-import useNotifier from "../../../../helpers/Notify";
 import { AuthContext } from "../../../../contexts/AuthContext";
 
 export default function SolicitationCard({ status, book, user, id, updateStatus }: SolicitationCardProps) {
@@ -49,6 +46,7 @@ export default function SolicitationCard({ status, book, user, id, updateStatus 
         return () => {
             setOptions([])
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return (
         <SolicitationCardContainer>

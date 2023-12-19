@@ -16,7 +16,7 @@ export default function BooksExplore() {
   const { state } = useLocation();
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState<Partial<BooksFilters>>();
-  const { data: books, isFetching } = useQuery(["getBooks", [state, filters, page]], () =>
+  const { data: books } = useQuery(["getBooks", [state, filters, page]], () =>
     getBooks({ search: state, ...filters, page, limit: 12 }),
     {
       keepPreviousData: true,

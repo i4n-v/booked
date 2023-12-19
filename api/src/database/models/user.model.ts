@@ -21,6 +21,8 @@ import Comment from './comment.model';
 import Chat from './chat.model';
 import Message from './message.model';
 import Solicitation from './solicitation.model';
+import UserChat from './userChat.model';
+import ReadedMessage from './readedMessage.model';
 import Wishe from './wishe.model';
 
 @Table
@@ -53,7 +55,7 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @Unique
   @AllowNull(false)
   @Column(DataType.STRING)
-  user_name: boolean;
+  user_name: string;
 
   @Unique({
     name: 'Users_email_key',
@@ -127,14 +129,14 @@ export default class User extends Model<UserDto, UserCreateDto> {
   @HasMany(() => Comment)
   comments: Comment[];
 
-  @HasMany(() => Chat)
+  @BelongsToMany(() => Chat, () => UserChat, 'user_id', 'chat_id')
   chats: Chat[];
 
   @HasMany(() => Message, 'sender_id')
   sender_messages: Message[];
 
-  @HasMany(() => Message, 'receiver_id')
-  receiver_messages: Message[];
+  @BelongsToMany(() => Message, () => ReadedMessage, 'user_id', 'message_id')
+  readed_messages: Message[];
 
   @BeforeValidate
   static async hashPasswordBeforeValidate(user: UserCreateDto) {

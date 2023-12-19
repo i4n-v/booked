@@ -83,7 +83,7 @@ router.get('/solicitations', authMidleware, SolicitationController.index);
  *     summary: update a solicitation.
  *     description: This route update a book's solicitation.
  *     tags:
- *       - Solicitaiton
+ *       - Solicitation
  *     parameters:
  *       - name:
  *         $ref: '#/components/parameters/access_token'

@@ -20,6 +20,8 @@ import BookCreateDto from '../../dto/book/bookCreate.dto';
 import Comment from './comment.model';
 import Solicitation from './solicitation.model';
 import Wishe from './wishe.model';
+import Message from './message.model';
+import MessageBook from './messageBook.model';
 
 @Table
 export default class Book extends Model<BookDto, BookCreateDto> {
@@ -79,4 +81,7 @@ export default class Book extends Model<BookDto, BookCreateDto> {
 
   @HasMany(() => Comment)
   comments: Comment[];
+
+  @BelongsToMany(() => Message, () => MessageBook, 'book_id', 'message_id')
+  messages: Message[];
 }

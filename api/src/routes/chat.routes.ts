@@ -31,10 +31,8 @@ import authMidleware from '../midlewares/auth.midleware';
  *               type: object
  *               id:
  *                 type: string
- *               first_user:
- *                  type: object
- *               second_user:
- *                  type: object
+ *               users:
+ *                  type: array
  *               not_readed_messages:
  *                 type: integer
  *               messages:
@@ -43,16 +41,15 @@ import authMidleware from '../midlewares/auth.midleware';
  *               get_payload:
  *                 value:
  *                   id: 'a99fb524-bfea-4dc1-a8f0-66410097266b'
- *                   first_user:
- *                     id: '449e0bd0-3b89-495c-b311-57acec53f702'
- *                     name: 'Maria Eduarda'
- *                     user_name: 'maria#0'
- *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
- *                   second_user:
- *                     id: 'badd7b31-53af-4936-8044-95ead27d783e'
- *                     name: 'João Gabriel'
- *                     user_name: 'joão#0'
- *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
+ *                   users:
+ *                     - id: '449e0bd0-3b89-495c-b311-57acec53f702'
+ *                       name: 'Maria Eduarda'
+ *                       user_name: 'maria#0'
+ *                       photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
+ *                     - id: 'badd7b31-53af-4936-8044-95ead27d783e'
+ *                       name: 'João Gabriel'
+ *                       user_name: 'joão#0'
+ *                       photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
  *                   unreaded_messages: 8
  *                   messages:
  *                     - id: 'a01835c6-0db7-4bd0-b1df-402c5b71bdf8'
@@ -101,8 +98,8 @@ router.get('/chats', authMidleware, ChatController.index);
  *                 type: string
  *               sender:
  *                  type: object
- *               receiver:
- *                  type: object
+ *               books:
+ *                  type: array
  *             examples:
  *               get_payload:
  *                 value:
@@ -115,11 +112,18 @@ router.get('/chats', authMidleware, ChatController.index);
  *                     name: 'Maria Eduarda'
  *                     user_name: 'maria#0'
  *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
- *                   receiver:
- *                     id: 'badd7b31-53af-4936-8044-95ead27d783e'
- *                     name: 'João Gabriel'
- *                     user_name: 'joão#0'
- *                     photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
+ *                     books:
+ *                       - id: '449e0bd0-3b89-495c-b311-57acec53f702'
+ *                         name: 'Mundo mágico'
+ *                         description: 'Um grande mundo mágico.'
+ *                         price: 12.56
+ *                         free_pages: 10
+ *                         photo_url: 'http://localhost:5000/public/uploads/images/1f96b637e1b9b174ffc4d3030e87b71c-example-image.png'
+ *                         user_id: 'a99fb524-6fea-4dc1-a8f0-66410097266b'
+ *                         createdAt: '2023-05-15T01:48:16.006Z'
+ *                         updatedAt: '2023-05-15T01:48:16.006Z'
+ *                         rating: 0
+ *                         total_users_rating: 0
  *       400:
  *         $ref: '#/components/responses/error'
  *       401:
@@ -128,5 +132,87 @@ router.get('/chats', authMidleware, ChatController.index);
  *         $ref: '#/components/responses/error'
  */
 router.get('/chats/:id/messages', authMidleware, MessageController.index);
+
+/**
+ * @openapi
+ * /books:
+ *   post:
+ *     summary: Create a chat.
+ *     description: This route create a chat if not exists.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
+ *     security:
+ *       - access_token: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               users:
+ *                 type: array
+ *           examples:
+ *             send_payload:
+ *               value:
+ *                 name: 'Vendas e divulgações'
+ *                 users:
+ *                   - 34dd53ba-d45d-4721-a15c-497e41f0c280
+ *                   - f4f7c237-e14d-4f27-8e2d-cacc16497db1
+ *                   - 67eb0237-fd66-4ebe-8840-539b5cbc5f49
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/success'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ */
+router.post('/chats', authMidleware, ChatController.store);
+
+/**
+ * @openapi
+ * /books:
+ *   post:
+ *     summary: Update a chat.
+ *     description: This route update a chat if not exists.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name:
+ *         $ref: '#/components/parameters/access_token'
+ *     security:
+ *       - access_token: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               users:
+ *                 type: array
+ *           examples:
+ *             send_payload:
+ *               value:
+ *                 name: 'Vendas e divulgações'
+ *                 users:
+ *                   - 34dd53ba-d45d-4721-a15c-497e41f0c280
+ *                   - f4f7c237-e14d-4f27-8e2d-cacc16497db1
+ *                   - 67eb0237-fd66-4ebe-8840-539b5cbc5f49
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/success'
+ *       400:
+ *         $ref: '#/components/responses/error'
+ *       401:
+ *         $ref: '#/components/responses/error'
+ */
+router.put('/chats/:id', authMidleware, ChatController.update);
 
 export default router;

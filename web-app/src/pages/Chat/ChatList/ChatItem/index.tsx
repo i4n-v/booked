@@ -1,14 +1,17 @@
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, Groups } from "@mui/icons-material";
 import { Badge, Box, Typography } from "@mui/material";
 import { ChatItemProps } from "./types";
 import { useEffect, useState } from "react";
 import TimePast from "../../../../helpers/TimePast";
+import ProfilePhoto from "../../ProfilePhoto";
 export default function ChatItem({
   active,
   username,
   last_message,
   unread_messages,
   last_update,
+  profile_photo,
+  group,
   onClick,
 }: ChatItemProps) {
   const [unread, setUnread] = useState<number>();
@@ -29,7 +32,7 @@ export default function ChatItem({
         height: "104px",
         display: "flex",
         alignItems: "center",
-        overflow:"hidden",
+        overflow: "hidden",
         paddingLeft: "68px",
         cursor: "pointer",
         ":hover": {
@@ -38,7 +41,13 @@ export default function ChatItem({
         },
       }}
     >
-      <AccountCircle color="primary" sx={{ fontSize: "56px" }} />
+      {group ? (
+        <Groups color="primary" sx={{ fontSize: "56px" }} />
+      ) : profile_photo ? (
+        <ProfilePhoto size={"56px"} src={profile_photo} />
+      ) : (
+        <AccountCircle color="primary" sx={{ fontSize: "56px" }} />
+      )}
       <Box
         sx={{
           paddingLeft: "20px",
@@ -57,7 +66,9 @@ export default function ChatItem({
           }}
         >
           <Typography sx={{ font: (t) => t.font.md }}>{username}</Typography>
-          <Typography sx={{ font: (t) => t.font.sm }}>{TimePast(last_update)}</Typography>
+          <Typography sx={{ font: (t) => t.font.sm }}>
+            {TimePast(last_update)}
+          </Typography>
         </Box>
         {last_message ? (
           <Box
@@ -75,7 +86,7 @@ export default function ChatItem({
                 width: "-webkit-fill-available",
                 textOverflow: "ellipsis",
                 whiteSpace: "normal",
-                maxHeight: '17px'
+                maxHeight: "17px",
               }}
             >
               {last_message}

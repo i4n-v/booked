@@ -17,6 +17,7 @@ const InputFile = ({
   label,
   hiddeFileName = false,
   customIcon,
+  disabled
 }: InputFileProps) => {
   const {
     control,
@@ -56,6 +57,7 @@ const InputFile = ({
             id={name}
             type="file"
             onChange={handleFileChange}
+            disabled={disabled}
           />
           <label htmlFor={name} style={{ borderRadius: "50%" }}>
             {!button ? (
@@ -72,7 +74,7 @@ const InputFile = ({
                   justifyContent: "center",
                   alignItems: "center",
                   color: (t) => t.palette.primary.main,
-                  cursor: "pointer",
+                  cursor: disabled ? "default" : "pointer",
                   "&:hover": {
                     opacity: 0.8,
                   },
@@ -101,6 +103,7 @@ const InputFile = ({
               <Box>
                 <Button
                   component="span"
+                  disabled={disabled}
                   sx={{
                     height: "48px",
                     userSelect: "none",

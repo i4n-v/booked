@@ -31,10 +31,14 @@ class UserController {
 
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const { query } = request;
+      const { query, auth } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
-      const whereStatement: any = {};
+      const whereStatement: any = {
+        id: {
+          [Op.not]: auth.id,
+        },
+      };
 
       if (query.name) {
         whereStatement['name'] = {

@@ -1,9 +1,11 @@
 import {
   AllowNull,
   BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -12,6 +14,9 @@ import User from './user.model';
 import Chat from './chat.model';
 import MessageDto from '../../dto/message/message.dto';
 import MessageCreateDto from '../../dto/message/messageCreate.dto';
+import Book from './book.model';
+import ReadedMessage from './readedMessage.model';
+import MessageBook from './messageBook.model';
 
 @Table
 export default class Message extends Model<MessageDto, MessageCreateDto> {
@@ -21,13 +26,6 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
     defaultValue: DataType.UUIDV4,
   })
   id: string;
-
-  @AllowNull(false)
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
-  read: boolean;
 
   @AllowNull(true)
   @Column(DataType.STRING(7000))
@@ -47,17 +45,18 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
   @ForeignKey(() => User)
   sender_id: string;
 
-  @AllowNull(false)
-  @Column(DataType.UUID)
-  @ForeignKey(() => User)
-  receiver_id: string;
-
   @BelongsTo(() => Chat)
   chat: Chat;
 
   @BelongsTo(() => User, 'sender_id')
   sender: User;
 
-  @BelongsTo(() => User, 'receiver_id')
-  receiver: User;
+  @BelongsToMany(() => Book, () => MessageBook, 'message_id', 'book_id')
+  books: Book[];
+
+  @BelongsToMany(() => User, () => ReadedMessage, 'message_id', 'user_id')
+  readers: User[];
+
+  @HasMany(() => ReadedMessage, 'message_id')
+  readed_messages: ReadedMessage[];
 }
