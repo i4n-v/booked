@@ -6,6 +6,7 @@ import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import ChatCreateDto from '../dto/chat/chatCreate.dto';
 import UserChatRepository from '../repositories/userChat.repository';
 import messages from '../config/messages.config';
+import { io } from '../setup';
 
 interface IChatBody extends ChatCreateDto {
   users: string[];
@@ -78,6 +79,17 @@ class ChatController {
 
         await UserChatRepository.bulkCreate(usersToAdd, { transaction });
 
+        for (const userId of users) {
+          const receiveChatWithLastMessage = await ChatRepository.findByIdWithUsers(
+            chat.id,
+            userId,
+            request,
+            transaction
+          );
+
+          io.emit(`receive-chat-${userId}`, receiveChatWithLastMessage);
+        }
+
         return response.json({ message: messages.create('Grupo') });
       });
     } catch (error) {
@@ -134,6 +146,17 @@ class ChatController {
             if (!userIsRegistered) {
               await UserChatRepository.delete(chatUser.id);
             }
+          }
+
+          for (const userId of users) {
+            const receiveChatWithLastMessage = await ChatRepository.findByIdWithUsers(
+              chat.id,
+              userId,
+              request,
+              transaction
+            );
+
+            io.emit(`receive-chat-${userId}`, receiveChatWithLastMessage);
           }
         }
 

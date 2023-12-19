@@ -60,7 +60,7 @@ class MessageController {
       const { content, receiver_id, chat_id, books }: ICreateMessageBody = body;
       let photo_url: string | null = null;
 
-      if (!content && !file) {
+      if (!content && !file && !books.length) {
         return response
           .status(400)
           .json({ message: 'Um conteúdo ou imagem da mensagem deve ser informado.' });

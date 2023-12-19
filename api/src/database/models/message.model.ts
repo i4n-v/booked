@@ -16,6 +16,7 @@ import MessageDto from '../../dto/message/message.dto';
 import MessageCreateDto from '../../dto/message/messageCreate.dto';
 import Book from './book.model';
 import ReadedMessage from './readedMessage.model';
+import MessageBook from './messageBook.model';
 
 @Table
 export default class Message extends Model<MessageDto, MessageCreateDto> {
@@ -50,8 +51,8 @@ export default class Message extends Model<MessageDto, MessageCreateDto> {
   @BelongsTo(() => User, 'sender_id')
   sender: User;
 
-  @BelongsToMany(() => Book, () => Book, 'message_id', 'book_id')
-  books: Book;
+  @BelongsToMany(() => Book, () => MessageBook, 'message_id', 'book_id')
+  books: Book[];
 
   @BelongsToMany(() => User, () => ReadedMessage, 'message_id', 'user_id')
   readers: User[];
