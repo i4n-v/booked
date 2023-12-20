@@ -176,6 +176,7 @@ export default function NavBar({ logged }: NavBarProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authData]);
+
   return (
     <AppBar
       elevation={1}
