@@ -3,12 +3,12 @@ import { Migration } from 'sequelize-cli';
 const migration: Migration = {
   async up(queryInterface, sequelize) {
     try {
-      queryInterface.addColumn('Messages', 'photo_url', {
+      await queryInterface.addColumn('Messages', 'photo_url', {
         type: sequelize.STRING,
         allowNull: true,
       });
 
-      queryInterface.changeColumn('Messages', 'content', {
+      await queryInterface.changeColumn('Messages', 'content', {
         type: sequelize.STRING(7000),
         allowNull: true,
       });
@@ -21,7 +21,7 @@ const migration: Migration = {
     try {
       await queryInterface.removeColumn('Messages', 'photo_url');
 
-      queryInterface.changeColumn('Messages', 'content', {
+      await queryInterface.changeColumn('Messages', 'content', {
         type: sequelize.STRING(7000),
         allowNull: false,
       });

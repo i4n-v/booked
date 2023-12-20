@@ -5,7 +5,6 @@ import MessageCreateDto from '../dto/message/messageCreate.dto';
 import { FindOptions, Transaction, WhereOptions } from 'sequelize';
 import MessageDto from '../dto/message/message.dto';
 import { Request } from 'express';
-import MessageUpdateDto from '../dto/message/messageUpdate.dto';
 
 class MessageRepository {
   private repository: Repository<Message>;
@@ -23,7 +22,7 @@ class MessageRepository {
 
     return await this.repository.findByPk(id, {
       attributes: {
-        exclude: ['sender_id', 'receiver_id'],
+        exclude: ['sender_id'],
         include: [
           [
             sequelizeConnection.literal(`
@@ -61,23 +60,55 @@ class MessageRepository {
           ],
         },
         {
-          model: sequelizeConnection.model('User'),
-          as: 'receiver',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN receiver.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', receiver.photo_url)
-                ELSE receiver.photo_url
-              END
-          `),
-              'photo_url',
+          model: sequelizeConnection.model('Book'),
+          as: 'books',
+          through: { attributes: [] },
+          attributes: {
+            exclude: ['user_id', 'file_url'],
+            include: [
+              [
+                sequelizeConnection.literal(`
+                  CASE
+                    WHEN "books".photo_url IS NOT NULL THEN CONCAT('${
+                      protocol + '://' + host
+                    }', "books".photo_url)
+                    ELSE "books".photo_url
+                  END
+              `),
+                'photo_url',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT
+                      CASE
+                        WHEN (SUM(number) / COUNT(id)) IS NULL THEN 0
+                        ELSE (SUM(number) / COUNT(id))
+                      END
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "books".id
+                  )`
+                ),
+                'rating',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT COUNT(id)
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "books".id
+                  )`
+                ),
+                'total_users_rating',
+              ],
             ],
+          },
+          include: [
+            {
+              model: sequelizeConnection.model('User'),
+              as: 'user',
+              attributes: ['id', 'name', 'user_name'],
+            },
           ],
         },
       ],
@@ -100,6 +131,7 @@ class MessageRepository {
   ) {
     const {
       headers: { host },
+      auth,
     } = request;
 
     const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
@@ -109,8 +141,17 @@ class MessageRepository {
       offset: (page - 1) * limit,
       order: [['createdAt', 'desc']],
       attributes: {
-        exclude: ['sender_id', 'receiver_id'],
+        exclude: ['sender_id'],
         include: [
+          [
+            sequelizeConnection.literal(`
+              EXISTS (
+                SELECT id FROM "ReadedMessages"
+                WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id = '${auth.id}'
+              )
+          `),
+            'read',
+          ],
           [
             sequelizeConnection.literal(`
               CASE
@@ -147,23 +188,55 @@ class MessageRepository {
           ],
         },
         {
-          model: sequelizeConnection.model('User'),
-          as: 'receiver',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN receiver.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', receiver.photo_url)
-                ELSE receiver.photo_url
-              END
-          `),
-              'photo_url',
+          model: sequelizeConnection.model('Book'),
+          as: 'books',
+          through: { attributes: [] },
+          attributes: {
+            exclude: ['user_id', 'file_url'],
+            include: [
+              [
+                sequelizeConnection.literal(`
+                  CASE
+                    WHEN "books".photo_url IS NOT NULL THEN CONCAT('${
+                      protocol + '://' + host
+                    }', "books".photo_url)
+                    ELSE "books".photo_url
+                  END
+              `),
+                'photo_url',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT
+                      CASE
+                        WHEN (SUM(number) / COUNT(id)) IS NULL THEN 0
+                        ELSE (SUM(number) / COUNT(id))
+                      END
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "books".id
+                  )`
+                ),
+                'rating',
+              ],
+              [
+                sequelizeConnection.literal(
+                  `(
+                    SELECT COUNT(id)
+                    FROM "Assessments"
+                    WHERE "Assessments".book_id = "books".id
+                  )`
+                ),
+                'total_users_rating',
+              ],
             ],
+          },
+          include: [
+            {
+              model: sequelizeConnection.model('User'),
+              as: 'user',
+              attributes: ['id', 'name', 'user_name'],
+            },
           ],
         },
       ],
@@ -181,12 +254,6 @@ class MessageRepository {
       where: {
         id,
       },
-    });
-  }
-
-  async update(message: MessageUpdateDto, where: WhereOptions<MessageDto>) {
-    return await this.repository.update(message, {
-      where: where,
     });
   }
 }

@@ -16,6 +16,13 @@ const seeder: Migration = {
   async up(queryInterface) {
     await sequelizeConnection.transaction(async (transaction) => {
       const chats = (await sequelizeConnection.model('Chat').findAll({
+        include: [
+          {
+            model: sequelizeConnection.model('User'),
+            attributes: ['id'],
+            through: { attributes: [] },
+          },
+        ],
         transaction,
       })) as Chat[];
 
@@ -27,8 +34,7 @@ const seeder: Migration = {
             messages.push({
               id: v4(),
               chat_id: chat.id,
-              sender_id: chat.first_user_id,
-              receiver_id: chat.second_user_id,
+              sender_id: chat.users[0].id,
               content: faker.lorem.sentence(),
               createdAt: new Date(),
               updatedAt: new Date(),
@@ -37,8 +43,7 @@ const seeder: Migration = {
             messages.push({
               id: v4(),
               chat_id: chat.id,
-              sender_id: chat.second_user_id,
-              receiver_id: chat.first_user_id,
+              sender_id: chat.users[1].id,
               content: faker.lorem.sentence(),
               createdAt: new Date(),
               updatedAt: new Date(),

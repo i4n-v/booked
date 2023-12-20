@@ -9,6 +9,9 @@ import Acquisition from './acquisition.model';
 import Chat from './chat.model';
 import Message from './message.model';
 import Solicitation from './solicitation.model';
+import UserChat from './userChat.model';
+import ReadedMessage from './readedMessage.model';
+import MessageBook from './messageBook.model';
 import Wishe from './wishe.model';
 import Follower from './follower.model';
 
@@ -24,6 +27,9 @@ const models: any[] = [
   Chat,
   Message,
   Solicitation,
+  UserChat,
+  ReadedMessage,
+  MessageBook,
   Wishe,
   Follower,
 ];

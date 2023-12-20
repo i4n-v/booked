@@ -1,3 +1,4 @@
+import { isArray } from "lodash";
 import api from "../../configs/api";
 import { IMessage } from "./types";
 
@@ -7,7 +8,15 @@ export default function useMessage() {
     try {
       const formData = new FormData();
       Object.entries(message).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (value) {
+          if (isArray(value)) {
+            value.forEach((obj, index) => {
+              formData.append(`${key}[]`, obj.id);
+            });
+            return;
+          }
+          formData.append(key, value);
+        }
       });
       const response = await api.post(DPath, formData, {
         headers: {

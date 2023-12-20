@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
 import { IWrapper } from "../../../commons/IWrapper";
 import useDebounce from "../../../helpers/Debounce";
 
-export default function InputSelect<T>({ name, options, optionLabel, label, multiple, service, valueKey }: InputSelectProps<T>) {
+export default function InputSelect<T>({ name, options, optionLabel, label, multiple, service, valueKey, ...others }: InputSelectProps<T>) {
     const { control, register, setValue, formState: { errors } } = useFormContext();
     const [filter, setFilter] = useState<InputSelectServiceFilter>({ limit: 10, page: 0 })
     const [optionsFromService, setOptionsFromService] = useState<T[]>([]);
@@ -70,17 +70,19 @@ export default function InputSelect<T>({ name, options, optionLabel, label, mult
             <Autocomplete
                 {...field}
                 {...config}
+                fullWidth
                 ListboxProps={{
                     style: { maxHeight: "200px" },
                     onScrollCapture: ({ currentTarget }) => handleScroll(currentTarget),
                 }}
+                {...others}
                 onOpen={onOpen}
                 isOptionEqualToValue={(option: T, value: T) => option[optionLabel] === value[optionLabel]}
                 getOptionLabel={(option) => option[optionLabel] as string}
                 noOptionsText={Service.isFetching ? `Solicitando ${label}...` : `Nenhum (a) ${label} encontradas(os)`}
                 onChange={handleChange}
                 renderInput={(params) => (
-                    <Input error={!!errors[name]}  {...params} onChange={handleFilter} variant="outlined" name={name} label={label} />
+                    <Input error={!!errors[name]}  {...params} {...others} onChange={handleFilter} variant="outlined" name={name} label={label} />
                 )}
             />
         )} />
