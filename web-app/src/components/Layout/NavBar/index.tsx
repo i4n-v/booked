@@ -33,6 +33,7 @@ import {
   AccountCircle,
   ChatBubble,
   CurrencyExchange,
+  Person,
   Search,
 } from "@mui/icons-material";
 import socket from "../../../configs/socket";
@@ -44,6 +45,7 @@ export default function NavBar({ logged }: NavBarProps) {
   const theme = useTheme();
   const [authData, authDispatch] = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
+  const [searchByUser, setSearchByUser] = useState(false);
   const [pendingChats, setPendingChats] = useState();
   const [pendingSolicitations, setPendingSolicitations] = useState();
   const { logout } = useAuth();
@@ -110,7 +112,7 @@ export default function NavBar({ logged }: NavBarProps) {
     {
       label: "Perfil",
       icon: <User />,
-      handler: () => navigate("/profile"),
+      handler: () => navigate(`/profile/${authData?.userData?.id}`),
     },
     {
       label: "Biblioteca",
@@ -159,7 +161,11 @@ export default function NavBar({ logged }: NavBarProps) {
   });
 
   const search = form.handleSubmit(({ search }) => {
-    navigate(`/explore`, { replace: true, state: search });
+    if (searchByUser) {
+      navigate(`/users`, { replace: true, state: search });
+    } else {
+      navigate(`/explore`, { replace: true, state: search });
+    }
   });
 
   useEffect(() => {
@@ -203,6 +209,29 @@ export default function NavBar({ logged }: NavBarProps) {
                   placeholder="Buscar..."
                   inputProps={{ maxLength: 255 }}
                   icon={{
+                    left: (
+                      <IconButton
+                        color="primary"
+                        sx={{
+                          backgroundColor: searchByUser
+                            ? theme.palette.primary.main
+                            : "inherit",
+                          color: searchByUser
+                            ? "white"
+                            : theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: searchByUser
+                              ? theme.palette.primary.main
+                              : "inherit",
+                          },
+                        }}
+                        onClick={() =>
+                          setSearchByUser((searchByUser) => !searchByUser)
+                        }
+                      >
+                        <Person />
+                      </IconButton>
+                    ),
                     right: (
                       <IconButton color="primary" type="submit">
                         <Search />

@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
 import useUser from "../../services/useUser";
 import {
   ContainerProfile,
@@ -10,9 +9,10 @@ import {
   ProfileImage,
   ProfileImageBox,
   UserProfileInfo,
+  FollowButton,
 } from "./styles";
 import { useMutation, useQuery } from "react-query";
-import { Box, Divider, Pagination, Typography, Button } from "@mui/material";
+import { Box, Divider, Pagination, Typography } from "@mui/material";
 import { BookCard } from "../../components/Cards";
 import BooksForm from "../Books/Form";
 import useBook from "../../services/useBook";
@@ -22,24 +22,29 @@ import DefaultImage from "../../assets/SVG/account.svg";
 import BooksActions from "../Books/Actions";
 import { BooksFilters } from "../Books/Actions/types";
 import useNotifier from "../../helpers/Notify";
-import { useNavigate } from "react-router-dom";
-import { Follow } from "../../assets/SVG";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { Follow, FollowWhite } from "../../assets/SVG";
+import { AuthContext } from "../../contexts/AuthContext";
+import useFollow from "../../services/useFollow";
 
 export default function Profile() {
   const { getUser } = useUser();
-  const { getBooks, deleteBook } = useBook();
+  const params: any = useParams();
   const [authData] = useContext(AuthContext);
+  const { getBooks, deleteBook } = useBook();
+  const { followUser, unfollowUser } = useFollow();
   const [open, handleOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [filters, handleFilters] = useState<Partial<BooksFilters>>({});
   const [bookToEdit, setBookToEdit] = useState<string>();
   const notify = useNotifier();
   const navigate = useNavigate();
+
   const { data: user, refetch: userRefetch } = useQuery(
     "getUser",
-    () => getUser(authData?.userData?.id as string),
+    () => getUser(params.userId),
     {
+      enabled: !!params.userId,
       retry: false,
       refetchOnWindowFocus: false,
     }
@@ -47,13 +52,16 @@ export default function Profile() {
 
   const { data: books, refetch: booksRefetch } = useQuery(
     ["getUserBooks", [filters, page]],
-    () => getBooks({ user_id: authData?.userData?.id, ...filters, page, limit: 12 }),
+    () => getBooks({ user_id: params.userId, ...filters, page, limit: 12 }),
     {
+      enabled: !!params.userId,
       refetchOnWindowFocus: false,
     }
   );
 
   const deleteBookMutation = useMutation(deleteBook);
+  const unfollowMutation = useMutation(unfollowUser);
+  const followMutation = useMutation(followUser);
 
   const deleteMutation = (id: string) => {
     deleteBookMutation.mutate(id, {
@@ -67,6 +75,30 @@ export default function Profile() {
       },
     });
   };
+
+  function togleFollow() {
+    if (user?.followed) {
+      unfollowMutation.mutate(user?.id as string, {
+        onSuccess(response) {
+          notify(response.message, "success");
+          userRefetch();
+        },
+        onError(error: any) {
+          notify(error.message, "error");
+        },
+      });
+    } else {
+      followMutation.mutate(user?.id as string, {
+        onSuccess(response) {
+          notify(response.message, "success");
+          userRefetch();
+        },
+        onError(error: any) {
+          notify(error.message, "error");
+        },
+      });
+    }
+  }
 
   return (
     <ContainerProfile>
@@ -86,31 +118,35 @@ export default function Profile() {
         </ProfileImageBox>
         <UserProfileInfo>
           <IdentityInfo>
-            <span id="name">{user?.name}</span>
-            <span id="dot" />
-            <span id="user_name">@{user?.user_name}</span>
+            <Typography component="span" id="name">
+              {user?.name}
+            </Typography>
+            <Typography component="span" id="dot" />
+            <Typography component="span" id="user_name">
+              @{user?.user_name}
+            </Typography>
           </IdentityInfo>
           <LibraryInfo>
-            <Button
-              variant="outlined"
-              sx={{
-                height: '30px',
-                padding: '6px 12px',
-                fontSize: (theme) => theme.typography.fontSize,
-                textTransform: 'none',
-              }}
-            >
-              Seguir
-              <Follow />
-            </Button>
+            {authData?.userData?.id !== params.userId && (
+              <FollowButton
+                endIcon={user?.followed ? <FollowWhite /> : <Follow />}
+                variant={user?.followed ? "contained" : "outlined"}
+                onClick={togleFollow}
+              >
+                {user?.followed ? "Seguindo" : "Seguir"}
+              </FollowButton>
+            )}
             <LibraryInfoBadge>
-              <span>{user?.total_followers}</span>Seguidores
+              <Typography component="span">{user?.total_followers}</Typography>
+              Seguidores
             </LibraryInfoBadge>
             <LibraryInfoBadge>
-              <span>{user?.total_books}</span>Livros
+              <Typography component="span">{user?.total_books}</Typography>
+              Livros
             </LibraryInfoBadge>
             <LibraryInfoBadge>
-              <span>{user?.total_acquitions}</span>Bibliotecas
+              <Typography component="span">{user?.total_acquitions}</Typography>
+              Bibliotecas
             </LibraryInfoBadge>
           </LibraryInfo>
           <p>{user?.description}</p>
@@ -119,12 +155,12 @@ export default function Profile() {
       <BooksContainer>
         <BooksActions
           filter
-          publish
+          publish={authData?.userData?.id !== params.userId}
           handleOpenPublish={handleOpen}
           handleFilter={handleFilters}
         />
         <Divider />
-        <Box display={'flex'} flexDirection={"column"} rowGap={4}>
+        <Box display={"flex"} flexDirection={"column"} rowGap={4}>
           {books?.items.length ? (
             <BooksCardsContainer>
               {books?.items.map((book: IBook, index) => {
@@ -134,26 +170,30 @@ export default function Profile() {
                     rating={book.rating}
                     price={book.price}
                     ratingQuantity={book.total_users_rating}
-                    showWishe={false}
+                    showWishe={authData?.userData?.id !== params.userId}
                     title={book.name}
                     image={book.photo_url}
                     size="md"
                     key={`${book.id}-${index}`}
                     onClick={() => navigate(`/explore/${book.id}`)}
-                    actionsOptions={[
-                      {
-                        label: "Editar",
-                        handler() {
-                          setBookToEdit(book.id);
-                        },
-                      },
-                      {
-                        label: "Deletar",
-                        handler() {
-                          deleteMutation(book.id as string);
-                        },
-                      },
-                    ]}
+                    actionsOptions={
+                      authData?.userData?.id === params.userId
+                        ? [
+                            {
+                              label: "Editar",
+                              handler() {
+                                setBookToEdit(book.id);
+                              },
+                            },
+                            {
+                              label: "Deletar",
+                              handler() {
+                                deleteMutation(book.id as string);
+                              },
+                            },
+                          ]
+                        : undefined
+                    }
                   />
                 );
               })}
@@ -171,11 +211,16 @@ export default function Profile() {
             </Typography>
           )}
           <Box display={"flex"} justifyContent={"center"}>
-            <Pagination page={page} onChange={(_, value) => setPage(value)} count={books?.totalPages} showFirstButton showLastButton />
+            <Pagination
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              count={books?.totalPages}
+              showFirstButton
+              showLastButton
+            />
           </Box>
         </Box>
       </BooksContainer>
-
     </ContainerProfile>
   );
 }

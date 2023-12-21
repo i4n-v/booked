@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import NotFound from "../pages/NotFound";
 import Chat from "../pages/Chat";
 import Solicitations from "../pages/Books/Solicitations";
+import Users from "../pages/Users";
 const Home = lazy(() => import("../pages/Home"));
 const Acquisitions = lazy(() => import("../pages/Books/Acquisitions"));
 const BooksExplore = lazy(() => import("../pages/Books/Explore"));
@@ -16,7 +17,6 @@ const SignIn = lazy(() => import("../pages/SignIn"));
 const ProfileSettings = lazy(() => import("../pages/Profile/Settings"));
 const Profile = lazy(() => import("../pages/Profile"));
 const RequireAuth = lazy(() => import("./RequireAuth"));
-const SearchUsers = lazy(() => import("../pages/SearchUsers"));
 
 const routes: RouteObject[] = [
   {
@@ -40,15 +40,24 @@ const routes: RouteObject[] = [
         element: <Wish />,
       },
       {
+        path: "Users",
+        element: <Users />,
+      },
+      {
         path: "profile",
         children: [
           {
-            index: true,
-            element: (
-              <RequireAuth>
-                <Profile />
-              </RequireAuth>
-            ),
+            path: ":userId",
+            children: [
+              {
+                index: true,
+                element: (
+                  <RequireAuth>
+                    <Profile />
+                  </RequireAuth>
+                ),
+              },
+            ],
           },
           {
             path: "settings",
@@ -105,10 +114,6 @@ const routes: RouteObject[] = [
       {
         path: "acquisitions",
         element: <Acquisitions />,
-      },
-      {
-        path: "search-users",
-        element: <SearchUsers />,
       },
       {
         path: "*",

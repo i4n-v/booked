@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import messages from '../config/messages.config';
-import userRepository from '../repositories/user.repository';
+import UserRepository from '../repositories/user.repository';
 import followerRepository from '../repositories/follower.repository';
 
 class FollowerController {
@@ -10,7 +10,7 @@ class FollowerController {
 
       const followedId = params.id;
 
-      const userFollowed = await userRepository.findById(followedId);
+      const userFollowed = await UserRepository.findById(followedId, null);
 
       if (!userFollowed) {
         return response.status(404).json({ message: messages.unknown('Usuário') });
@@ -34,7 +34,7 @@ class FollowerController {
         followed_id: userFollowed.id,
       });
 
-      return response.json({ message: messages.create('Seguidor') });
+      return response.json({ message: 'Você está seguindo este usuário' });
     } catch (error) {
       next(error);
     }
@@ -45,21 +45,28 @@ class FollowerController {
       const { auth, params } = request;
       const followedId = params.id;
 
-      const followed = await followerRepository.findById(followedId);
+      const userFollowed = await UserRepository.findById(followedId, null);
 
-      console.log('followed', followed);
-
-      if (!followed) {
+      if (!userFollowed) {
         return response.status(404).json({ message: messages.unknown('Usuário') });
       }
 
-      if (followed.follower_id !== auth.id) {
-        return response.status(401).json({ message: messages.unauthorized() });
+      if (auth.id === userFollowed.id) {
+        return response.status(400).json({ message: 'Você não pode deixar de seguir a si mesmo.' });
       }
 
-      await followerRepository.deleteById(followed.id);
+      const existingFollower = await followerRepository.findByUserAndFollowed(
+        auth.id,
+        userFollowed.id
+      );
 
-      return response.json({ message: 'Usuário deixado de seguir com sucesso' });
+      if (!existingFollower) {
+        return response.status(400).json({ message: 'Você não segue este usuário.' });
+      }
+
+      await followerRepository.deleteById(existingFollower.id);
+
+      return response.json({ message: 'Você deixou de seguir este usuário.' });
     } catch (error) {
       next(error);
     }

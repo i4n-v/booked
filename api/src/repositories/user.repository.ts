@@ -74,6 +74,18 @@ class UserRepository {
           `),
             'photo_url',
           ],
+          [
+            sequelizeConnection.literal(`
+              EXISTS (
+                SELECT "Followers".id
+                FROM "Followers"
+                WHERE
+                  "Followers".followed_id = "User".id
+                  AND "Followers".follower_id = '${auth.id}'
+              )
+            `),
+            'followed',
+          ],
         ],
       },
       include: [
@@ -111,42 +123,64 @@ class UserRepository {
     });
   }
 
-  async findById(id: string, options?: Omit<FindOptions<UserDto>, 'where'>) {
+  async findById(
+    id: string,
+    follower_id: string | null,
+    options?: Omit<FindOptions<UserDto>, 'where'>
+  ) {
+    const includeAttributes = [
+      [
+        sequelizeConnection.literal(`
+          (
+            SELECT COUNT(id)
+            FROM "Books"
+            WHERE "Books".user_id = "User".id
+          )
+        `),
+        'total_books',
+      ],
+      [
+        sequelizeConnection.literal(`
+          (
+            SELECT COUNT(id)
+            FROM "Acquisitions"
+            WHERE "Acquisitions".user_id = "User".id
+          )
+        `),
+        'total_acquitions',
+      ],
+      [
+        sequelizeConnection.literal(`
+          (
+            SELECT COUNT("Followers".id)
+            FROM "Followers"
+            WHERE "Followers".followed_id = "User".id
+          )
+        `),
+        'total_followers',
+      ],
+    ];
+
+    if (follower_id) {
+      includeAttributes.push([
+        sequelizeConnection.literal(`
+        EXISTS (
+          SELECT "Followers".id
+          FROM "Followers"
+          WHERE
+            "Followers".followed_id = "User".id
+            AND "Followers".follower_id = '${follower_id}'
+            AND "Followers".follower_id IS NOT NULL
+        )
+      `),
+        'followed',
+      ]);
+    }
+
     return await this.repository.findByPk(id, {
       attributes: {
         exclude: ['password', 'salt', 'updatedAt'],
-        include: [
-          [
-            sequelizeConnection.literal(`
-              (
-                SELECT COUNT(id)
-                FROM "Books"
-                WHERE "Books".user_id = "User".id
-              )
-            `),
-            'total_books',
-          ],
-          [
-            sequelizeConnection.literal(`
-              (
-                SELECT COUNT(id)
-                FROM "Acquisitions"
-                WHERE "Acquisitions".user_id = "User".id
-              )
-            `),
-            'total_acquitions',
-          ],
-          [
-            sequelizeConnection.literal(`
-              (
-                SELECT COUNT(id)
-                FROM "Followers"
-                WHERE "Followers".followed_id = "User".id
-              )
-            `),
-            'total_followers',
-          ],
-        ],
+        include: includeAttributes as any,
       },
       ...options,
     });

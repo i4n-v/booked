@@ -26,7 +26,8 @@ interface User extends UserCommom {
   total_books?: number;
   total_acquitions?: number;
   total_followers?: number;
-  chats?: IChat[]
+  chats?: IChat[];
+  followed: boolean;
 }
 
 interface UserUpdate extends User {
