@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import NotFound from "../pages/NotFound";
 import Chat from "../pages/Chat";
 import Solicitations from "../pages/Books/Solicitations";
+import Users from "../pages/Users";
 const Home = lazy(() => import("../pages/Home"));
 const Acquisitions = lazy(() => import("../pages/Books/Acquisitions"));
 const BooksExplore = lazy(() => import("../pages/Books/Explore"));
@@ -39,15 +40,24 @@ const routes: RouteObject[] = [
         element: <Wish />,
       },
       {
+        path: "Users",
+        element: <Users />,
+      },
+      {
         path: "profile",
         children: [
           {
-            index: true,
-            element: (
-              <RequireAuth>
-                <Profile />
-              </RequireAuth>
-            ),
+            path: ":userId",
+            children: [
+              {
+                index: true,
+                element: (
+                  <RequireAuth>
+                    <Profile />
+                  </RequireAuth>
+                ),
+              },
+            ],
           },
           {
             path: "settings",

@@ -29,7 +29,7 @@ const chatEvents: ISocketEvent[] = [
         if (!chat) return;
 
         const authData = jwt.verify(token, process.env.JWT_PRIVATE_KEY as string) as Auth;
-        const user = await UserRepository.findById(authData.id);
+        const user = await UserRepository.findById(authData.id, null);
 
         if (!user) return;
 

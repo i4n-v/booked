@@ -63,13 +63,7 @@ class UserController {
         params: { id },
       } = request;
 
-      if (id !== auth.id) {
-        return response.status(400).json({
-          message: messages.unauthorized(),
-        });
-      }
-
-      const user = await UserRepository.findById(id);
+      const user = await UserRepository.findById(id, auth.id);
 
       if (!user) {
         return response.status(400).json({
@@ -103,7 +97,7 @@ class UserController {
 
       if (!photo) photo_url = null;
 
-      const user = await UserRepository.findById(id);
+      const user = await UserRepository.findById(id, null);
 
       if (!user) {
         return response.status(404).json({
@@ -160,7 +154,7 @@ class UserController {
         });
       }
 
-      const user = await UserRepository.findById(id);
+      const user = await UserRepository.findById(id, null);
 
       if (!user) {
         return response.status(404).json({

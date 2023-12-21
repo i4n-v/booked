@@ -13,6 +13,7 @@ import UserChat from './userChat.model';
 import ReadedMessage from './readedMessage.model';
 import MessageBook from './messageBook.model';
 import Wishe from './wishe.model';
+import Follower from './follower.model';
 
 const models: any[] = [
   User,
@@ -30,6 +31,7 @@ const models: any[] = [
   ReadedMessage,
   MessageBook,
   Wishe,
+  Follower,
 ];
 
 export default models;

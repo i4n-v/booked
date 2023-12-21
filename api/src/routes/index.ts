@@ -11,6 +11,7 @@ import ChatRouter from './chat.routes';
 import MessageRouter from './message.routes';
 import WisheRouter from './wishe.routes';
 import SolicitationRouter from './solicitation.routes';
+import FollowerRoutes from './follower.routes';
 
 const routes: Router[] = [
   appRoutes,
@@ -25,6 +26,7 @@ const routes: Router[] = [
   MessageRouter,
   WisheRouter,
   SolicitationRouter,
+  FollowerRoutes,
 ];
 
 export default function initRoutes(app: Express) {

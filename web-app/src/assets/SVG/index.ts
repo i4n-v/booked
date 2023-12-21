@@ -15,6 +15,8 @@ import { ReactComponent as ArrowUp } from "./arrow-up.svg";
 import { ReactComponent as Book } from "./book.svg";
 import { ReactComponent as Favorite } from "./favorite.svg";
 import { ReactComponent as FavoriteOutlined } from "./favorite-outlined.svg";
+import { ReactComponent as Follow } from "./follow.svg";
+import { ReactComponent as FollowWhite } from "./follow-white.svg";
 
 export {
   DarkLogo,
@@ -34,4 +36,6 @@ export {
   Book,
   Favorite,
   FavoriteOutlined,
+  Follow,
+  FollowWhite,
 };
