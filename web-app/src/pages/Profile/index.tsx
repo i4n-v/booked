@@ -26,6 +26,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Follow, FollowWhite } from "../../assets/SVG";
 import { AuthContext } from "../../contexts/AuthContext";
 import useFollow from "../../services/useFollow";
+import { useConfirm } from "../../helpers/Confirm";
+import Message from "../../helpers/messages";
 
 export default function Profile() {
   const { getUser } = useUser();
@@ -39,6 +41,7 @@ export default function Profile() {
   const [bookToEdit, setBookToEdit] = useState<string>();
   const notify = useNotifier();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const { data: user, refetch: userRefetch } = useQuery(
     "getUser",
@@ -155,7 +158,7 @@ export default function Profile() {
       <BooksContainer>
         <BooksActions
           filter
-          publish={authData?.userData?.id !== params.userId}
+          publish={authData?.userData?.id === params.userId}
           handleOpenPublish={handleOpen}
           handleFilter={handleFilters}
         />
@@ -188,7 +191,12 @@ export default function Profile() {
                             {
                               label: "Deletar",
                               handler() {
-                                deleteMutation(book.id as string);
+                                confirm(
+                                  Message.DELETE_QUESTION(book.name),
+                                  () => {
+                                    deleteMutation(book.id as string);
+                                  }
+                                );
                               },
                             },
                           ]
