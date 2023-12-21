@@ -33,7 +33,7 @@ export default function Acquisitions() {
 
   return (
     <Content>
-      <Typography component={"h1"}>Biblioteca</Typography>
+      <Typography component={"h1"}>Sua biblioteca</Typography>
       <BooksContainer>
         <BooksActions
           filter

@@ -30,7 +30,7 @@ export default function BooksExplore() {
   };
   return (
     <Content>
-      <Typography component={"h1"}>Resultados</Typography>
+      <Typography component={"h1"}>Encontre sua próxima história</Typography>
       <BooksContainer>
         <BooksActions filter handleFilter={filterBooks} />
         <Divider />
