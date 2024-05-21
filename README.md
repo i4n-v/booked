@@ -3,7 +3,7 @@
 
 > A platform where to read is a good dream. Publish your books for readers around the world! 📘
 
-### Gif of web site >>> future
+<img width="1440" alt="image" src="https://github.com/i4n-v/booked/assets/72396372/650c3133-1e14-4394-a68d-dcf73c76bc25">
 
 ## STARTING
 
