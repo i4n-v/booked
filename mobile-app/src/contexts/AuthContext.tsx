@@ -52,8 +52,8 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
         loading({ isLoading: false });
       },
       onSettled: async (response) => {
-        const user = await AsyncStorage.getItem("@user");
-        const token = await AsyncStorage.getItem("@token");
+        const user = await AsyncStorage.getItem("user");
+        const token = await AsyncStorage.getItem("token");
 
         if (user && token && response?.valid) {
           setUser(JSON.parse(user));

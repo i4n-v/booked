@@ -2,7 +2,7 @@
 
 type IMode = "light" | "dark";
 
-type IColorsKeys = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+type IColorsKeys = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 1000 | 1100;
 
 type IColorsPattern = {
   [key in IColorsKeys]?: string;
@@ -62,7 +62,7 @@ interface IShadowPattern {
   };
 }
 
-type IShadowKeys = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+type IShadowKeys = 0;
 
 type IShadow = {
   [key in IShadowKeys]: IShadowPattern;

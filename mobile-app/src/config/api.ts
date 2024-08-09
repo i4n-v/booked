@@ -11,7 +11,7 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   try {
-    const token = await AsyncStorage.getItem("@token");
+    const token = await AsyncStorage.getItem("token");
 
     if (token) {
       const parsedToken = JSON.parse(token);

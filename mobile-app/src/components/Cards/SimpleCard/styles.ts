@@ -1,14 +1,13 @@
-import { styled } from 'styled-components/native'
-import { IContainerProps } from './types';
+import { styled } from "styled-components/native";
+import { IContainerProps } from "./types";
 
 const Container = styled.View<IContainerProps>`
     align-items: center;
     width: 100%;
     padding: 12px;
     background-color: ${({ theme }) => theme.colors.secondary?.[0]};
-    elevation: ${({ theme }) => theme.shadows[9].mobile.elevation};
-    box-shadow: ${({ theme }) => theme.shadows[9].web};
-    border-left-width: ${({ main }) => main ? 6 : 0 + "px"};
+    box-shadow: ${({ theme }) => theme.shadows[0].web};
+    border-left-width: ${({ main }) => (main ? 6 : 0 + "px")};
     border-color: ${({ theme }) => theme.colors.primary?.[200]};
     border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
 `;
@@ -55,6 +54,4 @@ const TagText = styled.Text`
     margin-top: 5px;
 `;
 
-
-
-export { Container, HeadContainer, LabelTitle, Title, Subtitle, TagsContainer, TagText }
+export { Container, HeadContainer, LabelTitle, Title, Subtitle, TagsContainer, TagText };
