@@ -13,8 +13,8 @@ const Unorded = styled.View`
 `;
 
 const Orded = styled.Text`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-  font-size: ${({ theme }) => theme.typography.size.body + "px"};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[700]};
 `;
 
@@ -26,7 +26,7 @@ const ItemContainer = styled.View`
 
 const Item = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.body + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[600]};
   max-width: 98%;
 `;

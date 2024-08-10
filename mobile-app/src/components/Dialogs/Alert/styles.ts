@@ -18,7 +18,7 @@ const AlertContainer = styled.View`
   box-shadow: ${({ theme }) => theme.shadows[0].web};
 `;
 
-const MessageContainer = styled.View`  
+const MessageContainer = styled.View`
   align-items: center;
 `;
 
@@ -48,20 +48,20 @@ const MinorCircle = styled.View`
 const Title = styled.Text`
   color: ${({ theme }) => theme.colors.secondary?.[900]};
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+  font-size: ${({ theme }) => theme.typography.size.md + "px"};
   margin-bottom: 8px;
 `;
 
 const Message = styled.Text`
   color: ${({ theme }) => theme.colors.secondary?.[500]};
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.body + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   margin-bottom: 12px;
 `;
 
 const Emphasis = styled.Text`
   color: ${({ theme }) => theme.colors.secondary?.[700]};
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
 `;
 
 const ActionsContainer = styled.View`

@@ -22,7 +22,7 @@ const styles = () => {
       size: 24,
     },
     itemText: {
-      fontSize: theme.typography.size.body,
+      fontSize: theme.typography.size.xs,
       fontFamily: theme.typography.fonts.primary.medium,
       color: theme.colors.text[700],
     },

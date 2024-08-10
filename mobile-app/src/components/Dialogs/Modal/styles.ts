@@ -13,7 +13,7 @@ const ExternalContainer = styled.View`
 
 const ModalContainer = styled.View`
     background-color: ${({ theme }) => theme.colors.secondary?.[0]};
-    border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};   
+    border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
     margin-left: 20px;
     margin-right: 20px;
     padding: 12px;
@@ -31,10 +31,10 @@ const OnCloseButton = styled.TouchableOpacity`
 `;
 
 const Title = styled.Text`
-    font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-    font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+    font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+    font-size: ${({ theme }) => theme.typography.size.md + "px"};
     color: ${({ theme }) => theme.colors.primary?.[200]};
     width: 90%;
 `;
 
-export { ExternalContainer, ModalContainer, OnCloseButton, Title, ContainerChildren }
+export { ExternalContainer, ModalContainer, OnCloseButton, Title, ContainerChildren };

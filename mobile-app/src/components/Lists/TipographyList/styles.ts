@@ -1,7 +1,6 @@
 import styled from "styled-components/native";
 import { ITipographyContainerProps } from "./types";
 
-
 const Container = styled.View`
     width: 100%;
     flex-direction: row;
@@ -11,28 +10,26 @@ const Container = styled.View`
 
 const TipographyContainer = styled.View<ITipographyContainerProps>`
     width: ${({ numberColumns, numberItems, currentNumberItem }) => {
-        const endColumns = numberItems % numberColumns;
-        const isLastRow = currentNumberItem >= numberItems - endColumns;
+      const endColumns = numberItems % numberColumns;
+      const isLastRow = currentNumberItem >= numberItems - endColumns;
 
-        if (!isLastRow) {
-            return 100 / numberColumns + "%";
-        }
-        return 100 / endColumns + "%";
-    }
-    };
+      if (!isLastRow) {
+        return 100 / numberColumns + "%";
+      }
+      return 100 / endColumns + "%";
+    }};
 `;
 
 const Title = styled.Text`
-    font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-    font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+    font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+    font-size: ${({ theme }) => theme.typography.size.md + "px"};
     color: ${({ theme }) => theme.colors.primary?.[200]};
 `;
 
 const Subtitle = styled.Text`
     font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-    font-size: ${({ theme }) => theme.typography.size.body + "px"};
+    font-size: ${({ theme }) => theme.typography.size.xs + "px"};
     color: ${({ theme }) => theme.colors.text?.[500]};
 `;
 
-
-export { Title, Subtitle, Container, TipographyContainer }
+export { Title, Subtitle, Container, TipographyContainer };

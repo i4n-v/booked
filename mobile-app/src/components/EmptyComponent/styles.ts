@@ -5,7 +5,7 @@ const EmptyMessageContainer = styled.Text`
   padding: ${({ theme }) => theme.shape.padding + "px"};
   background-color: ${({ theme }) => theme.colors.secondary?.[100]};
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.body + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[600]};
 `;
 

@@ -2,18 +2,16 @@ import { ITypography } from "@/types/Theme";
 
 const typography: ITypography = {
   size: {
-    body: 14,
-    caption: 12,
-    title: 28,
-    medium: 16,
-    regular: 20,
+    lg: 35,
+    md: 20,
+    sm: 16,
+    xs: 14,
+    xxs: 12,
   },
   fonts: {
     primary: {
-      light: "Montserrat-Light",
       normal: "Montserrat-Regular",
       medium: "Montserrat-Medium",
-      semibold: "Montserrat-Semibold",
     },
   },
 };

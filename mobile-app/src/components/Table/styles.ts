@@ -36,26 +36,31 @@ const EmptyContainer = styled.View`
     padding: 12px;
 `;
 
-
 const LabelHeader = styled.Text`
-    font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-    font-size: ${({ theme }) => theme.typography.size.body + "px"};
+    font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+    font-size: ${({ theme }) => theme.typography.size.xs + "px"};
     color: ${({ theme }) => theme.colors.primary?.[400]};
 `;
 
 const LabelLine = styled.Text`
     font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-    font-size: ${({ theme }) => theme.typography.size.body + "px"};
+    font-size: ${({ theme }) => theme.typography.size.xs + "px"};
     color: ${({ theme }) => theme.colors.text?.[500]};
 `;
 
-
-
 const Title = styled.Text`
-    font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-    font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+    font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+    font-size: ${({ theme }) => theme.typography.size.md + "px"};
     color: ${({ theme }) => theme.colors.text?.[200]};
 `;
 
-
-export { TitleContainer, Title, TableHeader, LabelHeader, LineContainer, LabelLine, LabelContainer, EmptyContainer }
+export {
+  TitleContainer,
+  Title,
+  TableHeader,
+  LabelHeader,
+  LineContainer,
+  LabelLine,
+  LabelContainer,
+  EmptyContainer,
+};

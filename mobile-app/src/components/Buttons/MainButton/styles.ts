@@ -29,8 +29,8 @@ const ButtonContainer = styled.TouchableOpacity<IButtonContainerProps>`
 `;
 
 const ButtonLabel = styled.Text<IButtonLabel>`
-  font-size: ${({ theme }) => theme.typography.size.body + "px"};
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
   text-transform: uppercase;
   color: ${({ color }) => color}
 `;

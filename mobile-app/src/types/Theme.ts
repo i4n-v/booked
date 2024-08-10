@@ -22,18 +22,16 @@ interface IColors {
 
 interface ITypography {
   size: {
-    body: number;
-    caption: number;
-    title: number;
-    medium: number;
-    regular: number;
+    lg: number;
+    md: number;
+    sm: number;
+    xs: number;
+    xxs: number;
   };
   fonts: {
     primary: {
-      normal?: string;
-      medium?: string;
-      light?: string;
-      semibold?: string;
+      normal: string;
+      medium: string;
     };
   };
 }

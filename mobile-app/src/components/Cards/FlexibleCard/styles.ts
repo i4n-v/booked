@@ -26,8 +26,8 @@ const ActionsContainer = styled.View`
 `;
 
 const CardTitle = styled.Text<ICommonProps>`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-  font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.md + "px"};
   margin-right: 80px;
   margin-bottom: 6;
   color: ${({ theme, color }) => color ?? theme.colors.primary?.[200]};
@@ -51,13 +51,13 @@ const CardIcon = styled(Icon)`
 
 const Description = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.body};
+  font-size: ${({ theme }) => theme.typography.size.xs};
   color: ${({ theme }) => theme.colors.text?.[600]};
   flex: 1;
 `;
 
 const DescriptionLabel = styled.Text`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
 `;
 
 export {

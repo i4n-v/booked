@@ -49,7 +49,7 @@ const RadioInputSelection = styled.View<Omit<IRadioInputProps, "error">>`
 
 const RadioInputLabel = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  font-size: ${({ theme }) => theme.typography.size.caption + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[600]};
 `;
 

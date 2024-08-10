@@ -23,26 +23,26 @@ const AnimationContainer = styled.View`
 `;
 
 const Title = styled.Text`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-  font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.md + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[700]};
   margin-bottom: 12px;
 `;
 
 const Message = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.body + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[600]};
   margin-bottom: 28px;
 `;
 
 const EmphasisMessage = styled.Text`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
 `;
 
 const ErrorViewer = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  font-size: ${({ theme }) => theme.typography.size.caption + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
   color: ${({ theme }) => theme.colors.error?.[400]};
   background-color: ${({ theme }) => theme.colors.error?.[50]};
   margin-top: 38px;

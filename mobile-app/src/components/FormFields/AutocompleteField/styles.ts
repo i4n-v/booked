@@ -21,7 +21,7 @@ const OptionTag = styled.View`
 `;
 
 const OptionTagLabel = styled.Text`
-  font-size: ${({ theme }) => theme.typography.size.caption + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
   color: ${({ theme }) => theme.colors.text?.[700]};
 `;

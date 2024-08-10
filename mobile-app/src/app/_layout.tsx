@@ -7,7 +7,7 @@ import { GlobalContextProvider } from "@/contexts/GlobalContext";
 import { ThemeContextProvider } from "@/contexts/ThemeContext";
 import { queryClient } from "@/config";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Platform, SafeAreaView } from "react-native";
+import { Platform, SafeAreaView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { FullPageLoading } from "@/components/Loading";
@@ -16,10 +16,8 @@ import theme from "@/global/theme";
 
 export default function Setup() {
   const [fontLoaded] = useFonts({
-    "Montserrat-Light": require("../../assets/fonts/Montserrat-Light.ttf"),
     "Montserrat-Regular": require("../../assets/fonts/Montserrat-Regular.ttf"),
     "Montserrat-Medium": require("../../assets/fonts/Montserrat-Medium.ttf"),
-    "Montserrat-Semibold": require("../../assets/fonts/Montserrat-SemiBold.ttf"),
   });
 
   if (!fontLoaded) return null;
@@ -37,13 +35,18 @@ export default function Setup() {
               >
                 <BottomSheetModalProvider>
                   {Platform.OS === "android" ? (
-                    <>
+                    <View
+                      style={{
+                        flex: 1,
+                        paddingTop: 50,
+                      }}
+                    >
                       <StatusBar
                         style="light"
                         backgroundColor={theme["light"].colors.primary?.[200]}
                       />
                       <Slot />
-                    </>
+                    </View>
                   ) : (
                     <>
                       <StatusBar style="light" />

@@ -1,10 +1,9 @@
 import styled from "styled-components/native";
 
-
 const Container = styled.View`
   overflow: hidden;
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
-  border-radius: 15px; 
+  border-radius: 15px;
 `;
 
 const CardContainer = styled.View`
@@ -28,15 +27,14 @@ const ContentCard = styled.View`
 `;
 
 const Title = styled.Text`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-  font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.md + "px"};
   color: ${({ theme }) => theme.colors.primary?.[200]};`;
 
 const Subtitle = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  font-size: ${({ theme }) => theme.typography.size.caption + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
   color: ${({ theme }) => theme.colors.text?.[500]};
 `;
 
-
-export { Container, CardContainer, Title, Subtitle, ContainerTextIcon, ContentCard }
+export { Container, CardContainer, Title, Subtitle, ContainerTextIcon, ContentCard };

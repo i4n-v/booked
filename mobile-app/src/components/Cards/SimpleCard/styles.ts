@@ -21,20 +21,20 @@ const HeadContainer = styled.View`
 `;
 
 const LabelTitle = styled.Text`
-    font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-    font-size: ${({ theme }) => theme.typography.size.body + "px"};
+    font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+    font-size: ${({ theme }) => theme.typography.size.xs + "px"};
     color: ${({ theme }) => theme.colors.primary?.[200]};
 `;
 
 const Title = styled.Text`
-    font-family: ${({ theme }) => theme.typography.fonts.primary.semibold};
-    font-size: ${({ theme }) => theme.typography.size.regular + "px"};
+    font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+    font-size: ${({ theme }) => theme.typography.size.md + "px"};
     color: ${({ theme }) => theme.colors.primary?.[200]};
 `;
 
 const Subtitle = styled.Text`
     font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-    font-size: ${({ theme }) => theme.typography.size.body + "px"};
+    font-size: ${({ theme }) => theme.typography.size.xs + "px"};
     color: ${({ theme }) => theme.colors.text?.[500]};
 `;
 
@@ -46,7 +46,7 @@ const TagsContainer = styled.View`
 
 const TagText = styled.Text`
     font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-    font-size: ${({ theme }) => theme.typography.size.caption + "px"};
+    font-size: ${({ theme }) => theme.typography.size.xss + "px"};
     color: ${({ theme }) => theme.colors.error?.[400]};
     border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
     background-color: ${({ theme }) => theme.colors.error?.[50]};
