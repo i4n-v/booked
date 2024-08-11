@@ -31,9 +31,9 @@ const SliderLabel = styled.TextInput`
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.secondary?.[300]};
-  box-shadow: ${({ theme }) => theme.shadows[0].web};
+  ${({ theme }) => theme.shadows[0] as any};
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
   color: ${({ theme }) => theme.colors.text?.[700]};
 `;
 

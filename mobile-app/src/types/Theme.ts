@@ -47,17 +47,14 @@ interface IShape {
 //Theme Shadows
 
 interface IShadowPattern {
-  web: string;
-  mobile: {
-    shadowColor: string;
-    shadowOffset: {
-      width: number;
-      height: number;
-    };
-    shadowOpacity: number;
-    shadowRadius: number;
-    elevation: number;
+  shadowColor: string;
+  shadowOffset: {
+    width: number;
+    height: number;
   };
+  shadowOpacity: number;
+  shadowRadius: number;
+  elevation: number;
 }
 
 type IShadowKeys = 0;

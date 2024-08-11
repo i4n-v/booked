@@ -42,7 +42,7 @@ const EmphasisMessage = styled.Text`
 
 const ErrorViewer = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
   color: ${({ theme }) => theme.colors.error?.[400]};
   background-color: ${({ theme }) => theme.colors.error?.[50]};
   margin-top: 38px;

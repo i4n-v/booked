@@ -12,7 +12,7 @@ const SkeletonContainer = styled.View`
   width: 100%;
   align-self: center;
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
-  box-shadow: ${({ theme }) => theme.shadows[0].web};
+  ${({ theme }) => theme.shadows[0] as any};
 `;
 
 const InfoWrapper = styled.View`

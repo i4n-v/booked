@@ -6,10 +6,10 @@ const Container = styled.View<IContainerProps>`
     width: 100%;
     padding: 12px;
     background-color: ${({ theme }) => theme.colors.secondary?.[0]};
-    box-shadow: ${({ theme }) => theme.shadows[0].web};
     border-left-width: ${({ main }) => (main ? 6 : 0 + "px")};
     border-color: ${({ theme }) => theme.colors.primary?.[200]};
     border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
+    ${({ theme }) => theme.shadows[0] as any};
 `;
 
 const HeadContainer = styled.View`
@@ -46,7 +46,7 @@ const TagsContainer = styled.View`
 
 const TagText = styled.Text`
     font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-    font-size: ${({ theme }) => theme.typography.size.xss + "px"};
+    font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
     color: ${({ theme }) => theme.colors.error?.[400]};
     border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
     background-color: ${({ theme }) => theme.colors.error?.[50]};

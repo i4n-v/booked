@@ -11,8 +11,8 @@ const CardContainer = styled.TouchableOpacity`
   border-radius: 12px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.secondary?.[100]};
-  box-shadow: ${({ theme }) => theme.shadows[0].web};
   row-gap: 2px;
+  ${({ theme }) => theme.shadows[0] as any};
 `;
 
 const ActionsContainer = styled.View`

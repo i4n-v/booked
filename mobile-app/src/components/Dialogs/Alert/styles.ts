@@ -15,7 +15,7 @@ const AlertContainer = styled.View`
   padding: ${({ theme }) => theme.shape.padding + "px"};
   border-radius: 8px;
   gap: 12px;
-  box-shadow: ${({ theme }) => theme.shadows[0].web};
+  ${({ theme }) => theme.shadows[0] as any};
 `;
 
 const MessageContainer = styled.View`

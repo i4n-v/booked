@@ -14,7 +14,7 @@ import { FullPageLoading } from "@/components/Loading";
 import { StatusNotifier } from "@/components/Notifiers";
 import theme from "@/global/theme";
 
-export default function Setup() {
+export default function RootLayout() {
   const [fontLoaded] = useFonts({
     "Montserrat-Regular": require("../../assets/fonts/Montserrat-Regular.ttf"),
     "Montserrat-Medium": require("../../assets/fonts/Montserrat-Medium.ttf"),
@@ -43,14 +43,18 @@ export default function Setup() {
                     >
                       <StatusBar
                         style="light"
-                        backgroundColor={theme["light"].colors.primary?.[200]}
+                        backgroundColor={theme.light.colors.primary?.[200]}
                       />
                       <Slot />
                     </View>
                   ) : (
                     <>
                       <StatusBar style="light" />
-                      <SafeAreaView style={{ flex: 1 }}>
+                      <SafeAreaView
+                        style={{
+                          flex: 1,
+                        }}
+                      >
                         <Slot />
                       </SafeAreaView>
                     </>

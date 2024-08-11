@@ -27,7 +27,7 @@ const Title = styled.Text`
 
 const Subtitle = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
   color: ${({ theme }) => theme.colors.text?.[200]};
 `;
 

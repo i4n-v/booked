@@ -34,7 +34,7 @@ const SwitchSlide = styled.View<ISwitchSlideProps>`
   border-style: solid;
   border-color: ${({ theme, error }) => (error ? theme.colors.error?.[400] : theme.colors.secondary?.[300])};
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
-  box-shadow: ${({ theme }) => theme.shadows[0].web};
+  ${({ theme }) => theme.shadows[0] as any};
 `;
 
 export { SwitchContainer, LabelContainer, SwitchInput, SwitchSlide };

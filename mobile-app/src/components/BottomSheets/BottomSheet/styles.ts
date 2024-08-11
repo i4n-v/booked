@@ -14,7 +14,7 @@ const styles = () => {
     container: {
       backgroundColor: theme.colors.secondary?.[0],
       borderRadius: 12,
-      ...theme.shadows[0].mobile,
+      ...theme.shadows[0],
     },
     contentContainer: {
       backgroundColor: theme.colors.secondary?.[0],

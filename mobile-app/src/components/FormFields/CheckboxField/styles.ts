@@ -42,7 +42,7 @@ const CheckBoxInput = styled.View<ICheckBoxInputProps>`
 
 const CheckBoxInputLabel = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  font-size: ${({ theme }) => theme.typography.size.xss + "px"};
+  font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
   color: ${({ theme }) => theme.colors.secondary?.[600]};
 `;
 

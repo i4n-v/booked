@@ -24,8 +24,8 @@ const ButtonContainer = styled.TouchableOpacity<IButtonContainerProps>`
   border-width: ${({ variant }) => (variant === "outlined" ? "1px" : "0px")};
   border-style: solid;
   border-color: ${({ theme, colorScheme }) => (colorScheme ? theme.colors[colorScheme]?.[500] : theme.colors.secondary?.[400])};
-  box-shadow: ${({ theme, variant }) => (variant !== "outlined" ? theme.shadows[0].web : "none")};
   opacity: ${({ theme, disabled }) => (disabled ? theme.shape.opacity + "px" : 1)};
+  ${({ theme, variant }) => (variant !== "outlined" ? (theme.shadows[0] as any) : "")}
 `;
 
 const ButtonLabel = styled.Text<IButtonLabel>`
