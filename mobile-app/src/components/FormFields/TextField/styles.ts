@@ -8,7 +8,7 @@ const InputContainer = styled.View`
 `;
 
 interface ITextInputProps
-  extends Pick<ITextFieldProps, "leftIcon" | "rightIcon" | "password" | "textArea"> {
+  extends Pick<ITextFieldProps<any>, "leftIcon" | "rightIcon" | "password" | "textArea"> {
   focused: boolean;
   error: boolean;
 }
@@ -31,13 +31,14 @@ const TextInput = styled.TextInput<ITextInputProps>`
 
     if (focused) return theme.colors.primary?.[200];
 
-    return theme.colors.secondary?.[300];
+    return theme.colors.primary?.[50];
   }};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
+  border-radius: 4px;
   color: ${({ theme }) => theme.colors.text?.[600]};
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  background-color: ${({ theme }) => theme.colors.secondary?.[100]};
-  opacity: ${({ theme, editable }) => (editable ? theme.shape.opacity : 1)};
+  font-size: ${({ theme }) => theme.typography.size.sm + "px"};
+  background-color: ${({ theme }) => theme.colors.secondary?.[50]};
+  opacity: ${({ theme, editable }) => (editable ? 1 : theme.shape.opacity)};
 `;
 
 interface IInputIconProps {
@@ -47,9 +48,9 @@ interface IInputIconProps {
 
 const InputIconButton = styled(IconButton)<IInputIconProps>`
   position: absolute;
-  right: ${({ direction }) => (direction === "right" ? "6px" : "initial")};
-  left: ${({ direction }) => (direction === "left" ? "6px" : "initial")};
-  bottom: ${({ error }) => (error ? "34px" : "17px")};
+  right: ${({ direction }) => (direction === "right" ? "12px" : "initial")};
+  left: ${({ direction }) => (direction === "left" ? "12px" : "initial")};
+  bottom: ${({ error }) => (error ? "34px" : "14px")};
 `;
 
 export { InputContainer, TextInput, InputIconButton };

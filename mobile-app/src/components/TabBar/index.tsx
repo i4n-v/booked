@@ -1,13 +1,14 @@
 import React, { useRef } from "react";
 import { Container, Selection, TabList } from "./styles";
 import { ITabBarProps, ITabBarIcon, ITabRoute } from "./types";
-import theme from "@/global/theme";
 import { TouchableOpacity } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { useTheme } from "styled-components/native";
 
 const AnimatedSelection = Animated.createAnimatedComponent(Selection);
 
 export default function TabBar({ state, descriptors, navigation }: ITabBarProps) {
+  const theme = useTheme();
   const elementsXaxis = useRef<number[]>([]);
   const xAxis = useSharedValue(0);
 
@@ -51,7 +52,7 @@ export default function TabBar({ state, descriptors, navigation }: ITabBarProps)
 
           return (
             <TouchableOpacity
-              activeOpacity={0.7}
+              activeOpacity={theme.shape.opacity}
               onPress={() => {
                 handleNavigate(index);
                 onPress(route, isFocused);
@@ -67,7 +68,7 @@ export default function TabBar({ state, descriptors, navigation }: ITabBarProps)
                 }
               }}
             >
-              <Icon focused={isFocused} color={theme.light.colors.primary?.[200]!} size={32} />
+              <Icon focused={isFocused} color={theme.colors.primary?.[200]!} size={32} />
             </TouchableOpacity>
           );
         })}

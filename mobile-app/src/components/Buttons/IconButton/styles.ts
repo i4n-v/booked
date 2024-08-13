@@ -10,7 +10,7 @@ interface IIconButtonContainerProps {
 const IconButtonContainer = styled(TouchableOpacity)<IIconButtonContainerProps>`
   border-radius: 100px;
   align-self: flex-start;
-  background-color: ${({ theme, focused }) => (focused ? theme.colors.secondary?.[300] : "initial")};
+  background-color: ${({ theme, focused }) => (focused ? theme.colors.secondary?.[200] : "initial")};
   padding: ${({ size }) => size * 0.3 + "px"};
 `;
 

@@ -39,6 +39,7 @@ export default function RootLayout() {
                       style={{
                         flex: 1,
                         paddingTop: 50,
+                        backgroundColor: theme.light.colors.secondary?.[100],
                       }}
                     >
                       <StatusBar
@@ -53,6 +54,7 @@ export default function RootLayout() {
                       <SafeAreaView
                         style={{
                           flex: 1,
+                          backgroundColor: theme.light.colors.secondary?.[100],
                         }}
                       >
                         <Slot />

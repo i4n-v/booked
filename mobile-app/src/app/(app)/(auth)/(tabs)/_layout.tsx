@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router/tabs";
-import { MaterialIcons } from "@expo/vector-icons";
 import { TabBar } from "@/components";
 import { Account, Chat, Home, Library, Transfer } from "@/components/Icons";
 
@@ -7,7 +6,7 @@ export default function AppLayout() {
   return (
     <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: "Home",
           tabBarIcon: () => <Home />,
