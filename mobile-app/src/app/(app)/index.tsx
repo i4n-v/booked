@@ -1,5 +1,15 @@
 import React from "react";
-import { Description, DescriptionDetail, DescriptionWrapper, Form, Title, Wrapper } from "./styles";
+import {
+  Description,
+  DescriptionDetail,
+  DescriptionWrapper,
+  Form,
+  Logo,
+  PositionBottomDetail,
+  PositionTopDetail,
+  Title,
+  Wrapper,
+} from "./styles";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "styled-components/native";
@@ -9,6 +19,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MainButton } from "@/components/Buttons";
+import Animated, { SlideInLeft } from "react-native-reanimated";
+
+const logo = require("../../../assets/images/logo-dark.png");
 
 const validations = z
   .object({
@@ -24,7 +37,9 @@ const validations = z
 
 type IAuthCredentials = z.infer<typeof validations>;
 
-export default function index() {
+const AnimatedForm = Animated.createAnimatedComponent(Form);
+
+export default function SignIn() {
   const theme = useTheme();
 
   const { control, handleSubmit, watch } = useForm<IAuthCredentials>({
@@ -37,37 +52,32 @@ export default function index() {
 
   return (
     <Wrapper>
-      <Form>
+      <PositionTopDetail />
+      <PositionBottomDetail />
+      <Logo source={logo} />
+      <AnimatedForm entering={SlideInLeft}>
         <Title>Login</Title>
         <TextField
           control={control}
           name="user"
-          label="Usuário"
-          placeholder="Usuário"
+          label="Usuário/E-mail"
           rightIcon={{
             icon: MaterialIcons,
             name: "person",
           }}
           required
         />
-        <TextField
-          control={control}
-          name="password"
-          label="Senha"
-          placeholder="Senha"
-          password
-          required
-        />
+        <TextField control={control} name="password" label="Senha" password required />
         <MainButton>Entrar</MainButton>
         <DescriptionWrapper>
           <Description>Não possui uma conta?</Description>
           <Link href="/(unauth)/signup">
             <TouchableOpacity activeOpacity={theme.shape.opacity}>
-              <DescriptionDetail>cadastre-se agora.</DescriptionDetail>
+              <DescriptionDetail>Cadastre-se agora.</DescriptionDetail>
             </TouchableOpacity>
           </Link>
         </DescriptionWrapper>
-      </Form>
+      </AnimatedForm>
     </Wrapper>
   );
 }
