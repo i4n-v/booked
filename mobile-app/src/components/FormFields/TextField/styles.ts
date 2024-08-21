@@ -15,7 +15,7 @@ interface ITextInputProps
 
 const TextInput = styled.TextInput<ITextInputProps>`
   height: ${({ textArea, numberOfLines }) => {
-    if (!textArea) return "64px";
+    if (!textArea) return "44px";
 
     const initialHeight = 20;
     const height = numberOfLines ? numberOfLines * initialHeight : 10 * initialHeight;
@@ -48,9 +48,9 @@ interface IInputIconProps {
 
 const InputIconButton = styled(IconButton)<IInputIconProps>`
   position: absolute;
-  right: ${({ direction }) => (direction === "right" ? "12px" : "initial")};
-  left: ${({ direction }) => (direction === "left" ? "12px" : "initial")};
-  bottom: ${({ error }) => (error ? "34px" : "14px")};
+  right: ${({ direction }) => (direction === "right" ? "8px" : "initial")};
+  left: ${({ direction }) => (direction === "left" ? "8px" : "initial")};
+  bottom: ${({ error }) => (error ? "26px" : "3px")};
 `;
 
 export { InputContainer, TextInput, InputIconButton };

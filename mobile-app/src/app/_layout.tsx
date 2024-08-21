@@ -38,7 +38,6 @@ export default function RootLayout() {
                     <View
                       style={{
                         flex: 1,
-                        paddingTop: 50,
                         backgroundColor: theme.light.colors.secondary?.[100],
                       }}
                     >

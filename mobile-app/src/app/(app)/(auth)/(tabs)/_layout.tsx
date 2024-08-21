@@ -1,20 +1,23 @@
 import { Tabs } from "expo-router/tabs";
-import { TabBar } from "@/components";
+import { TabBar } from "@/components/Navigation";
 import { Account, Chat, Home, Library, Transfer } from "@/components/Icons";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { Image } from "react-native";
 import { ProfileIcon } from "./styles";
-
-const userPath = require("../../../../../assets/images/user.jpg");
+import { SearchHeader } from "@/components/Navigation/Headers";
 
 export default function AppLayout() {
   const { user } = useContext(AuthContext)!;
 
   return (
-    <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} />}>
+    <Tabs
+      tabBar={(props) => <TabBar {...props} />}
+      screenOptions={{
+        header: (props) => <SearchHeader {...props} />,
+      }}
+    >
       <Tabs.Screen
-        name="home"
+        name="home/index"
         options={{
           title: "Home",
           tabBarIcon: () => <Home />,

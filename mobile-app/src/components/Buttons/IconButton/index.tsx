@@ -11,6 +11,8 @@ export default function IconButton<T extends ExpoVectorIcon>({
   activeOpacity = 0.7,
   style,
   disabled,
+  focusColor,
+  isFocused,
   onPress,
 }: IIconButtonProps<T>) {
   const [focused, setFocused] = useState(false);
@@ -19,16 +21,17 @@ export default function IconButton<T extends ExpoVectorIcon>({
     if (onPress) setFocused((focused) => !focused);
   }, []);
 
-  const Icon = icon as unknown;
+  const Icon = icon as any;
 
   const isIcon = useCallback((value: any): value is ExpoVectorIcon => {
-    return !!value;
+    return !!value && !!name;
   }, []);
 
   return (
     <IconButtonContainer
       size={size}
-      focused={focused}
+      focused={focused || isFocused}
+      focusColor={focusColor}
       style={style}
       onPressIn={toggleFocus}
       onPressOut={toggleFocus}
@@ -36,7 +39,7 @@ export default function IconButton<T extends ExpoVectorIcon>({
       activeOpacity={activeOpacity}
       disabled={disabled}
     >
-      {isIcon(Icon) && <Icon name={name} color={color} size={size} />}
+      {isIcon(Icon) ? <Icon name={name} color={color} size={size} /> : Icon}
     </IconButtonContainer>
   );
 }
