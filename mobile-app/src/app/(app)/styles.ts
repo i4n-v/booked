@@ -17,7 +17,7 @@ const Form = styled(View)`
   padding: 40px 20px;
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
-  gap: 12px;
+  gap: 20px;
 `;
 
 const Title = styled(Text)`
@@ -63,7 +63,7 @@ const Logo = styled(Image)`
 `;
 
 const Button = styled(MainButton)`
-  margin-top: 12px;
+  margin: 12px 0 28px 0;
 `;
 
 export {

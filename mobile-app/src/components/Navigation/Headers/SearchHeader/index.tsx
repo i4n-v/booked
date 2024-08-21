@@ -9,12 +9,17 @@ import { useForm } from "react-hook-form";
 import { IFilterBy } from "./types";
 import { useTheme } from "styled-components/native";
 import Animated, { EntryExitTransition, FadeIn, FadeOut } from "react-native-reanimated";
+import { z } from "zod";
 
 const logo = require("../../../../../assets/images/logo-dark.png");
-
 const windowWidth = Dimensions.get("window").width - 128 - 16;
+const AnimatedWraper = Animated.createAnimatedComponent(Wrapper);
 
-const AnimatedWrapper = Animated.createAnimatedComponent(Wrapper);
+const validations = z.object({
+  filter: z.string(),
+});
+
+type ISearchFilter = z.infer<typeof validations>;
 
 export default function SearchHeader({ layout, options, route, navigation }: BottomTabHeaderProps) {
   const [search, setSearch] = useState(false);
@@ -22,7 +27,11 @@ export default function SearchHeader({ layout, options, route, navigation }: Bot
   const theme = useTheme();
   const layoutAnimation = EntryExitTransition.entering(FadeIn).exiting(FadeOut);
 
-  const { control } = useForm();
+  const { control } = useForm<ISearchFilter>({
+    defaultValues: {
+      filter: "",
+    },
+  });
 
   function toggleFilterType() {
     setFilterBy((filterBy) => (filterBy === "book" ? "author" : "book"));
@@ -35,7 +44,7 @@ export default function SearchHeader({ layout, options, route, navigation }: Bot
   return (
     <HeaderContainer>
       {search ? (
-        <AnimatedWrapper layout={layoutAnimation}>
+        <AnimatedWraper layout={layoutAnimation}>
           <IconButton<any>
             icon={<ArrowBack />}
             size={0}
@@ -63,12 +72,12 @@ export default function SearchHeader({ layout, options, route, navigation }: Bot
             focusColor={theme.colors.primary?.[200]}
             onPress={toggleFilterType}
           />
-        </AnimatedWrapper>
+        </AnimatedWraper>
       ) : (
-        <AnimatedWrapper layout={layoutAnimation}>
+        <AnimatedWraper layout={layoutAnimation}>
           <Image source={logo} />
           <IconButton<any> icon={<Search />} onPress={toggleSearch} />
-        </AnimatedWrapper>
+        </AnimatedWraper>
       )}
     </HeaderContainer>
   );
