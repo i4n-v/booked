@@ -85,7 +85,7 @@ function StatusNotifier() {
             <IconButton
               style={{ alignSelf: "flex-start" }}
               icon={Ionicons}
-              name={icons[notifierStates.status]}
+              name={icons[notifierStates.status] as any}
               color={theme.colors[notifierStates.status][900]}
               size={20}
             />

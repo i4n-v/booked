@@ -1,6 +1,6 @@
 import { createNumberMask } from "../utils/mask";
 
-const RegexOf = {
+const fieldsRegex = {
   cpf: [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/],
   rg: [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/],
   cep: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],
@@ -14,4 +14,8 @@ const RegexOf = {
   }),
 };
 
-export default RegexOf;
+const matchRegex = {
+  password: /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/,
+};
+
+export { fieldsRegex, matchRegex };

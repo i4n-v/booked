@@ -1,3 +1,4 @@
+import { MainButton } from "@/components/Buttons";
 import { BottomDetail, TopDetail } from "@/components/Icons";
 import { Image, Text, View } from "react-native";
 import styled from "styled-components/native";
@@ -61,7 +62,9 @@ const Logo = styled(Image)`
   left: 12px;
 `;
 
-SiginMainButton;
+const Button = styled(MainButton)`
+  margin-top: 12px;
+`;
 
 export {
   Wrapper,
@@ -73,4 +76,5 @@ export {
   PositionBottomDetail,
   PositionTopDetail,
   Logo,
+  Button,
 };

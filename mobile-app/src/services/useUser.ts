@@ -13,6 +13,7 @@ export default function useUser() {
       const result = await api.get<IUser>(`${DPath}/${id}`);
       return result.data;
     } catch (error: any) {
+      console.log("Real", error);
       throw new Error(error.response?.data?.message);
     }
   }
@@ -31,6 +32,7 @@ export default function useUser() {
       const result = await api.post<ResponseMessage>(DPath, data);
       return result.data;
     } catch (error: any) {
+      console.log(error);
       throw new Error(error.response?.data?.message);
     }
   }

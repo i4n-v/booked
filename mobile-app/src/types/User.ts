@@ -6,7 +6,7 @@ interface UserCommom {
 
 interface UserCreate extends UserCommom {
   name: string;
-  birth_date: Date;
+  birth_date: string;
   password: string;
   confirm_password: string;
 }

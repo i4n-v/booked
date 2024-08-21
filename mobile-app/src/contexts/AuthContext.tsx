@@ -1,16 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ReactNode, createContext, useCallback, useContext, useState } from "react";
-import { useQuery } from "react-query";
-// import { useAuth } from "@/services";
+import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { useAuth } from "@/services";
+import IUser from "@/types/User";
+import useAsyncStorage from "@/hooks/useAsyncStorage";
+import { router } from "expo-router";
 
 interface IAuthContextProps {
-  user: any;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
+  user: IUser | null;
+  setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
-  loged: boolean;
-  setLoged: React.Dispatch<React.SetStateAction<boolean>>;
   handleLogout(): void;
 }
 
@@ -21,46 +22,42 @@ interface IAuthContextProviderProps {
 const AuthContext = createContext<IAuthContextProps | null>(null);
 
 function AuthProvider({ children }: IAuthContextProviderProps) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loged, setLoged] = useState(false);
-  // const { validateToken } = useAuth();
+  const [user, setUser] = useAsyncStorage<IUser | null>("user", null);
+  const [token, setToken] = useAsyncStorage<string | null>("token", null);
   const { loading } = useContext(GlobalContext)!;
 
-  const handleLogout = useCallback(async () => {
-    await AsyncStorage.clear();
-    setLoged(false);
-    setUser(null);
-    setToken(null);
-  }, []);
+  const { verify, logout } = useAuth();
+  const logoutMutation = useMutation(logout);
+
+  async function handleLogout() {
+    logoutMutation.mutate(undefined, {
+      onSettled() {
+        setToken(null);
+        setUser(null);
+        router.navigate("/");
+      },
+    });
+  }
 
   useQuery(
     "validate-token",
     () => {
       loading({ isLoading: true });
-      // return validateToken();
+      return verify();
     },
     {
-      enabled: false,
-      onSuccess: async (response: any) => {
+      enabled: !!token,
+      onSuccess(response) {
         if (!response.valid) {
-          setLoged(false);
-        }
-      },
-      onError: () => {
-        setLoged(false);
-        loading({ isLoading: false });
-      },
-      onSettled: async (response) => {
-        const user = await AsyncStorage.getItem("user");
-        const token = await AsyncStorage.getItem("token");
-
-        if (user && token && response?.valid) {
-          setUser(JSON.parse(user));
-          setToken(JSON.parse(token));
-          setLoged(true);
+          return handleLogout();
         }
 
+        router.navigate("/home");
+      },
+      onError() {
+        handleLogout();
+      },
+      onSettled() {
         loading({
           isLoading: false,
         });
@@ -75,8 +72,6 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
         setUser,
         token,
         setToken,
-        loged,
-        setLoged,
         handleLogout,
       }}
     >

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   Description,
   DescriptionDetail,
   DescriptionWrapper,
@@ -10,44 +11,87 @@ import {
   Title,
   Wrapper,
 } from "../styles";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "styled-components/native";
 import { DateField, TextField } from "@/components/FormFields";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MainButton } from "@/components/Buttons";
 import Animated, { SlideInLeft } from "react-native-reanimated";
+import { useUser } from "@/services";
+import { useMutation } from "react-query";
+import IUser from "@/types/User";
+import { useNotifier } from "@/hooks";
+import messages from "@/config/messages";
+import { matchRegex } from "@/config/regex";
+import { format } from "date-fns";
 
 const logo = require("../../../../assets/images/logo-dark.png");
 
 const validations = z
   .object({
-    user: z.string({ required_error: "Seu nome de usuário ou e-mail deve ser informado." }),
-    password: z.string({
-      required_error: "Sua senha deve ser informada.",
+    name: z.string({ required_error: messages.NAME_REQUIRED }),
+    birth_date: z.date({
+      required_error: messages.DATE_REQUIRED,
     }),
+    email: z
+      .string({
+        required_error: messages.EMAIL_REQUIRED,
+      })
+      .email(messages.EMAIL_INVALID),
+    password: z
+      .string({
+        required_error: messages.PASSWORD_REQUIRED,
+      })
+      .regex(matchRegex.password, messages.PASSWORD_SHAPE),
+    confirm_password: z
+      .string({
+        required_error: messages.PASSWORD_CONFIRMATION_REQUIRED,
+      })
+      .regex(matchRegex.password, messages.PASSWORD_SHAPE),
   })
-  .required({
-    user: true,
-    password: true,
+  .required()
+  .superRefine(({ password, confirm_password }, context) => {
+    if (password !== confirm_password) {
+      context.addIssue({
+        code: "custom",
+        message: messages.PASSWORD_CONFIRMATION_MATCH,
+        path: ["confirmPassword"],
+      });
+    }
   });
 
-type IAuthCredentials = z.infer<typeof validations>;
+type IRegister = z.infer<typeof validations>;
 
 const AnimatedForm = Animated.createAnimatedComponent(Form);
 
 export default function SignUp() {
   const theme = useTheme();
+  const { openNotification } = useNotifier();
+  const { createUser } = useUser();
 
-  const { control, handleSubmit, watch } = useForm<IAuthCredentials>({
+  const postUserMutation = useMutation(createUser);
+
+  const { control, handleSubmit } = useForm<IRegister>({
     resolver: zodResolver(validations),
-    defaultValues: {
-      user: "",
-      password: "",
-    },
+  });
+
+  const onSubmit = handleSubmit((values) => {
+    const data: IUser<"CREATE"> = {
+      ...values,
+      birth_date: format(values.birth_date, "yyyy-MM-dd"),
+    };
+
+    postUserMutation.mutate(data, {
+      onSuccess(response) {
+        router.navigate("/");
+        openNotification({ status: "success", message: response.message });
+      },
+      onError(error: any) {
+        openNotification({ status: "error", message: error.message });
+      },
+    });
   });
 
   return (
@@ -76,7 +120,9 @@ export default function SignUp() {
           password
           required
         />
-        <MainButton>Cadastrar</MainButton>
+        <Button loading={postUserMutation.isLoading} onPress={onSubmit}>
+          Cadastrar
+        </Button>
         <DescriptionWrapper>
           <Description>Já possui uma conta?</Description>
           <Link href="/">

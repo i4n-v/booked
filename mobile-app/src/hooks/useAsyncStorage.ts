@@ -1,16 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-export default function useAsyncStorage<T = any>(key: string, initialValue?: T) {
-  const [storedValue, setStoredValue] = useState<T>();
+type IAsyncStorageSetStateValue<T> = T | ((value: T) => T);
+type IAsyncStorageSetState<T> = (value: IAsyncStorageSetStateValue<T>) => Promise<void>;
+type IAsyncStorageReturn<T> = [T, IAsyncStorageSetState<T>];
 
-  async function getStoredValue(key: string, initialValue?: T) {
+export default function useAsyncStorage<T>(key: string, initialValue: T): IAsyncStorageReturn<T> {
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
+
+  async function getStoredValue(key: string, initialValue: T) {
     try {
       const item = await AsyncStorage.getItem(key);
       const value = item ? JSON.parse(item) : initialValue;
       setStoredValue(value);
     } catch (error) {
-      console.log(error);
       setStoredValue(initialValue);
     }
   }
@@ -19,9 +22,14 @@ export default function useAsyncStorage<T = any>(key: string, initialValue?: T) 
     getStoredValue(key, initialValue);
   }, [key, initialValue]);
 
-  const setValue = async (value: T) => {
+  const setValue: IAsyncStorageSetState<T> = async (value) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      let valueToStore = value;
+
+      if (value instanceof Function) {
+        valueToStore = value(storedValue);
+      }
+
       setStoredValue(valueToStore);
       await AsyncStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {

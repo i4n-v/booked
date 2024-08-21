@@ -9,9 +9,9 @@ interface ILoadingConfig {
 interface INotifierStates {
   status: "error" | "info" | "success" | "warning";
   message: string;
-  noTimeout: boolean;
-  duration: number;
-  callback(): void;
+  noTimeout?: boolean;
+  duration?: number;
+  callback?(): void;
 }
 
 interface IGlobalContextProps {

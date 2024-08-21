@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import LottieView from "lottie-react-native";
 import { GlobalContext } from "../../../contexts/GlobalContext";
-import heartBeat from "../../../animations/heart-beat.json";
+import bookLoading from "../../../animations/book-loading.json";
 import { LoadingContainer, LoadingMessage } from "./styles";
 
 function FullPageLoading() {
@@ -15,7 +15,7 @@ function FullPageLoading() {
     <LoadingContainer opacity={opacity}>
       <LottieView
         autoPlay
-        source={heartBeat}
+        source={bookLoading}
         style={{
           width: 300,
           height: 300,
