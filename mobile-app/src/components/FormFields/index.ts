@@ -7,6 +7,7 @@ import DateField from "./DateField";
 import SelectField from "./SelectField";
 import SwitchField from "./SwitchField";
 import SliderField from "./SliderField";
+import RatingField from "./RatingField";
 
 export {
   TextField,
@@ -18,4 +19,5 @@ export {
   SwitchField,
   PaginatedAutocompleteField,
   SliderField,
+  RatingField,
 };

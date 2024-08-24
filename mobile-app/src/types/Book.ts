@@ -3,7 +3,7 @@ import { ICategory } from "./Category";
 import IUser from "./User";
 
 type Book = {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   price: number;

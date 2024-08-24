@@ -113,9 +113,12 @@ class BookRepository {
       limit,
       offset: (page - 1) * limit,
       where: options,
-      distinct: true,
       subQuery: false,
-      order: [[sequelizeConnection.literal('rating'), 'DESC']],
+      order: [
+        [sequelizeConnection.literal('rating'), 'DESC'],
+        [sequelizeConnection.literal('"createdAt"'), 'DESC'],
+        [sequelizeConnection.literal('description'), 'ASC'],
+      ],
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [
@@ -165,6 +168,23 @@ class BookRepository {
             `),
             'wished',
           ],
+          [
+            sequelizeConnection.literal(`(
+              SELECT
+                JSON_AGG(
+                  JSON_BUILD_OBJECT(
+                    'id',
+                    c.id,
+                    'name',
+                    c.name
+                  )
+                )
+              FROM "Categories" AS c
+                INNER JOIN "BookCategories" AS bc ON bc.category_id = c.id
+              WHERE bc.book_id = "Book".id
+            )`),
+            'categories',
+          ],
         ],
       },
       include: [
@@ -172,12 +192,6 @@ class BookRepository {
           model: sequelizeConnection.model('User'),
           as: 'user',
           attributes: ['id', 'name', 'user_name'],
-        },
-        {
-          model: sequelizeConnection.model('Category'),
-          as: 'categories',
-          attributes: ['id', 'name'],
-          through: { attributes: [] },
         },
         {
           model: sequelizeConnection.model('User'),

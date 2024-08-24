@@ -13,7 +13,6 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { FullPageLoading } from "@/components/Loading";
 import { StatusNotifier } from "@/components/Notifiers";
 import theme from "@/global/theme";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RootLayout() {
   const [fontLoaded] = useFonts({

@@ -4,7 +4,7 @@ const shadowColor = "#000000";
 
 const shadows: IShadow = {
   0: {
-    shadowColor: "#000",
+    shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,

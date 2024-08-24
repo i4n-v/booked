@@ -1,13 +1,15 @@
+import { ReactElement } from "react";
 import { StyleProp, ViewStyle } from "react-native";
-import { SkeletonFlexibleCard } from "./Templates/SkeletonFlexibleCard";
 
-interface ISkeletonTemplates {
-  "flex-card": typeof SkeletonFlexibleCard;
-}
+type ISketonTemplateTypes = "book-card";
+
+type ISkeletonTemplates = {
+  [key in ISketonTemplateTypes]: (props: any) => ReactElement<any, any>;
+};
 
 interface ISkeletonProps {
   quantity?: number;
-  template: keyof ISkeletonTemplates;
+  template: ISketonTemplateTypes;
   style?: StyleProp<ViewStyle>;
 }
 

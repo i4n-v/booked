@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
-import { SkeletonFlexibleCard } from "./Templates/SkeletonFlexibleCard";
+import SkeletonBookCard from "./Templates/SkeletonBookCard";
 import { ISkeletonProps, ISkeletonTemplates } from "./types";
 
 const templates: ISkeletonTemplates = {
-  "flex-card": SkeletonFlexibleCard,
+  "book-card": SkeletonBookCard,
 };
 
-export default function Skeleton({ quantity = 1, template = "flex-card", style }: ISkeletonProps) {
+export default function Skeleton({ quantity = 1, template, style }: ISkeletonProps) {
   const skeletons = useMemo(() => {
     const generator = Array.from({ length: quantity });
     const SkeletonStructure = templates[template];

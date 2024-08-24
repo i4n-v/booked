@@ -1,5 +1,3 @@
-import FlexibleCard from "./FlexibleCard";
-import Accordion from "./Accordion";
-import CardAccordion from "./CardAccordion";
+import BookCard from "./BookCard";
 
-export { FlexibleCard, Accordion, CardAccordion };
+export { BookCard };
