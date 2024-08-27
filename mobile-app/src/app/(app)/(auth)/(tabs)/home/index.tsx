@@ -13,7 +13,7 @@ const screenWidth = Dimensions.get("window").width;
 
 function Home() {
   const [page, setPage] = useState<number>(2);
-  const [totalPages, setTotalPages] = useState<number>(2);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [books, setBooks] = useState<IBookExplore[]>([]);
 
   const { getBooks } = useBook();
@@ -127,7 +127,10 @@ function Home() {
 
         if (totalPages < page) {
           return (
-            <EmptyComponent style={{ width: screenWidth }} emptyMessage="Não há mais livros." />
+            <EmptyComponent
+              style={{ width: screenWidth }}
+              emptyMessage="Nenhum livro encontrado."
+            />
           );
         }
 

@@ -1,5 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ReactNode, createContext, useCallback, useContext, useState } from "react";
+import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/services";
@@ -39,31 +38,23 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
     });
   }
 
-  useQuery(
-    "validate-token",
-    () => {
-      loading({ isLoading: true });
-      return verify();
-    },
-    {
-      enabled: !!token,
-      onSuccess(response) {
-        if (!response.valid) {
-          return handleLogout();
-        }
+  useQuery("validate-token", () => verify(), {
+    onSuccess(response) {
+      if (!response.valid) {
+        return handleLogout();
+      }
 
-        router.navigate("/home");
-      },
-      onError() {
-        handleLogout();
-      },
-      onSettled() {
-        loading({
-          isLoading: false,
-        });
-      },
+      router.navigate("/home");
     },
-  );
+    onError() {
+      handleLogout();
+    },
+    onSettled() {
+      loading({
+        isLoading: false,
+      });
+    },
+  });
 
   return (
     <AuthContext.Provider

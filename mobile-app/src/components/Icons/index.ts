@@ -12,6 +12,7 @@ import StarHalf from "./StarHalf";
 import Star from "./Star";
 import OutlinedStar from "./OutlinedStar";
 import Favorite from "./Favorite";
+import Filter from "./Filter";
 
 export {
   Transfer,
@@ -28,4 +29,5 @@ export {
   Star,
   OutlinedStar,
   Favorite,
+  Filter,
 };
