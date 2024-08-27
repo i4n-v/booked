@@ -15,9 +15,18 @@ interface IChatBody extends ChatCreateDto {
 class ChatController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const { query, auth } = request;
+      const {
+        query,
+        auth,
+        params: { id },
+      } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
+      if (id) {
+        const chats = await ChatRepository.findById(id);
+
+        return response.json(chats);
+      }
 
       const loggedUserChatsLiteral = `(
         SELECT

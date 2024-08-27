@@ -16,6 +16,15 @@ export default function useChat() {
     }
   }
 
+  async function getChat({id,...params}: Params): Promise<IChat> {
+    try {
+      const response = await api.get(`${DPath}/${id}`, { params });
+      return response.data;
+    } catch (error: any) {
+      return error.response.data.message;
+    }
+  }
+
   async function getMessages(chatid: string, params: Params): Promise<IWrapper<IMessage>> {
     try {
       const response = await api.get(`${DPath}/${chatid}/messages`, { params });
@@ -43,6 +52,7 @@ export default function useChat() {
   }
 
   return {
+    getChat,
     getChats,
     getMessages,
     createGroup,

@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ProfileIcon } from "./styles";
 import { SearchHeader } from "@/components/Navigation/Headers";
+import { router } from "expo-router";
 
 export default function AppLayout() {
   const { user } = useContext(AuthContext)!;
@@ -43,6 +44,12 @@ export default function AppLayout() {
           title: "Menssagens",
           tabBarIcon: () => <Chat />,
         }}
+        listeners={() => ({
+          tabPress: (e) => {
+            e.preventDefault()
+            router.push("/chat") /// your screen without Tab bar
+          },
+        })}
       />
       <Tabs.Screen
         name="profile"
