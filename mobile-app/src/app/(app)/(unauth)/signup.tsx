@@ -104,13 +104,7 @@ export default function SignUp() {
           Cadastre<DescriptionDetail>-</DescriptionDetail>se
         </Title>
         <TextField control={control} name="name" label="Nome" required />
-        <DateField
-          control={control}
-          name="birth_date"
-          label="Data de nascimento"
-          placeholder="dd/mm/yyyy"
-          required
-        />
+        <DateField control={control} name="birth_date" label="Data de nascimento" required />
         <TextField control={control} name="email" label="E-mail" required />
         <TextField control={control} name="password" label="Senha" password required />
         <TextField

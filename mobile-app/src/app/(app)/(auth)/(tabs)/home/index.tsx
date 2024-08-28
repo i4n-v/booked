@@ -7,14 +7,14 @@ import { Skeleton } from "@/components/Loading";
 import { useState } from "react";
 import { EmptyComponent, RefreshControl } from "@/components";
 import { Dimensions, SectionList } from "react-native";
-import { IBookExplore } from "./types";
+import IBook from "@/types/Book";
 
 const screenWidth = Dimensions.get("window").width;
 
 function Home() {
   const [page, setPage] = useState<number>(2);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [books, setBooks] = useState<IBookExplore[]>([]);
+  const [books, setBooks] = useState<IBook[]>([]);
 
   const { getBooks } = useBook();
 
@@ -26,18 +26,7 @@ function Home() {
         setTotalPages(response.totalPages);
       }
 
-      setBooks((books) => {
-        let newItems: IBookExplore[] = [];
-
-        if (page === 2) {
-          newItems = response.items;
-          newItems[0].first = true;
-        } else {
-          newItems = [...books, ...response.items];
-        }
-
-        return newItems;
-      });
+      setBooks((books) => (page === 2 ? response.items : [...books, ...response.items]));
     },
   });
 
@@ -108,9 +97,6 @@ function Home() {
             rating={item.rating}
             ratingQuantity={item.total_users_rating}
             onPress={() => {}}
-            style={{
-              marginLeft: item.first ? -32 : 0,
-            }}
           />
         );
       }}
@@ -158,11 +144,12 @@ function Home() {
         }
       }}
       contentContainerStyle={{
-        gap: 16,
-        paddingHorizontal: 16,
-        paddingBottom: 96,
         flexDirection: "row",
         flexWrap: "wrap",
+        justifyContent: "space-between",
+        rowGap: 16,
+        paddingHorizontal: 16,
+        paddingBottom: 96,
       }}
     />
   );

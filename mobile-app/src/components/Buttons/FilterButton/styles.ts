@@ -1,11 +1,18 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
-const ButtonGradient = styled(LinearGradient)`
+const ButtonContainer = styled(TouchableOpacity)`
   position: absolute;
-  bottom: 48px;
+  bottom: 124px;
   right: 16px;
-  padding: 8px;
+  z-index: 1;
+  ${({ theme }) => theme.shadows[0] as any};
 `;
 
-export { ButtonGradient };
+const ButtonGradient = styled(LinearGradient)`
+  padding: 12px;
+  border-radius: 100px;
+`;
+
+export { ButtonGradient, ButtonContainer };

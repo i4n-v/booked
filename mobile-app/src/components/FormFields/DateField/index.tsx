@@ -16,7 +16,7 @@ function DateField({
   maximumDate,
   minimumDate,
   label,
-  placeholder,
+  placeholder = "dd/mm/yyyy",
   required,
   disabled,
   customOnChange,
@@ -46,7 +46,7 @@ function DateField({
   };
 
   const icons: IDateIcons = {
-    date: "date-range",
+    date: "today",
     time: "access-time",
   };
 

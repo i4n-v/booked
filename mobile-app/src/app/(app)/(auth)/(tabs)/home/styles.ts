@@ -14,7 +14,8 @@ const Detail = styled.Text`
 const SkeletonContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 16px;
+  justify-content: space-between;
+  row-gap: 16px;
 `;
 
 const Divider = styled.View`

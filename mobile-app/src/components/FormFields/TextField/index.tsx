@@ -73,7 +73,7 @@ function TextField<L extends ExpoVectorIcon, R extends ExpoVectorIcon = L>({
           inputProps?.style,
         ]}
         numberOfLines={numberOfLines}
-        value={value || field.value || undefined}
+        value={value ?? field.value ?? undefined}
         placeholder={placeholder}
         placeholderTextColor={theme.colors.secondary?.[400]}
         selectionColor={selectionColor || theme.colors.primary?.[0]}

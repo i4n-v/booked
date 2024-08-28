@@ -8,7 +8,6 @@ type BookCardProps = {
   rating: number;
   ratingQuantity: number;
   image?: string | null;
-  style?: ViewStyle;
   onPress?: () => void;
 };
 
