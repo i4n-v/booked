@@ -25,7 +25,7 @@ import { useAuth } from "@/services";
 import { useMutation } from "react-query";
 import { AuthContext } from "@/contexts/AuthContext";
 
-const logo = require("../../../assets/images/logo-dark.png");
+const logo = require("../../../../assets/images/logo-dark.png");
 
 const validations = z
   .object({
@@ -93,7 +93,7 @@ export default function SignIn() {
         </Button>
         <DescriptionWrapper>
           <Description>Não possui uma conta?</Description>
-          <Link href="/(unauth)/signup">
+          <Link href="/signup">
             <TouchableOpacity activeOpacity={theme.shape.opacity}>
               <DescriptionDetail>Cadastre-se agora.</DescriptionDetail>
             </TouchableOpacity>

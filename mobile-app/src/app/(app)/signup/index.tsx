@@ -10,7 +10,7 @@ import {
   PositionTopDetail,
   Title,
   Wrapper,
-} from "../styles";
+} from "../sigin/styles";
 import { Link, router } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "styled-components/native";
