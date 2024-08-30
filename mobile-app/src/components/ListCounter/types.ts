@@ -1,7 +1,6 @@
 interface ICounterProps {
   title?: string;
-  page: number;
-  limit: number;
+  count: number;
   total: number;
 }
 

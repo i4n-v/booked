@@ -1,5 +1,3 @@
-import { ViewStyle } from "react-native";
-
 type BookCardProps = {
   title: string;
   author: string;

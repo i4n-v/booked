@@ -19,7 +19,7 @@ interface UserLogin {
 interface User extends UserCommom {
   name: string;
   birth_date: Date | string;
-  id?: string;
+  id: string;
   user_name: string;
   photo_url?: string;
   description?: string;

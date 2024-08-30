@@ -153,8 +153,7 @@ export default function Books() {
       <FilterButton onPress={handleOpenFilter} />
       <ListCounter
         title="Livros encontrados..."
-        page={page}
-        limit={10}
+        count={books.length}
         total={booksQuery.data?.totalItems ?? 0}
       />
       <FlatList

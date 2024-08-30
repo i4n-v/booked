@@ -1,58 +1,111 @@
-import { BookCard } from "@/components/Cards";
 import { FlatList } from "@/components/Lists";
-import { useBook } from "@/services";
-import { useQuery } from "react-query";
+import { useFollow, useUser } from "@/services";
+import { useMutation, useQuery } from "react-query";
 import { Skeleton } from "@/components/Loading";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListCounter, RefreshControl } from "@/components";
-import IBook from "@/types/Book";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import IUser from "@/types/User";
+import { UserCard } from "@/components/Cards";
+import { useNotifier } from "@/hooks";
 
 export default function Users() {
-  // const [page, setPage] = useState<number>(1);
-  // const [totalPages, setTotalPages] = useState<number>(1);
-  // const [books, setBooks] = useState<IBook[]>([]);
+  const { openNotification } = useNotifier();
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const { searchFilter } = useContext(GlobalContext)!;
 
-  // const { getBooks } = useBook();
+  useEffect(() => {
+    setPage(1);
+  }, [searchFilter]);
 
-  // const booksQuery = useQuery(["books", page], () => getBooks({ page, limit: 10 }), {
-  //   onSuccess(response) {
-  //     if (page === 1) {
-  //       setTotalPages(response.totalPages);
-  //     }
+  const { getUsers } = useUser();
+  const { followUser, unfollowUser } = useFollow();
 
-  //     setBooks((books) => (page === 1 ? response.items : [...books, ...response.items]));
-  //   },
-  // });
+  const followMutation = useMutation(followUser);
+  const unfollowMutation = useMutation(unfollowUser);
+
+  const usersQuery = useQuery(
+    ["users", page, searchFilter],
+    () =>
+      getUsers({
+        page,
+        limit: 10,
+        name: searchFilter,
+      }),
+    {
+      onSuccess(response) {
+        if (page === 1) {
+          setTotalPages(response.totalPages);
+        }
+
+        setUsers((users) => (page === 1 ? response.items : [...users, ...response.items]));
+      },
+    },
+  );
+
+  function toggleFollowUser(user: IUser, index: number) {
+    if (user.followed) {
+      unfollowMutation.mutate(user.id, {
+        onSuccess() {
+          setUsers((users) => {
+            const newUsers = [...users];
+            newUsers[index].followed = false;
+            return newUsers;
+          });
+        },
+        onError(error: any) {
+          openNotification({ status: "error", message: error.message });
+        },
+      });
+    } else {
+      followMutation.mutate(user.id, {
+        onSuccess() {
+          setUsers((users) => {
+            const newUsers = [...users];
+            newUsers[index].followed = true;
+            return newUsers;
+          });
+        },
+        onError(error: any) {
+          openNotification({ status: "error", message: error.message });
+        },
+      });
+    }
+  }
 
   return (
     <>
-      <ListCounter title="Usuários encontrados..." page={1} limit={10} total={0} />
-      {/* <FlatList
-        data={books}
-        loading={booksQuery.isFetching}
-        numColumns={2}
+      <ListCounter
+        title="Usuários encontrados..."
+        count={users.length}
+        total={usersQuery.data?.totalItems ?? 0}
+      />
+      <FlatList
+        data={users}
+        loading={usersQuery.isFetching}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <BookCard
-            title={item.name}
-            author={item.user.name}
-            // image={item.photo_url}
-            wished={item.wished}
-            price={item.price}
-            rating={item.rating}
-            ratingQuantity={item.total_users_rating}
+        renderItem={({ item, index }) => (
+          <UserCard
+            name={item.name}
+            userName={item.user_name}
+            isFollowing={item.followed}
+            image={item.photo_url}
+            onPress={() => {}}
+            onFollow={() => toggleFollowUser(item, index)}
           />
         )}
         emptyMessage="Nenhum livro encontrado."
-        ListFooterComponent={<Skeleton template="book-card" quantity={10} />}
+        ListFooterComponent={<Skeleton template="user-card" quantity={10} />}
         refreshControl={
           <RefreshControl
-            refreshing={booksQuery.isRefetching}
+            refreshing={usersQuery.isRefetching}
             onRefresh={() => {
               if (page !== 1) {
                 setPage(1);
               } else {
-                booksQuery.refetch();
+                usersQuery.refetch();
               }
             }}
           />
@@ -60,24 +113,19 @@ export default function Users() {
         onEndReached={() => {
           const hasPagesToLoad = totalPages > page;
 
-          if (hasPagesToLoad && !booksQuery.isFetching && !booksQuery.error) {
+          if (hasPagesToLoad && !usersQuery.isFetching && !usersQuery.error) {
             setPage((page) => page + 1);
           }
-        }}
-        columnWrapperStyle={{
-          gap: 16,
         }}
         contentContainerStyle={{
           paddingHorizontal: 16,
           paddingBottom: 96,
-          gap: 16,
+          rowGap: 16,
         }}
         ListFooterComponentStyle={{
-          gap: 16,
-          flexDirection: "row",
-          flexWrap: "wrap",
+          rowGap: 16,
         }}
-      /> */}
+      />
     </>
   );
 }

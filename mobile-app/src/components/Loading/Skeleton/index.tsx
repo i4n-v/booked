@@ -1,9 +1,11 @@
 import React, { useMemo } from "react";
 import SkeletonBookCard from "./Templates/SkeletonBookCard";
 import { ISkeletonProps, ISkeletonTemplates } from "./types";
+import SkeletonUserCard from "./Templates/SkeletonUserCard";
 
 const templates: ISkeletonTemplates = {
   "book-card": SkeletonBookCard,
+  "user-card": SkeletonUserCard,
 };
 
 export default function Skeleton({ quantity = 1, template, style }: ISkeletonProps) {
