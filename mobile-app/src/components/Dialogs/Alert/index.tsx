@@ -30,7 +30,6 @@ function Alert({
   title,
   message,
   open,
-  handleClose,
   onClose,
   onConfirm,
   onCancel,
@@ -49,8 +48,10 @@ function Alert({
   });
 
   const processMessage = (message: string) => {
-    return message.split(" ").map((str, index) => {
-      if (str.match(/(\*\D+\*)/gi)) {
+    const splitedMessage = message.match(/[^*]+|\*[^*]+\*/g);
+
+    return splitedMessage?.map((str) => {
+      if (str.match(/^\*.*|\*$/gi)) {
         const cleanStr = str.replace(/\*/g, "");
         return <Emphasis>{`${cleanStr} `}</Emphasis>;
       }
@@ -82,8 +83,7 @@ function Alert({
             {!hasActions && (
               <CloseButton
                 onPress={() => {
-                  if (handleClose instanceof Function) handleClose();
-                  onClose();
+                  onClose;
                 }}
                 name="close-outline"
                 size={26}
@@ -94,7 +94,7 @@ function Alert({
             <MajorCircle>
               <MinorCircle>
                 <Icon
-                  name="md-alert-circle-outline"
+                  name="alert-circle-outline"
                   size={26}
                   icon={Ionicons}
                   color={theme.colors.error[500]}
@@ -118,7 +118,6 @@ function Alert({
               </MainButton>
               <MainButton
                 style={style.button}
-                colorScheme="error"
                 onPress={() => {
                   if (onConfirm instanceof Function) onConfirm();
                   onClose();

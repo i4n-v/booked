@@ -9,7 +9,7 @@ import IBook from "@/types/Book";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import FilterButton from "@/components/Buttons/FilterButton";
 import { BottomSheet } from "@/components/BottomSheets";
-import { useBottomSheet, useDebounce } from "@/hooks";
+import { useBottomSheet, useDebounce, useRefetchOnFocus } from "@/hooks";
 import {
   DateField,
   PaginatedAutocompleteField,
@@ -21,6 +21,7 @@ import { z } from "zod";
 import { fieldsRegex } from "@/config/regex";
 import { format } from "date-fns";
 import { cleanUpMask } from "@/utils/mask";
+import { router } from "expo-router";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -97,6 +98,14 @@ export default function Books() {
     },
   );
 
+  useRefetchOnFocus(() => {
+    if (page !== 1) {
+      setPage(2);
+    } else {
+      booksQuery.refetch();
+    }
+  });
+
   return (
     <>
       <BottomSheet
@@ -170,6 +179,7 @@ export default function Books() {
             price={item.price}
             rating={item.rating}
             ratingQuantity={item.total_users_rating}
+            onPress={() => router.navigate({ pathname: "/books/[id]", params: { id: item.id } })}
           />
         )}
         emptyMessage="Nenhum livro encontrado."

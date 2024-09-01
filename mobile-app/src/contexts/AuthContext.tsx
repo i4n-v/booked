@@ -1,9 +1,9 @@
-import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext } from "react";
 import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/services";
 import IUser from "@/types/User";
-import useAsyncStorage from "@/hooks/useAsyncStorage";
+import { useAsyncStorage } from "@/hooks/";
 import { router } from "expo-router";
 
 interface IAuthContextProps {
@@ -33,7 +33,7 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
       onSettled() {
         setToken(null);
         setUser(null);
-        router.navigate("/");
+        router.navigate("/sigin");
       },
     });
   }

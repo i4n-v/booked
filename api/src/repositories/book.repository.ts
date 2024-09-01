@@ -57,6 +57,16 @@ class BookRepository {
             ),
             'total_users_rating',
           ],
+          [
+            sequelizeConnection.literal(
+              `(
+                SELECT COUNT(id)
+                FROM "Comments"
+                WHERE "Comments".book_id = "Book".id
+              )`
+            ),
+            'total_comments',
+          ],
           [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
           [sequelizeConnection.literal('"acquisitions->Acquisition".marked_page'), 'marked_page'],
         ],

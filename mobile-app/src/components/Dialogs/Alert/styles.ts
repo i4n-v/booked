@@ -47,7 +47,7 @@ const MinorCircle = styled.View`
 
 const Title = styled.Text`
   color: ${({ theme }) => theme.colors.secondary?.[900]};
-  font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
   font-size: ${({ theme }) => theme.typography.size.md + "px"};
   margin-bottom: 8px;
 `;
@@ -55,12 +55,12 @@ const Title = styled.Text`
 const Message = styled.Text`
   color: ${({ theme }) => theme.colors.secondary?.[500]};
   font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
-  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
+  font-size: ${({ theme }) => theme.typography.size.sm + "px"};
   margin-bottom: 12px;
 `;
 
 const Emphasis = styled.Text`
-  color: ${({ theme }) => theme.colors.secondary?.[700]};
+  color: ${({ theme }) => theme.colors.primary?.[200]};
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
 `;
 

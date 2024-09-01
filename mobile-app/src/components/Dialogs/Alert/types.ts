@@ -1,11 +1,10 @@
 interface IAlertProps {
   title: string;
   message: string;
-  open?: boolean;
-  handleClose(): void;
+  open: boolean;
   onClose(): void;
-  onConfirm(): void;
-  onCancel(): void;
+  onConfirm?(): void;
+  onCancel?(): void;
   confirmTextButton?: string;
   cancelTextButton?: string;
   hasActions?: boolean;

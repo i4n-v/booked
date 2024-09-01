@@ -14,6 +14,7 @@ type Book = {
   user: IUser;
   rating: number;
   total_users_rating: number;
+  total_comments: number;
   acquisition_id?: string;
   marked_page?: number;
   wished: boolean;

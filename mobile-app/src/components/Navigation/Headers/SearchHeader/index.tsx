@@ -13,7 +13,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { useDebounceCallback } from "@/hooks";
 import { router } from "expo-router";
 
-const logo = require("../../../../../assets/images/logo-dark.png");
+const logo = require("@/../assets/images/logo-dark.png");
 const windowWidth = Dimensions.get("window").width - 128 - 16;
 const AnimatedWraper = Animated.createAnimatedComponent(Wrapper);
 
