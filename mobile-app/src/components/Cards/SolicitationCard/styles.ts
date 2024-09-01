@@ -6,10 +6,10 @@ const CardContainer = styled.View`
  padding: 16px;
  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
  border-radius: 8px; ${({ theme }) => theme.shadows[0] as any}
- margin: 0px 16px 14px 16px ;
+ margin-bottom: 14px;
 `;
 
-const InfoContainer = styled.View`
+const InfoContainer = styled.TouchableOpacity`
  flex: 1;
 `;
 
