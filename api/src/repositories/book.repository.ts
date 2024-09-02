@@ -3,7 +3,7 @@ import { Repository } from 'sequelize-typescript';
 import Book from '../database/models/book.model';
 import BookCreateDto from '../dto/book/bookCreate.dto';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
-import { CreateOptions, Transaction, WhereOptions } from 'sequelize';
+import { BindOrReplacements, CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
 import { Request } from 'express';
 import 'dotenv/config';
@@ -101,7 +101,8 @@ class BookRepository {
     page: number,
     limit: number,
     request: Request,
-    options?: WhereOptions<BookDto>
+    options?: WhereOptions<BookDto>,
+    replacements?: BindOrReplacements
   ) {
     const {
       headers: { host },
@@ -119,6 +120,7 @@ class BookRepository {
         [sequelizeConnection.literal('"createdAt"'), 'DESC'],
         [sequelizeConnection.literal('description'), 'ASC'],
       ],
+      replacements,
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [

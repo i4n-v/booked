@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { IIconButtonProps } from "@/components/Buttons/IconButton/types";
 import { ExpoVectorIcon } from "@/types/ExpoVectorIcons";
+import { Mask } from "@/types/Regex";
 
 type IInputIcon<T extends ExpoVectorIcon> = Omit<
   IIconButtonProps<T>,
@@ -22,7 +23,7 @@ interface ITextFieldProps<L extends ExpoVectorIcon, R extends ExpoVectorIcon = L
   label?: string;
   textArea?: boolean;
   numberOfLines?: number;
-  mask?: RegExp[];
+  mask?: Mask;
   password?: boolean;
   errorMessage?: string;
   showErrorMessage?: boolean;

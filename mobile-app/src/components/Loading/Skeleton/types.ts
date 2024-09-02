@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 
-type ISketonTemplateTypes = "book-card" | "message"| "chat" ;
+type ISketonTemplateTypes = "book-card" | "message"| "chat" | "user-card";
 
 type ISkeletonTemplates = {
   [key in ISketonTemplateTypes]: (props: any) => ReactElement<any, any>;

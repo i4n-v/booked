@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -43,59 +42,23 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
     });
   }
 
-  useQuery(
-    "validate-token",
-    () => {
-      loading({ isLoading: true });
-      return verify();
-    },
-    {
-      enabled: !!token,
-      onSuccess(response) {
-        if (!response.valid) {
-          return handleLogout();
-        }
-
-        router.navigate("/home");
-      },
-      onError() {
-        handleLogout();
-      },
-      onSettled() {
-        loading({
-          isLoading: false,
-        });
-      },
-    },
-  );
-
-  useEffect(() => {
-    const initializeSocket = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-
-        if (token) {
-          const socketInstance = io(API_URL, {
-            auth: {
-              token,
-            },
-            transports: ["websocket"], // Use websocket transport only
-          });
-          setSocket(socketInstance);
-        } else {
-          console.log("No token found");
-        }
-      } catch (error) {
-        console.error("Error initializing socket:", error);
+  useQuery("validate-token", () => verify(), {
+    onSuccess(response) {
+      if (!response.valid) {
+        return handleLogout();
       }
-    };
 
-    initializeSocket();
-
-    return () => {
-      if (socket) socket?.disconnect();
-    };
-  },[token])
+      router.navigate("/home");
+    },
+    onError() {
+      handleLogout();
+    },
+    onSettled() {
+      loading({
+        isLoading: false,
+      });
+    },
+  });
 
   return (
     <AuthContext.Provider

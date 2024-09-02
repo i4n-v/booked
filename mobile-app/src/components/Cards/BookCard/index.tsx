@@ -28,7 +28,6 @@ export default function BookCard({
   ratingQuantity,
   image,
   onPress,
-  style,
 }: BookCardProps) {
   const theme = useTheme();
 
@@ -37,7 +36,7 @@ export default function BookCard({
   });
 
   return (
-    <CardContainer onPress={onPress} activeOpacity={theme.shape.opacity} style={style}>
+    <CardContainer onPress={onPress} activeOpacity={theme.shape.opacity}>
       {image ? <BookImage source={{ uri: image }} /> : <BookImage source={unknownPhoto} />}
       <InfoContainer>
         <Title numberOfLines={1} ellipsizeMode="tail">

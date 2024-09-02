@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs/src/types";
+import React, { useContext, useState } from "react";
 import { HeaderContainer, Wrapper } from "./styles";
 import { Dimensions, Image } from "react-native";
 import { IconButton } from "@/components/Buttons";
@@ -10,6 +9,9 @@ import { IFilterBy } from "./types";
 import { useTheme } from "styled-components/native";
 import Animated, { EntryExitTransition, FadeIn, FadeOut } from "react-native-reanimated";
 import { z } from "zod";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import { useDebounceCallback } from "@/hooks";
+import { router } from "expo-router";
 
 const logo = require("../../../../../assets/images/logo-dark.png");
 const windowWidth = Dimensions.get("window").width - 128 - 16;
@@ -21,25 +23,44 @@ const validations = z.object({
 
 type ISearchFilter = z.infer<typeof validations>;
 
-export default function SearchHeader({ layout, options, route, navigation }: BottomTabHeaderProps) {
-  const [search, setSearch] = useState(false);
-  const [filterBy, setFilterBy] = useState<IFilterBy>("book");
+export default function SearchHeader() {
   const theme = useTheme();
+  const [search, setSearch] = useState(false);
+  const [filterBy, setFilterBy] = useState<IFilterBy>("books");
+  const { setSearchFilter } = useContext(GlobalContext)!;
   const layoutAnimation = EntryExitTransition.entering(FadeIn).exiting(FadeOut);
 
-  const { control } = useForm<ISearchFilter>({
+  const { control, reset } = useForm<ISearchFilter>({
     defaultValues: {
       filter: "",
     },
   });
 
   function toggleFilterType() {
-    setFilterBy((filterBy) => (filterBy === "book" ? "author" : "book"));
+    const newValue = filterBy === "books" ? "users" : "books";
+    reset();
+    setSearchFilter(null);
+    setFilterBy(newValue);
+
+    router.replace(`/${newValue}`);
   }
 
   function toggleSearch() {
-    setSearch((search) => !search);
+    if (!search) {
+      router.navigate(`/books`);
+    } else {
+      reset();
+      setSearchFilter(null);
+      setFilterBy("books");
+      router.back();
+    }
+
+    setSearch(!search);
   }
+
+  const handleSearch = useDebounceCallback((value: string) => {
+    setSearchFilter(value);
+  });
 
   return (
     <HeaderContainer>
@@ -60,6 +81,7 @@ export default function SearchHeader({ layout, options, route, navigation }: Bot
               onPress: () => {},
             }}
             required
+            customOnChange={handleSearch}
             inputProps={{
               style: {
                 width: windowWidth,
@@ -67,8 +89,8 @@ export default function SearchHeader({ layout, options, route, navigation }: Bot
             }}
           />
           <IconButton<any>
-            icon={<User color={filterBy === "author" ? theme.colors.secondary?.[0] : ""} />}
-            isFocused={filterBy === "author"}
+            icon={<User color={filterBy === "users" ? theme.colors.secondary?.[0] : ""} />}
+            isFocused={filterBy === "users"}
             focusColor={theme.colors.primary?.[200]}
             onPress={toggleFilterType}
           />

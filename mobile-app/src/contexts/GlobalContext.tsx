@@ -19,6 +19,8 @@ interface IGlobalContextProps {
   loading(options: ILoadingConfig): void;
   notifierStates: INotifierStates | null;
   setNotifierStates: React.Dispatch<React.SetStateAction<INotifierStates | null>>;
+  searchFilter: string | null;
+  setSearchFilter: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 interface IGlobalContextProviderProps {
@@ -34,8 +36,12 @@ const initialLoadingConfig: ILoadingConfig = {
 const GlobalContext = createContext<IGlobalContextProps | null>(null);
 
 function GlobalContextProvider({ children }: IGlobalContextProviderProps) {
-  const [loadingConfig, setLoadingConfig] = useState<ILoadingConfig>(initialLoadingConfig);
+  const [loadingConfig, setLoadingConfig] = useState<ILoadingConfig>(() => ({
+    ...initialLoadingConfig,
+    isLoading: true,
+  }));
   const [notifierStates, setNotifierStates] = useState<INotifierStates | null>(null);
+  const [searchFilter, setSearchFilter] = useState<string | null>(null);
 
   const loading = useCallback(
     (options: ILoadingConfig) => {
@@ -49,7 +55,16 @@ function GlobalContextProvider({ children }: IGlobalContextProviderProps) {
   );
 
   return (
-    <GlobalContext.Provider value={{ loadingConfig, loading, setNotifierStates, notifierStates }}>
+    <GlobalContext.Provider
+      value={{
+        loadingConfig,
+        loading,
+        setNotifierStates,
+        notifierStates,
+        searchFilter,
+        setSearchFilter,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );

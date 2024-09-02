@@ -257,7 +257,7 @@ function AutoCompleteField<T extends Record<string, any>>({
           )}
         />
       )}
-      {multiple && !open && field.value?.length > 0 && (
+      {multiple && !open && field.value?.length > 0 && filteredOptions.length > 0 && (
         <OptionTagContainer>
           {field.value.map((option: any) => {
             let item: T = option;

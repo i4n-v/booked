@@ -1,3 +1,3 @@
-type IFilterBy = "book" | "author";
+type IFilterBy = "books" | "users";
 
 export { IFilterBy };

@@ -3,11 +3,13 @@ import SkeletonBookCard from "./Templates/SkeletonBookCard";
 import { ISkeletonProps, ISkeletonTemplates } from "./types";
 import SkeletonMessage from "./Templates/SkeletonMessage";
 import SkeletonChat from "./Templates/SkeletonChat";
+import SkeletonUserCard from "./Templates/SkeletonUserCard";
 
 const templates: ISkeletonTemplates = {
   "book-card": SkeletonBookCard,
   "message": SkeletonMessage,
-  "chat": SkeletonChat
+  "chat": SkeletonChat,
+  "user-card": SkeletonUserCard,
 };
 
 export default function Skeleton({ quantity = 1, template, style }: ISkeletonProps) {

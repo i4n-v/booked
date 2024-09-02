@@ -7,7 +7,7 @@ import { StyleProp, ViewStyle } from "react-native";
 type IBottomSheetModalProps = Omit<BottomSheetModalProps, "style"> &
   React.RefAttributes<BottomSheetModalMethods[]>;
 
-interface IBottomSheetScrollViewProps extends BottomSheetScrollViewProps {
+interface IBottomSheetScrollViewProps extends Omit<BottomSheetScrollViewProps, "children"> {
   contentContainerStyle: StyleProp<ViewStyle>;
 }
 

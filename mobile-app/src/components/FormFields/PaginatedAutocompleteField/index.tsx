@@ -40,7 +40,7 @@ function PaginatedAutoCompleteField<T extends Record<string, any>>({
   });
   const [debouncedTextValue, setDebouncedTextValue] = useState<string | null>(null);
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
   const serviceQuery = useQuery(
@@ -54,7 +54,7 @@ function PaginatedAutoCompleteField<T extends Record<string, any>>({
       refetchOnWindowFocus: false,
       enabled: !!queryKey,
       onSuccess(response) {
-        setTotalPage(response.total);
+        setTotalPage(response.totalPages);
         setOptions((options) => [...options, ...response.items]);
       },
       onError() {
@@ -79,10 +79,10 @@ function PaginatedAutoCompleteField<T extends Record<string, any>>({
 
   function handleFilter(value: string | null) {
     if (queryKey) {
-      if (page !== 0 || value !== debouncedTextValue) {
+      if (page !== 1 || value !== debouncedTextValue) {
         setOptions([]);
         serviceQuery.refetch();
-        setPage(0);
+        setPage(1);
         setDebouncedTextValue(value);
       }
     }
