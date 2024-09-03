@@ -6,6 +6,7 @@ import {
   Author,
   BookImage,
   ButtonContainer,
+  CommentsTitle,
   Divider,
   RatingContainer,
   RatingDescribe,
@@ -18,7 +19,7 @@ import {
 import { useAcquisitions, useAssessment, useBook, useWishe } from "@/services";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { IBookParams } from "./types";
-import { useNotifier } from "@/hooks";
+import { useBottomSheet, useNotifier } from "@/hooks";
 import { RatingField } from "@/components/FormFields";
 import { useForm } from "react-hook-form";
 import { IconButton, MainButton } from "@/components/Buttons";
@@ -28,6 +29,7 @@ import { Favorite, FavoriteOutlined } from "@/components/Icons";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { Alert } from "@/components/Dialogs";
 import { AuthContext } from "@/contexts/AuthContext";
+import { BottomSheet } from "@/components/BottomSheets";
 
 const unknownPhoto = require("@/../assets/images/unknown-photo.jpg");
 
@@ -38,6 +40,7 @@ export default function BookView() {
   const firstRender = useRef(true);
   const [confirm, setConfirm] = useState(false);
   const { id } = useLocalSearchParams<IBookParams>();
+  const [refComments, handleOpenComments] = useBottomSheet();
 
   const ratingForm = useForm({
     defaultValues: { rating: 0 },
@@ -156,6 +159,15 @@ export default function BookView() {
 
   return (
     <Wrapper>
+      <BottomSheet
+        ref={refComments}
+        snapPoints={["75%", "90%"]}
+        scrollViewProps={{
+          contentContainerStyle: { padding: 16, gap: 12 },
+        }}
+      >
+        <CommentsTitle>Comentários</CommentsTitle>
+      </BottomSheet>
       <Alert
         open={confirm}
         onClose={() => setConfirm(false)}
@@ -194,8 +206,12 @@ export default function BookView() {
           <MainButton>Começar leitura</MainButton>
         ) : (
           <>
-            <MainButton onPress={() => setConfirm(true)}>
-              {book.free ? "Gratuito" : `Comprar por R$ ${toBRL(book.price)}`}
+            <MainButton disabled={!!book.solicitation_id} onPress={() => setConfirm(true)}>
+              {book.solicitation_id
+                ? "Solicitação pendente"
+                : book.free
+                  ? "Gratuito"
+                  : `Comprar por R$ ${toBRL(book.price)}`}
             </MainButton>
             {!book.free && (
               <MainButton variant="outlined" colorScheme="primary">
@@ -209,7 +225,7 @@ export default function BookView() {
       <About>Sobre o livro</About>
       <ReadMore>{book.description}</ReadMore>
       <Divider />
-      <MainButton variant="outlined" colorScheme="primary">
+      <MainButton variant="outlined" colorScheme="primary" onPress={handleOpenComments}>
         Comentários ({book.total_comments})
       </MainButton>
     </Wrapper>

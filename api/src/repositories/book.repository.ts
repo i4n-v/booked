@@ -68,6 +68,7 @@ class BookRepository {
             'total_comments',
           ],
           [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
+          [sequelizeConnection.literal('"solicitations->Solicitation".id'), 'solicitation_id'],
           [sequelizeConnection.literal('"acquisitions->Acquisition".marked_page'), 'marked_page'],
         ],
       },
@@ -98,6 +99,14 @@ class BookRepository {
         {
           model: sequelizeConnection.model('User'),
           as: 'acquisitions',
+          attributes: [],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'solicitations',
           attributes: [],
           through: {
             attributes: [],

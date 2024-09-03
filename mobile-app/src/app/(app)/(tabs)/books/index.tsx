@@ -22,6 +22,7 @@ import { fieldsRegex } from "@/config/regex";
 import { format } from "date-fns";
 import { cleanUpMask } from "@/utils/mask";
 import { router } from "expo-router";
+import { FilterTitle } from "./styles";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -39,7 +40,7 @@ export default function Books() {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [books, setBooks] = useState<IBook[]>([]);
   const { searchFilter } = useContext(GlobalContext)!;
-  const [refFilter, handleOpenFilter, handleCloseFilter] = useBottomSheet();
+  const [refFilter, handleOpenFilter] = useBottomSheet();
 
   const filterForm = useForm<IBookFilters>({
     defaultValues: {
@@ -112,9 +113,10 @@ export default function Books() {
         ref={refFilter}
         snapPoints={["75%"]}
         scrollViewProps={{
-          contentContainerStyle: { padding: 20, gap: 20 },
+          contentContainerStyle: { padding: 16, gap: 20 },
         }}
       >
+        <FilterTitle>Filtrar livros</FilterTitle>
         <DateField label="Data mínima da publicação" name="min_date" control={filterForm.control} />
         <DateField label="Data máxima da publicação" name="max_date" control={filterForm.control} />
         <SwitchField
