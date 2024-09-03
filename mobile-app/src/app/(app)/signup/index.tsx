@@ -85,7 +85,7 @@ export default function SignUp() {
 
     postUserMutation.mutate(data, {
       onSuccess(response) {
-        router.navigate("/");
+        router.navigate("/sigin");
         openNotification({ status: "success", message: response.message });
       },
       onError(error: any) {
