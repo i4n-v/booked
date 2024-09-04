@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ProfileIcon } from "./styles";
 import { SearchHeader } from "@/components/Navigation/Headers";
-import { Slot } from "expo-router";
+import { router, Slot } from "expo-router";
 
 export default function AppLayout() {
   const { user } = useContext(AuthContext)!;
@@ -59,6 +59,17 @@ export default function AppLayout() {
               return <Account />;
             },
           }}
+          listeners={() => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              router.navigate({
+                pathname: "/profile/[userId]",
+                params: {
+                  userId: user?.id,
+                },
+              });
+            },
+          })}
         />
       </Tabs>
     </>

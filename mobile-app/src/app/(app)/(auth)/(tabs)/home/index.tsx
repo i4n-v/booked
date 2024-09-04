@@ -31,7 +31,10 @@ function Home() {
 
         if (page === 2) {
           newItems = response.items;
-          newItems[0].first = true;
+          if(newItems.length){
+            newItems[0].first = true;
+          }
+          
         } else {
           newItems = [...books, ...response.items];
         }
