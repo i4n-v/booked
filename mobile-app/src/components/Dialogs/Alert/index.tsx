@@ -30,6 +30,7 @@ function Alert({
   title,
   message,
   open,
+  status = "error",
   onClose,
   onConfirm,
   onCancel,
@@ -83,7 +84,7 @@ function Alert({
             {!hasActions && (
               <CloseButton
                 onPress={() => {
-                  onClose;
+                  onClose();
                 }}
                 name="close-outline"
                 size={26}
@@ -91,13 +92,13 @@ function Alert({
                 color={theme.colors.secondary[900]}
               />
             )}
-            <MajorCircle>
-              <MinorCircle>
+            <MajorCircle color={theme.colors[status][500] + "10"}>
+              <MinorCircle color={theme.colors[status][500] + "20"}>
                 <Icon
                   name="alert-circle-outline"
                   size={26}
                   icon={Ionicons}
-                  color={theme.colors.error[500]}
+                  color={theme.colors[status][500]}
                 />
               </MinorCircle>
             </MajorCircle>

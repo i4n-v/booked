@@ -17,6 +17,7 @@ import Follow from "./Follow";
 import ArrowDown from "./ArrowDown";
 import ArrowUp from "./ArrowUp";
 import FavoriteOutlined from "./FavoriteOutlined";
+import Send from "./Send";
 
 export {
   Transfer,
@@ -38,4 +39,5 @@ export {
   ArrowDown,
   ArrowUp,
   FavoriteOutlined,
+  Send,
 };

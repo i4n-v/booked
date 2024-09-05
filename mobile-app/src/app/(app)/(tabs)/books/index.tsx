@@ -39,7 +39,7 @@ export default function Books() {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [books, setBooks] = useState<IBook[]>([]);
-  const { searchFilter } = useContext(GlobalContext)!;
+  const { searchFilter, setSearchFilter } = useContext(GlobalContext)!;
   const [refFilter, handleOpenFilter] = useBottomSheet();
 
   const filterForm = useForm<IBookFilters>({
@@ -181,7 +181,10 @@ export default function Books() {
             price={item.price}
             rating={item.rating}
             ratingQuantity={item.total_users_rating}
-            onPress={() => router.navigate({ pathname: "/books/[id]", params: { id: item.id } })}
+            onPress={() => {
+              setSearchFilter(null);
+              router.navigate({ pathname: "/books/[id]", params: { id: item.id } });
+            }}
           />
         )}
         emptyMessage="Nenhum livro encontrado."

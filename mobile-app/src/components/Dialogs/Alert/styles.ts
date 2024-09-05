@@ -1,6 +1,7 @@
 import { IconButton } from "@/components/Buttons";
 import { StyleSheet, Dimensions } from "react-native";
 import styled from "styled-components/native";
+import { IconContainerProps } from "./types";
 
 const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.3);
@@ -30,14 +31,14 @@ const CloseButton = styled(IconButton)`
   right: 10px;
 `;
 
-const MajorCircle = styled.View`
-  background-color: rgba(252, 165, 165, 0.1);
+const MajorCircle = styled.View<IconContainerProps>`
+  background-color: ${({ color }) => color};
   padding: 8px;
   border-radius: 32px;
 `;
 
-const MinorCircle = styled.View`
-  background-color: rgba(252, 165, 165, 0.2);
+const MinorCircle = styled.View<IconContainerProps>`
+  background-color: ${({ color }) => color};
   align-items: center;
   justify-content: center;
   border-radius: 21px;

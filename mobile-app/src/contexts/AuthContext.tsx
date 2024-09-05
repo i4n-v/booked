@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/services";
 import IUser from "@/types/User";
-import { useAsyncStorage } from "@/hooks/";
+import { useAsyncStorage, useNotifier } from "@/hooks/";
 import { router } from "expo-router";
 
 interface IAuthContextProps {
@@ -21,6 +21,7 @@ interface IAuthContextProviderProps {
 const AuthContext = createContext<IAuthContextProps | null>(null);
 
 function AuthProvider({ children }: IAuthContextProviderProps) {
+  const { openNotification } = useNotifier();
   const [user, setUser] = useAsyncStorage<IUser | null>("user", null);
   const [token, setToken] = useAsyncStorage<string | null>("token", null);
   const { loading } = useContext(GlobalContext)!;
@@ -30,10 +31,18 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
 
   async function handleLogout() {
     logoutMutation.mutate(undefined, {
-      onSettled() {
-        setToken(null);
-        setUser(null);
-        router.navigate("/sigin");
+      onSettled(response, error: any) {
+        if (response || error.message === "Conexão não autorizada.") {
+          setToken(null);
+          setUser(null);
+          router.navigate("/sigin");
+        } else {
+          router.navigate("/home");
+          openNotification({
+            status: "error",
+            message: "Não foi possivel se comunicar com o servidor.",
+          });
+        }
       },
     });
   }

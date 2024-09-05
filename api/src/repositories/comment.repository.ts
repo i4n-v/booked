@@ -53,7 +53,7 @@ class CommentRepository {
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       where: options,
       attributes: {
         include: [

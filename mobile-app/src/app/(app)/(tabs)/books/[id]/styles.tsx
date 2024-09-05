@@ -86,7 +86,21 @@ const CommentsTitle = styled.Text`
   font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.text?.[1000]};
-  margin-bottom: 16px;
+  padding: 16px 0;
+  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
+`;
+
+const CommentForm = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  gap: 20px;
+`;
+
+const CommentOwner = styled.Text`
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.sm + "px"};
+  color: ${({ theme }) => theme.colors.primary?.[200]};
 `;
 
 export {
@@ -104,4 +118,6 @@ export {
   Divider,
   About,
   CommentsTitle,
+  CommentForm,
+  CommentOwner,
 };

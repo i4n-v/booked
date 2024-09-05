@@ -2,10 +2,12 @@ import React, { useMemo } from "react";
 import SkeletonBookCard from "./Templates/SkeletonBookCard";
 import { ISkeletonProps, ISkeletonTemplates } from "./types";
 import SkeletonUserCard from "./Templates/SkeletonUserCard";
+import SkeletonCommentCard from "./Templates/SkeletonCommentCard";
 
 const templates: ISkeletonTemplates = {
   "book-card": SkeletonBookCard,
   "user-card": SkeletonUserCard,
+  "comment-card": SkeletonCommentCard,
 };
 
 export default function Skeleton({ quantity = 1, template, style }: ISkeletonProps) {

@@ -25,6 +25,7 @@ interface ISwipeableProps<T, I extends ExpoVectorIcon> {
   actions: ISwipleableActions<T>[];
   customActions?: ICustomSwipleableActions<I>;
   disabledActions?(data: T, action: string): boolean;
+  hiddeActions?(data: T, action: string): boolean;
   itemKeyExtractor?: keyof T & string;
   confirmMessage?: string;
   children: ReactNode;
