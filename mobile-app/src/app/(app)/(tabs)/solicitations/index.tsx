@@ -14,6 +14,7 @@ import { DateField, PaginatedAutocompleteField } from "@/components/FormFields";
 import FilterButton from "@/components/Buttons/FilterButton";
 import { SolicitationStatus } from "@/types/Solicitation";
 import { Text } from "./styles";
+import TabNavigation from "@/components/Navigation/TabNavigation";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -38,8 +39,18 @@ export default function Solicitations() {
   });
 
   const filters = useWatch({ control: filterForm.control });
-  const debouncedFilters = useDebounce(filters);
 
+  const [selectedTab, setSelectedTab] = useState<string>("recebidas");
+
+  const debouncedFilters = useDebounce({ ...filters, type: selectedTab });
+
+  const handleSelectTab = (tab: string) => {
+    setSelectedTab(tab);
+    setPage(1);
+  };
+
+  /* console.log("Filtros usados na requisição:", debouncedFilters);
+   */
   useEffect(() => {
     setPage(1);
   }, [debouncedFilters]);
@@ -72,6 +83,7 @@ export default function Solicitations() {
           ? format(debouncedFilters.max_date, "yyyy-MM-dd")
           : null,
         status: debouncedFilters.status,
+        type: debouncedFilters.type,
       };
 
       return getSolicitations(params);
@@ -123,6 +135,12 @@ export default function Solicitations() {
 
       <FilterButton onPress={handleOpenFilter} />
 
+      <TabNavigation
+        selectedTab={selectedTab}
+        onSelectTab={handleSelectTab}
+        tabs={["recebidas", "enviadas"]}
+      />
+
       <ListCounter
         title="Solicitações"
         count={solicitations.length}
@@ -136,26 +154,6 @@ export default function Solicitations() {
             <SolicitationCard id={item.id} status={item.status} book={item.book} user={item.user} />
           )}
           ListEmptyComponent={<Text>Nenhuma solicitação encontrada.</Text>}
-          /* ListFooterComponent={<Skeleton template="user-card" quantity={10} />}
-          refreshControl={
-            <RefreshControl
-              refreshing={solicitationsQuery.isRefetching}
-              onRefresh={() => {
-                if (page !== 1) {
-                  setPage(1);
-                } else {
-                  solicitationsQuery.refetch();
-                }
-              }}
-            />
-          }
-          onEndReached={() => {
-            const hasPagesToLoad = totalPages > page;
-
-            if (hasPagesToLoad && !solicitationsQuery.isFetching && !solicitationsQuery.error) {
-              setPage((page) => page + 1);
-            }
-          }} */
           onEndReachedThreshold={0.1}
           contentContainerStyle={{
             paddingHorizontal: 16,
