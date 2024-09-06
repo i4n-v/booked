@@ -6,6 +6,7 @@ import Config from "@/components/Icons/Config";
 import Follow from "@/components/Icons/Follow";
 import User from "@/components/Icons/User";
 import BottomSheetMenu from "@/components/BottomSheets/BottomSheetMenu";
+import Logout from "@/components/Icons/Logout";
 import {
   Container,
   Text as StyledText,
@@ -27,14 +28,15 @@ import {
 import { FlatList, Image } from "react-native";
 import { BookCard } from "@/components/Cards";
 import Security from "@/components/Icons/Security";
-import Logout from "@/components/Icons/Logout";
 import { ReadMore } from "@/components";
+import { useAuth } from "@/services";
 
 const Profile = () => {
   const { userId } = useLocalSearchParams();
   const { getUser } = useUser();
   const { getBooks } = useBook();
   const { followUser, unfollowUser } = useFollow();
+  const { logout } = useAuth();
   const [page] = useState(1);
   const [isFollowing, setIsFollowing] = useState(false);
   const bottomSheetRef = useRef(null);
@@ -82,6 +84,15 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.replace("/sigin");
+    } catch (error) {
+      console.error("Erro ao sair:", error);
+    }
+  };
+
   const openBottomSheet = () => {
     if (bottomSheetRef.current) {
       bottomSheetRef.current.present();
@@ -117,7 +128,7 @@ const Profile = () => {
   const bottomSheetItems = [
     { text: "Conta", icon: User, onPress: () => router.navigate("/profile/account") },
     { text: "Segurança", icon: Security, onPress: () => router.navigate("/profile/security") },
-    { text: "Sair", icon: Logout, onPress: () => console.log("Sair pressed") },
+    { text: "Sair", icon: Logout, onPress: handleLogout },
   ];
 
   return (
@@ -141,10 +152,7 @@ const Profile = () => {
             ) : (
               <User width={60} height={60} />
             )}
-            <FollowButton
-              style={isFollowing ? ButtonFollowing : ""}
-              onPress={handleFollowToggle}
-            >
+            <FollowButton style={isFollowing ? ButtonFollowing : ""} onPress={handleFollowToggle}>
               <ButtonText>{isFollowing ? "Seguindo" : "Seguir"}</ButtonText>
               <Follow style={{ left: 2 }} width={24} height={24} />
             </FollowButton>
