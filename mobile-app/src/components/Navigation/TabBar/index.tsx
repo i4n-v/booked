@@ -29,6 +29,7 @@ export default function TabBar({ state, descriptors, navigation }: ITabBarProps)
     });
 
     if (!isFocused && !event.defaultPrevented) {
+      console.log("RAPAZ:", route.params);
       navigation.navigate(route.name, route.params);
     }
   };

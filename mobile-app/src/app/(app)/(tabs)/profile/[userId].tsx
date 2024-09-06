@@ -41,7 +41,7 @@ const Profile = () => {
 
   const bottomSheetRef = useRef(null);
 
-  console.log("User ID:", userId);
+  console.log("User ID: ", userId);
   console.log("Books:", { user_id: userId, page, limit: 12 });
 
   const {
@@ -161,11 +161,12 @@ const Profile = () => {
           <StyledText>{user.description}</StyledText>
           <Divider />
 
-          <FlatList 
+          <FlatList
             data={books?.items}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <BookCard style={{ marginHorizontal: 8 }}
+              <BookCard
+                style={{ marginHorizontal: 8 }}
                 title={item.name}
                 author={item.user?.name}
                 rating={item.rating}
@@ -185,10 +186,7 @@ const Profile = () => {
       ) : (
         <StyledText>No user data found</StyledText>
       )}
-      <BottomSheetMenu
-        ref={bottomSheetRef}
-        items={bottomSheetItems}
-      />
+      <BottomSheetMenu ref={bottomSheetRef} items={bottomSheetItems} />
     </Container>
   );
 };

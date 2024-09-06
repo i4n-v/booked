@@ -43,14 +43,14 @@ export default function AppLayout() {
         <Tabs.Screen
           name="chat/index"
           options={{
-            title: "Menssagens/index",
+            title: "Mensagens",
             tabBarIcon: () => <Chat />,
           }}
         />
         <Tabs.Screen
-          name="profile/index"
+          name="profile/[userId]"
+          initialParams={{ userId: user?.id }}
           options={{
-            title: "Perfil",
             tabBarIcon: () => {
               if (user?.photo_url) {
                 return <ProfileIcon source={{ uri: user?.photo_url }} />;
@@ -59,17 +59,6 @@ export default function AppLayout() {
               return <Account />;
             },
           }}
-          listeners={() => ({
-            tabPress: (e) => {
-              e.preventDefault();
-              router.navigate({
-                pathname: "/profile/[userId]",
-                params: {
-                  userId: user?.id!,
-                },
-              });
-            },
-          })}
         />
       </Tabs>
     </>
