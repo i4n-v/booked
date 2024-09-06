@@ -27,7 +27,7 @@ import messages from "@/config/messages";
 import { matchRegex } from "@/config/regex";
 import { format } from "date-fns";
 
-const logo = require("../../../../assets/images/logo-dark.png");
+const logo = require("@/../assets/images/logo-dark.png");
 
 const validations = z
   .object({
@@ -85,7 +85,7 @@ export default function SignUp() {
 
     postUserMutation.mutate(data, {
       onSuccess(response) {
-        router.navigate("/");
+        router.navigate("/sigin");
         openNotification({ status: "success", message: response.message });
       },
       onError(error: any) {

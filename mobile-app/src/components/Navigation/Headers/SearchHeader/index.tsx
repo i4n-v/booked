@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { HeaderContainer, Wrapper } from "./styles";
 import { Dimensions, Image } from "react-native";
 import { IconButton } from "@/components/Buttons";
@@ -13,7 +13,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { useDebounceCallback } from "@/hooks";
 import { router } from "expo-router";
 
-const logo = require("../../../../../assets/images/logo-dark.png");
+const logo = require("@/../assets/images/logo-dark.png");
 const windowWidth = Dimensions.get("window").width - 128 - 16;
 const AnimatedWraper = Animated.createAnimatedComponent(Wrapper);
 
@@ -27,7 +27,7 @@ export default function SearchHeader() {
   const theme = useTheme();
   const [search, setSearch] = useState(false);
   const [filterBy, setFilterBy] = useState<IFilterBy>("books");
-  const { setSearchFilter } = useContext(GlobalContext)!;
+  const { setSearchFilter, searchFilter } = useContext(GlobalContext)!;
   const layoutAnimation = EntryExitTransition.entering(FadeIn).exiting(FadeOut);
 
   const { control, reset } = useForm<ISearchFilter>({
@@ -35,6 +35,12 @@ export default function SearchHeader() {
       filter: "",
     },
   });
+
+  useEffect(() => {
+    if (searchFilter === null) {
+      reset();
+    }
+  }, [searchFilter]);
 
   function toggleFilterType() {
     const newValue = filterBy === "books" ? "users" : "books";

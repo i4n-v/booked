@@ -9,7 +9,7 @@ import IBook from "@/types/Book";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import FilterButton from "@/components/Buttons/FilterButton";
 import { BottomSheet } from "@/components/BottomSheets";
-import { useBottomSheet, useDebounce } from "@/hooks";
+import { useBottomSheet, useDebounce, useRefetchOnFocus } from "@/hooks";
 import {
   DateField,
   PaginatedAutocompleteField,
@@ -21,6 +21,8 @@ import { z } from "zod";
 import { fieldsRegex } from "@/config/regex";
 import { format } from "date-fns";
 import { cleanUpMask } from "@/utils/mask";
+import { router } from "expo-router";
+import { FilterTitle } from "./styles";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -37,8 +39,8 @@ export default function Books() {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [books, setBooks] = useState<IBook[]>([]);
-  const { searchFilter } = useContext(GlobalContext)!;
-  const [refFilter, handleOpenFilter, handleCloseFilter] = useBottomSheet();
+  const { searchFilter, setSearchFilter } = useContext(GlobalContext)!;
+  const [refFilter, handleOpenFilter] = useBottomSheet();
 
   const filterForm = useForm<IBookFilters>({
     defaultValues: {
@@ -97,15 +99,24 @@ export default function Books() {
     },
   );
 
+  useRefetchOnFocus(() => {
+    if (page !== 1) {
+      setPage(2);
+    } else {
+      booksQuery.refetch();
+    }
+  });
+
   return (
     <>
       <BottomSheet
         ref={refFilter}
         snapPoints={["75%"]}
         scrollViewProps={{
-          contentContainerStyle: { padding: 20, gap: 20 },
+          contentContainerStyle: { padding: 16, gap: 20 },
         }}
       >
+        <FilterTitle>Filtrar livros</FilterTitle>
         <DateField label="Data mínima da publicação" name="min_date" control={filterForm.control} />
         <DateField label="Data máxima da publicação" name="max_date" control={filterForm.control} />
         <SwitchField
@@ -170,6 +181,10 @@ export default function Books() {
             price={item.price}
             rating={item.rating}
             ratingQuantity={item.total_users_rating}
+            onPress={() => {
+              setSearchFilter(null);
+              router.navigate({ pathname: "/books/[id]", params: { id: item.id } });
+            }}
           />
         )}
         emptyMessage="Nenhum livro encontrado."
