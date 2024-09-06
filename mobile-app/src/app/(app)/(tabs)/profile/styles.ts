@@ -2,7 +2,6 @@ import styled from "styled-components/native";
 
 const Container = styled.View`
   flex: 1;
-  margin-top: 20px;
   padding: 12px;
   background-color: #f5f5f5;
 `;
@@ -53,12 +52,9 @@ const Button = styled.TouchableOpacity`
 `;
 
 const ButtonFollowing = styled(Button)`
-  background-color: #4caf50;
+  background-color: #9B51E0;
 `;
 
-const ButtonNotFollowing = styled(Button)`
-  background-color: #2196f3;
-`;
 
 const ButtonText = styled.Text`
   color: #9b51e0;
@@ -122,7 +118,6 @@ export {
   FollowContainer,
   Button,
   ButtonFollowing,
-  ButtonNotFollowing,
   ButtonText,
   FollowButton,
   StatsContainer,

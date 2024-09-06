@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
-import { useUser } from "@/services";
-import { useQuery } from "react-query";
-import { useBook } from "@/services";
-import { useLocalSearchParams } from "expo-router";
+import { useUser, useFollow, useBook } from "@/services";
+import { useQuery, useMutation } from "react-query";
+import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 import Config from "@/components/Icons/Config";
 import Follow from "@/components/Icons/Follow";
 import User from "@/components/Icons/User";
@@ -16,7 +15,6 @@ import {
   Username,
   FollowContainer,
   ButtonFollowing,
-  ButtonNotFollowing,
   ButtonText,
   FollowButton,
   StatsContainer,
@@ -30,19 +28,16 @@ import { FlatList, Image } from "react-native";
 import { BookCard } from "@/components/Cards";
 import Security from "@/components/Icons/Security";
 import Logout from "@/components/Icons/Logout";
+import { ReadMore } from "@/components";
 
 const Profile = () => {
   const { userId } = useLocalSearchParams();
   const { getUser } = useUser();
   const { getBooks } = useBook();
+  const { followUser, unfollowUser } = useFollow();
   const [page] = useState(1);
-
   const [isFollowing, setIsFollowing] = useState(false);
-
   const bottomSheetRef = useRef(null);
-
-  console.log("User ID: ", userId);
-  console.log("Books:", { user_id: userId, page, limit: 12 });
 
   const {
     data: user,
@@ -69,11 +64,21 @@ const Profile = () => {
     },
   );
 
+  const followMutation = useMutation(followUser, {
+    onSuccess: () => setIsFollowing(true),
+    onError: (error) => console.error("Error following user:", error),
+  });
+
+  const unfollowMutation = useMutation(unfollowUser, {
+    onSuccess: () => setIsFollowing(false),
+    onError: (error) => console.error("Error unfollowing user:", error),
+  });
+
   const handleFollowToggle = async () => {
-    try {
-      setIsFollowing(!isFollowing);
-    } catch (error) {
-      console.error("Error toggling follow status", error);
+    if (isFollowing) {
+      unfollowMutation.mutate(userId as string);
+    } else {
+      followMutation.mutate(userId as string);
     }
   };
 
@@ -83,16 +88,20 @@ const Profile = () => {
     }
   };
 
-  const closeBottomSheet = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.close();
-    }
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (bottomSheetRef.current) {
+          bottomSheetRef.current.dismiss();
+        }
+      };
+    }, []),
+  );
 
   if (isLoading) {
     return (
       <Container>
-        <StyledText>Loading user...</StyledText>
+        <StyledText>Carregando usuário...</StyledText>
       </Container>
     );
   }
@@ -100,14 +109,14 @@ const Profile = () => {
   if (error) {
     return (
       <Container>
-        <StyledText>Error loading user data</StyledText>
+        <StyledText>Erro ao carregar dados do usuário</StyledText>
       </Container>
     );
   }
 
   const bottomSheetItems = [
-    { text: "Conta", icon: User, onPress: () => console.log("Conta pressed") },
-    { text: "Segurança", icon: Security, onPress: () => console.log("Segurança pressed") },
+    { text: "Conta", icon: User, onPress: () => router.navigate("/profile/account") },
+    { text: "Segurança", icon: Security, onPress: () => router.navigate("/profile/security") },
     { text: "Sair", icon: Logout, onPress: () => console.log("Sair pressed") },
   ];
 
@@ -133,7 +142,7 @@ const Profile = () => {
               <User width={60} height={60} />
             )}
             <FollowButton
-              style={isFollowing ? ButtonFollowing : ButtonNotFollowing}
+              style={isFollowing ? ButtonFollowing : ""}
               onPress={handleFollowToggle}
             >
               <ButtonText>{isFollowing ? "Seguindo" : "Seguir"}</ButtonText>
@@ -158,7 +167,7 @@ const Profile = () => {
             </StatsContainer>
           </FollowContainer>
 
-          <StyledText>{user.description}</StyledText>
+          <ReadMore>{user.description}</ReadMore>
           <Divider />
 
           <FlatList
@@ -173,6 +182,12 @@ const Profile = () => {
                 price={item.price}
                 image={item.photo_url}
                 ratingQuantity={item.total_users_rating}
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/books/[id]",
+                    params: { id: item.id },
+                  })
+                }
               />
             )}
             numColumns={2}
