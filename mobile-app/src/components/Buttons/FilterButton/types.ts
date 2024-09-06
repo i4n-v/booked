@@ -1,5 +1,5 @@
 interface IFilterButtonProps {
-  onPress(): void;
+  onPress?(): void;
 }
 
 export { IFilterButtonProps };

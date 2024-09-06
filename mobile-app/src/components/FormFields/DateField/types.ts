@@ -19,7 +19,7 @@ interface IDateFieldProps {
 }
 
 interface IDateIcons {
-  date: "date-range";
+  date: "today";
   time: "access-time";
 }
 

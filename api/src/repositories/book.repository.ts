@@ -3,7 +3,7 @@ import { Repository } from 'sequelize-typescript';
 import Book from '../database/models/book.model';
 import BookCreateDto from '../dto/book/bookCreate.dto';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
-import { CreateOptions, Transaction, WhereOptions } from 'sequelize';
+import { BindOrReplacements, CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
 import { Request } from 'express';
 import 'dotenv/config';
@@ -57,7 +57,18 @@ class BookRepository {
             ),
             'total_users_rating',
           ],
+          [
+            sequelizeConnection.literal(
+              `(
+                SELECT COUNT(id)
+                FROM "Comments"
+                WHERE "Comments".book_id = "Book".id
+              )`
+            ),
+            'total_comments',
+          ],
           [sequelizeConnection.literal('"acquisitions->Acquisition".id'), 'acquisition_id'],
+          [sequelizeConnection.literal('"solicitations->Solicitation".id'), 'solicitation_id'],
           [sequelizeConnection.literal('"acquisitions->Acquisition".marked_page'), 'marked_page'],
         ],
       },
@@ -93,6 +104,14 @@ class BookRepository {
             attributes: [],
           },
         },
+        {
+          model: sequelizeConnection.model('User'),
+          as: 'solicitations',
+          attributes: [],
+          through: {
+            attributes: [],
+          },
+        },
       ],
     });
   }
@@ -101,7 +120,8 @@ class BookRepository {
     page: number,
     limit: number,
     request: Request,
-    options?: WhereOptions<BookDto>
+    options?: WhereOptions<BookDto>,
+    replacements?: BindOrReplacements
   ) {
     const {
       headers: { host },
@@ -119,6 +139,7 @@ class BookRepository {
         [sequelizeConnection.literal('"createdAt"'), 'DESC'],
         [sequelizeConnection.literal('description'), 'ASC'],
       ],
+      replacements,
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [

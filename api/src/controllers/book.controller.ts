@@ -263,12 +263,19 @@ class BookController {
       }
 
       if (categories) {
-        whereStatement['$categories.id$'] = {
-          [Op.in]: categories,
-        };
+        whereStatement[Op.and] = sequelizeConnection.literal(`(
+          EXISTS (
+            SELECT 1
+            FROM "BookCategories" as bc
+            WHERE bc.book_id = "Book".id
+            AND "bc".category_id IN (:categories)
+          )
+        )`);
       }
 
-      const books = await BookRepository.findAndCountAll(page, limit, request, whereStatement);
+      const books = await BookRepository.findAndCountAll(page, limit, request, whereStatement, {
+        categories,
+      });
 
       const wrappedBooks = paginationWrapper(books, page, limit);
 

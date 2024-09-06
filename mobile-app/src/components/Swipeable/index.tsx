@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useTheme } from "styled-components";
@@ -18,6 +18,7 @@ function Swipeable<T extends Record<string, any>, I extends ExpoVectorIcon>({
   actions,
   customActions,
   disabledActions,
+  hiddeActions,
   itemKeyExtractor,
   confirmMessage = "Você realmente deseja *action* este item?",
   children,
@@ -26,19 +27,21 @@ function Swipeable<T extends Record<string, any>, I extends ExpoVectorIcon>({
   const actionAlert = useRef<ActionAlert | null>(null);
   const [open, setOpen] = useState(false);
 
-  const swipeSize = useMemo(
-    () => (actions.length >= 1 ? 80 + 95 * (actions.length - 1) : 200),
-    [actions],
-  );
+  const newActions = useMemo(() => {
+    const filteredActions = actions.filter((action) => {
+      if (hiddeActions) {
+        return !hiddeActions(data, action.name);
+      }
+
+      return true;
+    });
+
+    return filteredActions;
+  }, [actions]);
+  const swipeSize = useMemo(() => 60 * newActions.length, [newActions]);
 
   const swipeActions: ICustomSwipleableActions<ExpoVectorIcon> = useMemo(
     () => ({
-      more: {
-        title: "mais",
-        name: "more-vert",
-        icon: MaterialIcons,
-        color: theme.colors.primary[200],
-      },
       delete: {
         title: "deletar",
         name: "delete",
@@ -46,17 +49,16 @@ function Swipeable<T extends Record<string, any>, I extends ExpoVectorIcon>({
         color: theme.colors.error[500],
         confirm: true,
       },
-      suspend: {
-        title: "suspender",
-        name: "block-helper",
-        icon: MaterialCommunityIcons,
-        color: theme.colors.warning[500],
-        confirm: true,
-      },
       edit: {
         title: "editar",
         name: "edit",
         icon: MaterialIcons,
+        color: theme.colors.primary[200],
+      },
+      response: {
+        title: "responder",
+        name: "arrow-undo",
+        icon: Ionicons,
         color: theme.colors.primary[200],
       },
       ...customActions,
@@ -88,7 +90,7 @@ function Swipeable<T extends Record<string, any>, I extends ExpoVectorIcon>({
 
   const actionItems = (data: T) => (
     <ActionsContainer>
-      {actions.map((action, index, array) => {
+      {newActions.map((action, index, array) => {
         const disabled = disabledActions ? disabledActions(data, action.name) : false;
 
         return (
@@ -117,16 +119,11 @@ function Swipeable<T extends Record<string, any>, I extends ExpoVectorIcon>({
             activeOpacity={0.7}
             disabled={disabled}
           >
-            <IconContainer
-              color={swipeActions[action.name].color}
-              index={index}
-              length={array.length - 1}
-              disabled={disabled}
-            >
+            <IconContainer length={array.length - 1} disabled={disabled}>
               <Icon
                 icon={swipeActions[action.name].icon}
                 name={swipeActions[action.name].name}
-                color={theme.colors.secondary[0]}
+                color={swipeActions[action.name].color}
                 size={24}
               />
             </IconContainer>
@@ -165,7 +162,7 @@ function Swipeable<T extends Record<string, any>, I extends ExpoVectorIcon>({
     <>
       <Alert
         title="Confirmação"
-        message={actionAlert.current?.message}
+        message={actionAlert.current?.message!}
         open={open}
         onClose={togleOpen}
         onConfirm={actionAlert.current?.onPress}

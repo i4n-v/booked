@@ -17,7 +17,7 @@ import toBRL from "@/utils/toBRL";
 import { Favorite } from "@/components/Icons";
 import { useTheme } from "styled-components/native";
 
-const unknownPhoto = require("../../../../assets/images/unknown-photo.jpg");
+const unknownPhoto = require("@/../assets/images/unknown-photo.jpg");
 
 export default function BookCard({
   title,
@@ -28,7 +28,6 @@ export default function BookCard({
   ratingQuantity,
   image,
   onPress,
-  style,
 }: BookCardProps) {
   const theme = useTheme();
 
@@ -37,7 +36,7 @@ export default function BookCard({
   });
 
   return (
-    <CardContainer onPress={onPress} activeOpacity={theme.shape.opacity} style={style}>
+    <CardContainer onPress={onPress} activeOpacity={theme.shape.opacity}>
       {image ? <BookImage source={{ uri: image }} /> : <BookImage source={unknownPhoto} />}
       <InfoContainer>
         <Title numberOfLines={1} ellipsizeMode="tail">

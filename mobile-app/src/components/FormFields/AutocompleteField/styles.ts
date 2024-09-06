@@ -1,23 +1,24 @@
 import { FlatList } from "@/components/Lists";
 import styled from "styled-components/native";
 
-const OptionTagContainer = styled.Text`
-  flex-wrap: "wrap";
-  width: "100%";
+const OptionTagContainer = styled.View`
+  flex-wrap: wrap;
+  width: 100%;
   padding: 2px 0;
-  flex-direction: "row";
-  gap: 8;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 4px;
 `;
 
 const OptionTag = styled.View`
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.secondary?.[200]};
-  background-color: ${({ theme }) => theme.colors.secondary?.[100]};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
+  background-color: ${({ theme }) => theme.colors.secondary?.[50]};
+  border-radius: 4px;
   padding: 8px;
-  align-items: "center";
-  flex-direction: "row";
-  gap: 4;
+  align-items: center;
+  flex-direction: row;
+  gap: 4px;
 `;
 
 const OptionTagLabel = styled.Text`
@@ -27,7 +28,7 @@ const OptionTagLabel = styled.Text`
 `;
 
 const InputList = styled(FlatList)`
-  width: "100%";
+  width: 100%;
   background-color: ${({ theme }) => theme.colors.secondary?.[100]};
   border-radius: 0 0 6px 6px;
   max-height: 200px;

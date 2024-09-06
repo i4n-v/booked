@@ -13,6 +13,11 @@ import Star from "./Star";
 import OutlinedStar from "./OutlinedStar";
 import Favorite from "./Favorite";
 import Filter from "./Filter";
+import Follow from "./Follow";
+import ArrowDown from "./ArrowDown";
+import ArrowUp from "./ArrowUp";
+import FavoriteOutlined from "./FavoriteOutlined";
+import Send from "./Send";
 
 export {
   Transfer,
@@ -30,4 +35,9 @@ export {
   OutlinedStar,
   Favorite,
   Filter,
+  Follow,
+  ArrowDown,
+  ArrowUp,
+  FavoriteOutlined,
+  Send,
 };

@@ -10,7 +10,7 @@ import {
   PositionTopDetail,
   Title,
   Wrapper,
-} from "../styles";
+} from "../sigin/styles";
 import { Link, router } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "styled-components/native";
@@ -27,7 +27,7 @@ import messages from "@/config/messages";
 import { matchRegex } from "@/config/regex";
 import { format } from "date-fns";
 
-const logo = require("../../../../assets/images/logo-dark.png");
+const logo = require("@/../assets/images/logo-dark.png");
 
 const validations = z
   .object({
@@ -85,7 +85,7 @@ export default function SignUp() {
 
     postUserMutation.mutate(data, {
       onSuccess(response) {
-        router.navigate("/");
+        router.navigate("/sigin");
         openNotification({ status: "success", message: response.message });
       },
       onError(error: any) {
@@ -104,13 +104,7 @@ export default function SignUp() {
           Cadastre<DescriptionDetail>-</DescriptionDetail>se
         </Title>
         <TextField control={control} name="name" label="Nome" required />
-        <DateField
-          control={control}
-          name="birth_date"
-          label="Data de nascimento"
-          placeholder="dd/mm/yyyy"
-          required
-        />
+        <DateField control={control} name="birth_date" label="Data de nascimento" required />
         <TextField control={control} name="email" label="E-mail" required />
         <TextField control={control} name="password" label="Senha" password required />
         <TextField

@@ -30,7 +30,7 @@ function Alert({
   title,
   message,
   open,
-  handleClose,
+  status = "error",
   onClose,
   onConfirm,
   onCancel,
@@ -49,8 +49,10 @@ function Alert({
   });
 
   const processMessage = (message: string) => {
-    return message.split(" ").map((str, index) => {
-      if (str.match(/(\*\D+\*)/gi)) {
+    const splitedMessage = message.match(/[^*]+|\*[^*]+\*/g);
+
+    return splitedMessage?.map((str) => {
+      if (str.match(/^\*.*|\*$/gi)) {
         const cleanStr = str.replace(/\*/g, "");
         return <Emphasis>{`${cleanStr} `}</Emphasis>;
       }
@@ -82,7 +84,6 @@ function Alert({
             {!hasActions && (
               <CloseButton
                 onPress={() => {
-                  if (handleClose instanceof Function) handleClose();
                   onClose();
                 }}
                 name="close-outline"
@@ -91,13 +92,13 @@ function Alert({
                 color={theme.colors.secondary[900]}
               />
             )}
-            <MajorCircle>
-              <MinorCircle>
+            <MajorCircle color={theme.colors[status][500] + "10"}>
+              <MinorCircle color={theme.colors[status][500] + "20"}>
                 <Icon
-                  name="md-alert-circle-outline"
+                  name="alert-circle-outline"
                   size={26}
                   icon={Ionicons}
-                  color={theme.colors.error[500]}
+                  color={theme.colors[status][500]}
                 />
               </MinorCircle>
             </MajorCircle>
@@ -118,7 +119,6 @@ function Alert({
               </MainButton>
               <MainButton
                 style={style.button}
-                colorScheme="error"
                 onPress={() => {
                   if (onConfirm instanceof Function) onConfirm();
                   onClose();

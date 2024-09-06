@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ProfileIcon } from "./styles";
 import { SearchHeader } from "@/components/Navigation/Headers";
-import { router, Slot } from "expo-router";
+import { router } from "expo-router";
 
 export default function AppLayout() {
   const { user } = useContext(AuthContext)!;
@@ -27,28 +27,28 @@ export default function AppLayout() {
           }}
         />
         <Tabs.Screen
-          name="library"
+          name="library/index"
           options={{
             title: "Biblioteca",
             tabBarIcon: () => <Library />,
           }}
         />
         <Tabs.Screen
-          name="solicitations"
+          name="solicitations/index"
           options={{
             title: "Solicitações",
             tabBarIcon: () => <Transfer />,
           }}
         />
         <Tabs.Screen
-          name="chat"
+          name="chat/index"
           options={{
-            title: "Menssagens",
+            title: "Menssagens/index",
             tabBarIcon: () => <Chat />,
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="profile/index"
           options={{
             title: "Perfil",
             tabBarIcon: () => {
@@ -65,7 +65,7 @@ export default function AppLayout() {
               router.navigate({
                 pathname: "/profile/[userId]",
                 params: {
-                  userId: user?.id,
+                  userId: user?.id!,
                 },
               });
             },

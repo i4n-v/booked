@@ -1,14 +1,20 @@
 interface IAlertProps {
   title: string;
   message: string;
-  open?: boolean;
-  handleClose(): void;
+  open: boolean;
+  status?: "error" | "info" | "success" | "warning";
   onClose(): void;
-  onConfirm(): void;
-  onCancel(): void;
+  onConfirm?(): void;
+  onCancel?(): void;
   confirmTextButton?: string;
   cancelTextButton?: string;
   hasActions?: boolean;
 }
 
-export { IAlertProps };
+interface IconContainerProps {
+  color: string;
+}
+
+type IStatusTypes = "error" | "success" | null;
+
+export { IAlertProps, IconContainerProps, IStatusTypes };

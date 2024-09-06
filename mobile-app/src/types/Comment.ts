@@ -5,11 +5,11 @@ type CommentCommom = {
   description: string;
 };
 interface Comment extends CommentCommom {
-  id?: string;
-  user?: IUser;
-  book_id?: string;
+  id: string;
+  user: IUser;
+  book_id: string;
   refered_by?: string;
-  total_responses?: number;
+  total_responses: number;
 }
 
 interface CommentCreate extends CommentCommom {

@@ -1,5 +1,3 @@
-import { ViewStyle } from "react-native";
-
 type BookCardProps = {
   title: string;
   author: string;
@@ -8,7 +6,6 @@ type BookCardProps = {
   rating: number;
   ratingQuantity: number;
   image?: string | null;
-  style?: ViewStyle;
   onPress?: () => void;
 };
 
