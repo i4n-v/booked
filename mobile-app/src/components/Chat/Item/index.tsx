@@ -10,6 +10,7 @@ import { TimePast } from "@/helpers";
 import { AuthContext } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import { UserPhoto } from "@/components/Cards/UserCard/styles";
+import Group from "@/components/Icons/Group";
 
 export default function Item(chat: IChat) {
   const theme = useTheme();
@@ -22,7 +23,7 @@ export default function Item(chat: IChat) {
   return (
       <TouchableHighlight onPress={_onPressButton}>
         <ChatItem.Container>
-          {receiver?.photo_url ? (
+          {chat.name ? <Group width={42} height={42} /> : receiver?.photo_url ? (
             <UserPhoto source={{ uri: receiver.photo_url }} resizeMode="cover" />
           ) : (
             <Account width={42} height={42} />
