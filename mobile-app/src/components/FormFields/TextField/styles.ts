@@ -51,6 +51,7 @@ const InputIconButton = styled(IconButton)<IInputIconProps>`
   right: ${({ direction }) => (direction === "right" ? "8px" : "initial")};
   left: ${({ direction }) => (direction === "left" ? "8px" : "initial")};
   bottom: ${({ error }) => (error ? "26px" : "3px")};
+  padding: 3px;
 `;
 
 export { InputContainer, TextInput, InputIconButton };

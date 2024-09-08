@@ -15,6 +15,7 @@ interface IAuthContextProps {
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   socket: Socket | null;
   handleLogout(): void;
+  connectSocket(token: string): void;
 }
 
 interface IAuthContextProviderProps {
@@ -37,7 +38,7 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
       onSettled() {
         setToken(null);
         setUser(null);
-        router.navigate("/");
+        router.navigate("/(app)/sigin");
       },
     });
   }
@@ -47,8 +48,10 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
       if (!response.valid) {
         return handleLogout();
       }
-
-      router.navigate("/home");
+      if(!socket?.connected){
+        connectSocket(token!)
+      }
+      router.navigate("/(app)/home");
     },
     onError() {
       handleLogout();
@@ -60,6 +63,25 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
     },
   });
 
+  async function connectSocket(token: string) {
+    try {
+      if (token) {
+        console.log(token)
+        const socketInstance = io(API_URL as string, {
+          extraHeaders: {
+            "x-access-token": token as string,
+          },
+        }).connect();
+        console.log(socketInstance)
+        setSocket(socketInstance);
+      } else {
+        console.log("No token found");
+      }
+    } catch (error) {
+      console.error("Error initializing socket:", error);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -68,7 +90,8 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
         token,
         setToken,
         handleLogout,
-        socket
+        socket,
+        connectSocket,
       }}
     >
       {children}

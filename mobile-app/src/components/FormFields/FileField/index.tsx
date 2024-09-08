@@ -1,71 +1,69 @@
-import React from 'react';
-import styled from 'styled-components/native';
-import { TouchableOpacity, Image, Alert, Text } from 'react-native';
-import {  Controller } from 'react-hook-form';
-import Picture from '@/components/Icons/Picture';
-import { isCancel, pick, pickSingle } from 'react-native-document-picker';
+import React from "react";
+import { Button, Text, View } from "react-native";
+import { Controller } from "react-hook-form";
+import * as DocumentPicker from "expo-document-picker";
+import { Container, FileButton } from "./style";
+import Picture from "@/components/Icons/Picture";
+import { useTheme } from "styled-components/native";
+import { copyAsync, documentDirectory } from "expo-file-system";
 
-const Container = styled.View`
-  flex-direction: row;
-  align-items: center;
-  width: 70px;
-  height: 44px;
-`;
+type InputFileProps = {
+  name: string;
+  control: any;
+  onSelectFile?(...args: any): any;
+  types?: string[] | string;
+};
 
-const FileButton = styled(TouchableOpacity)`
-  background-color: #9b59b6; /* Purple background */
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-`;
-
-const SelectedFileName = styled.Text`
-  flex: 1;
-  margin-left: 10px;
-  color: #333;
-`;
-
-
-interface IFileInput{
-    control: any;
-    name: string;
-}
-
-const FileField = ({control,name}: IFileInput) => {
-
+const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFile }) => {
   const pickDocument = async (onChange: (file: any) => void) => {
     try {
-      const result = await pickSingle({mode: "import"})
-      onChange(result);
-    } catch (err) {
-      if (isCancel(err)) {
-        // User canceled the picker
-      } else {
-        console.log(err)
-        Alert.alert('Error', `${err}`);
+      
+      const result = await DocumentPicker.getDocumentAsync({
+        type: types,
+        multiple: false,
+        copyToCacheDirectory: false
+      })
+
+      if (!result.canceled) {
+        
+        let {  name,size, uri ,mimeType} = result.assets[0];
+        const imageUri = documentDirectory + name
+        await copyAsync({
+          from: uri,
+          to: imageUri
+        })
+        var fileToUpload = {
+          name: name,
+          size: size,
+          uri: uri,
+          type:mimeType ,
+        };
+        onChange(fileToUpload);
+        if (onSelectFile instanceof Function) onSelectFile(fileToUpload);
       }
+    } catch (error) {
+      console.log(error);
+      
     }
   };
-
+  const theme = useTheme();
   return (
-    <Container>
-      <Controller
-        control={control}
-        name={name}
-        defaultValue={null}
-        render={({ field: { onChange, value } }) => (
-          <>
-            <FileButton onPress={() => pickDocument(onChange)} >
-              <Picture />
-            </FileButton>
-            {value && <SelectedFileName>{value.name}</SelectedFileName>}
-          </>
-        )}
-      />
-    </Container>
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange, value } }) => (
+        <Container>
+          <FileButton
+            variant={value ? "contained" : "outlined"}
+            hasValue={!!value}
+            onPress={() => pickDocument(onChange)}
+          >
+            <Picture fill={value ? "white" : theme.colors.primary?.[300]} />
+          </FileButton>
+        </Container>
+      )}
+    />
   );
 };
 
-export default FileField;
+export default InputFile;
