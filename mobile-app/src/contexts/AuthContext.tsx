@@ -1,9 +1,9 @@
-import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/services";
 import IUser from "@/types/User";
-import useAsyncStorage from "@/hooks/useAsyncStorage";
+import { useAsyncStorage, useNotifier } from "@/hooks/";
 import { router } from "expo-router";
 import { io, Socket } from "socket.io-client";
 import { API_URL } from "../../env";
@@ -25,6 +25,7 @@ interface IAuthContextProviderProps {
 const AuthContext = createContext<IAuthContextProps | null>(null);
 
 function AuthProvider({ children }: IAuthContextProviderProps) {
+  const { openNotification } = useNotifier();
   const [user, setUser] = useAsyncStorage<IUser | null>("user", null);
   const [token, setToken] = useAsyncStorage<string | null>("token", null);
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -35,10 +36,18 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
 
   async function handleLogout() {
     logoutMutation.mutate(undefined, {
-      onSettled() {
-        setToken(null);
-        setUser(null);
-        router.navigate("/(app)/sigin");
+      onSettled(response, error: any) {
+        if (response || error.message === "Conexão não autorizada.") {
+          setToken(null);
+          setUser(null);
+          router.navigate("/sigin");
+        } else {
+          router.navigate("/home");
+          openNotification({
+            status: "error",
+            message: "Não foi possivel se comunicar com o servidor.",
+          });
+        }
       },
     });
   }

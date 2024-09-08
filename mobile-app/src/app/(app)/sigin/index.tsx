@@ -25,7 +25,7 @@ import { useAuth } from "@/services";
 import { useMutation } from "react-query";
 import { AuthContext } from "@/contexts/AuthContext";
 
-const logo = require("../../../../assets/images/logo-dark.png");
+const logo = require("@/../assets/images/logo-dark.png");
 
 const validations = z
   .object({

@@ -8,6 +8,8 @@ import { useState } from "react";
 import { EmptyComponent, RefreshControl } from "@/components";
 import { Dimensions, SectionList } from "react-native";
 import IBook from "@/types/Book";
+import { router } from "expo-router";
+import { useRefetchOnFocus } from "@/hooks";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -28,6 +30,16 @@ function Home() {
 
       setBooks((books) => (page === 2 ? response.items : [...books, ...response.items]));
     },
+  });
+
+  useRefetchOnFocus(() => {
+    topTenBooksQuery.refetch();
+
+    if (page !== 2) {
+      setPage(2);
+    } else {
+      booksQuery.refetch();
+    }
   });
 
   const sections = [
@@ -67,6 +79,12 @@ function Home() {
                   price={item.price}
                   rating={item.rating}
                   ratingQuantity={item.total_users_rating}
+                  onPress={() =>
+                    router.navigate({
+                      pathname: "/books/[id]",
+                      params: { id: item.id },
+                    })
+                  }
                 />
               )}
               keyExtractor={(item) => item.id}
@@ -96,7 +114,12 @@ function Home() {
             price={item.price}
             rating={item.rating}
             ratingQuantity={item.total_users_rating}
-            onPress={() => {}}
+            onPress={() =>
+              router.navigate({
+                pathname: "/books/[id]",
+                params: { id: item.id },
+              })
+            }
           />
         );
       }}

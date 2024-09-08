@@ -182,6 +182,7 @@ router.put(
  *               rating: float
  *               total_users_rating: integer
  *               acquisition_id: integer
+ *               solicitation_id: integer
  *               marked_page: integer
  *               wished: boolean
  *               categories: array
@@ -202,6 +203,7 @@ router.put(
  *                   rating: 0
  *                   total_users_rating: 0
  *                   acquisition_id: 'a29fb524-a8f0-4dc1-a8f0-66410097266b'
+ *                   solicitation_id: '6641009-a8f0-4dc1-a8f0-66410097266b'
  *                   marked_page: 25
  *                   wished: true
  *                   categories:

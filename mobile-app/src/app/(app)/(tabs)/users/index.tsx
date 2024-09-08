@@ -7,7 +7,7 @@ import { ListCounter, RefreshControl } from "@/components";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import IUser from "@/types/User";
 import { UserCard } from "@/components/Cards";
-import { useNotifier } from "@/hooks";
+import { useNotifier, useRefetchOnFocus } from "@/hooks";
 
 export default function Users() {
   const { openNotification } = useNotifier();
@@ -44,6 +44,14 @@ export default function Users() {
       },
     },
   );
+
+  useRefetchOnFocus(() => {
+    if (page !== 1) {
+      setPage(2);
+    } else {
+      usersQuery.refetch();
+    }
+  });
 
   function toggleFollowUser(user: IUser, index: number) {
     if (user.followed) {

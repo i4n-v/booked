@@ -17,7 +17,7 @@ import toBRL from "@/utils/toBRL";
 import { Favorite } from "@/components/Icons";
 import { useTheme } from "styled-components/native";
 
-const unknownPhoto = require("../../../../assets/images/unknown-photo.jpg");
+const unknownPhoto = require("@/../assets/images/unknown-photo.jpg");
 
 export default function BookCard({
   title,

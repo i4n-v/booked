@@ -198,8 +198,8 @@ function Chat() {
         <Divider />
         {!!groupUsers.length && (
           <View style={{flexDirection: "row", flexWrap: "wrap",gap: 4}}>
-            {groupUsers.map((item: any) => (
-              <TouchableHighlight onPress={() => hanldeRemoveGroupUser(item)}>
+            {groupUsers.map((item: any,index: number) => (
+              <TouchableHighlight key={index} onPress={() => hanldeRemoveGroupUser(item)}>
                 <View style={{width: 55}}>
                   {item.photo_url ? (
                     <UserPhoto source={{ uri: item.photo_url }} resizeMode="cover" />

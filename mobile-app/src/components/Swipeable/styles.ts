@@ -1,9 +1,7 @@
 import styled from "styled-components/native";
 
 interface IIconContainerProps {
-  index: number;
   length: number;
-  color: string;
   disabled: boolean;
 }
 
@@ -26,13 +24,11 @@ const SwipeableContainer = styled.View`
 const IconContainer = styled.View<IIconContainerProps>`
   justify-content: center;
   align-items: center;
-  background-color: ${({ color }) => color};
+  background-color: ${({ theme }) => theme.colors.secondary?.[100]};
   height: 100%;
-  width: ${({ index }) => (index === 0 ? "95px" : "80px")};
+  width: 60px;
   border-color: ${({ theme }) => theme.colors.secondary?.[0]};
   border-right-width: 1px;
-  border-top-right-radius: ${({ index, length }) => (index === length ? "12px" : 0)};
-  border-bottom-right-radius: ${({ index, length }) => (index === length ? "12px" : 0)};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 

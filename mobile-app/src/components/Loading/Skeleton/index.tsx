@@ -4,12 +4,14 @@ import { ISkeletonProps, ISkeletonTemplates } from "./types";
 import SkeletonMessage from "./Templates/SkeletonMessage";
 import SkeletonChat from "./Templates/SkeletonChat";
 import SkeletonUserCard from "./Templates/SkeletonUserCard";
+import SkeletonCommentCard from "./Templates/SkeletonCommentCard";
 
 const templates: ISkeletonTemplates = {
   "book-card": SkeletonBookCard,
   "message": SkeletonMessage,
   "chat": SkeletonChat,
   "user-card": SkeletonUserCard,
+  "comment-card": SkeletonCommentCard,
 };
 
 export default function Skeleton({ quantity = 1, template, style }: ISkeletonProps) {

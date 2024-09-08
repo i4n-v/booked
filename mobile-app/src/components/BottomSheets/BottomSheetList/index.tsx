@@ -19,6 +19,7 @@ function BottomSheetListComponent<T extends Record<string, any>>(
     indicatorStyle,
     backDropStyle,
     flatListProps,
+    FooterComponent,
     onOpen,
     onClose,
     ...props
@@ -71,7 +72,11 @@ function BottomSheetListComponent<T extends Record<string, any>>(
           return index;
         }}
         ListFooterComponent={
-          flatListProps?.loading ? <SpinnerLoading /> : flatListProps?.ListFooterComponent
+          flatListProps?.loading && flatListProps?.ListFooterComponent ? (
+            flatListProps.ListFooterComponent
+          ) : flatListProps?.loading ? (
+            <SpinnerLoading />
+          ) : null
         }
         ListEmptyComponent={
           !flatListProps?.loading
@@ -83,6 +88,7 @@ function BottomSheetListComponent<T extends Record<string, any>>(
             : null
         }
       />
+      {FooterComponent && <FooterComponent />}
     </BottomSheetModal>
   );
 }

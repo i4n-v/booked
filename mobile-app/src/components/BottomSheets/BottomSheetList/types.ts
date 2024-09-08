@@ -18,6 +18,7 @@ interface IBottomSheetListProps<T> extends IBottomSheetProps {
   snapPoints?: Array<string | number>;
   enableBackdropInteractions?: boolean;
   indicatorStyle?: StyleProp<ViewStyle>;
+  FooterComponent?: React.ComponentType<any> | null;
   backDropStyle?: StyleProp<ViewStyle>;
   flatListProps: IFlatlisProps<T>;
   onOpen?(): void;
