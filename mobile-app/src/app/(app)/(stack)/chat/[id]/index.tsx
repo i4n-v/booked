@@ -1,9 +1,9 @@
 import { TextField } from "@/components/FormFields";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import Message from "../../../../../components/Chat/Message";
 import { useMutation, useQuery } from "react-query";
-import { useBook, useChat, useMessage } from "@/services";
-import { useContext, useEffect, useState } from "react";
+import { useBook, useChat, useMessage, useUser } from "@/services";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import Styled from "./styled";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/Loading";
 import FileField from "@/components/FormFields/FileField";
 import { BottomSheet } from "@/components/BottomSheets";
 import { useBottomSheet, useDebounceCallback, useNotifier } from "@/hooks";
-import { Dimensions,  ImageBackground, View } from "react-native";
+import { Dimensions, ImageBackground, View } from "react-native";
 import { Search } from "@/components/Icons";
 import IBook from "@/types/Book";
 import Close from "@/components/Icons/Close";
@@ -52,6 +52,7 @@ function Messages() {
   const { user, socket, token } = useContext(AuthContext)!;
   const { getMessages, getChat } = useChat();
   const { createMessage } = useMessage();
+  const {getUser} = useUser()
   const { getBooks } = useBook();
   const [chat, setChat] = useState<Partial<IChat> | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -62,6 +63,7 @@ function Messages() {
     current: 1,
     max: 1,
   });
+  const [receiver,setReveiver] = useState<Partial<IUser>>()
   const debounceBookSearch = useDebounceCallback((value: string) => setBookSearch(value));
   const sendMutation = useMutation({
     mutationFn: createMessage,
@@ -72,9 +74,22 @@ function Messages() {
     queryFn: () => getChat({ id: params?.id }),
     queryKey: ["get-chat", params?.id],
     onSuccess(data) {
+      setReveiver(data.users?.find((chatUser) => chatUser.id !== user?.id))
       setChat(data);
     },
+    onError(){
+      setReveiver({id: params?.id})
+    }
   });
+
+  useQuery({
+    queryFn: () => getUser(receiver?.id!),
+    queryKey: ['get-user'],
+    onSuccess(data){
+      setReveiver(data)      
+    },
+    enabled: !!receiver
+  })
 
   const { isFetching } = useQuery({
     queryFn: () => getMessages(chat?.id!, { page: page.current, limit: 5 }),
@@ -97,8 +112,6 @@ function Messages() {
   });
 
   const sendMessage = handleSubmit(({ message, books, image }) => {
-    const receiver: IUser | undefined = chat?.users?.find((chatUser) => chatUser.id !== user?.id);
-
     if (image) message = "";
     if (!message && !image && !books.length) return;
     sendMutation.mutate(
@@ -170,6 +183,15 @@ function Messages() {
   }
 
   const { width, height } = Dimensions.get("window");
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    if (chat?.name || receiver?.name) {
+      navigation.setOptions({
+        title: chat?.name || receiver?.name,
+      });
+    }
+  }, [chat,receiver]);
 
   return (
     <Styled.Container>
