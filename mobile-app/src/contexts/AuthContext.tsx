@@ -75,13 +75,11 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
   async function connectSocket(token: string) {
     try {
       if (token) {
-        console.log(token)
         const socketInstance = io(API_URL as string, {
           extraHeaders: {
             "x-access-token": token as string,
           },
         }).connect();
-        console.log(socketInstance)
         setSocket(socketInstance);
       } else {
         console.log("No token found");
