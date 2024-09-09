@@ -61,7 +61,8 @@ import authMidleware from '../midlewares/auth.midleware';
  *         $ref: '#/components/responses/error'
  */
 router.get('/chats', authMidleware, ChatController.index);
-router.get('/chats/:id', authMidleware, ChatController.index);
+
+router.get('/chats/:id', authMidleware, ChatController.show);
 
 /**
  * @openapi

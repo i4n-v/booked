@@ -1,7 +1,10 @@
-interface MessageContentProps {
-    mine?: boolean
+import { IMessage } from "@/types/Message";
+import { GestureResponderEvent } from "react-native";
+
+export interface MessageContentProps {
+  mine?: boolean;
 }
 
-interface MessageProps extends MessageContentProps {
-    content?: string
+export interface MessageProps extends IMessage {
+  onPressImage: (((event: GestureResponderEvent) => void) & (() => void)) | undefined;
 }

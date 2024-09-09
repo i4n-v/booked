@@ -24,6 +24,7 @@ import IBook from "@/types/Book";
 import Close from "@/components/Icons/Close";
 import { IChat } from "@/types/Chat";
 import { BottomSheetButton, BottomSheetHeader, BottomSheetTitle } from "../styles";
+import { PageParams } from "../types";
 
 const validations = z
   .object({
@@ -36,10 +37,36 @@ const validations = z
 type IMessageForm = z.infer<typeof validations>;
 
 function Messages() {
-  const params = useLocalSearchParams<{ id: string }>();
-  const { openNotification } = useNotifier();
+  const [chat, setChat] = useState<Partial<IChat> | null>(null);
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [bookSToSend, setBooksToSend] = useState<IBook[]>([]);
+  const [bookSearch, setBookSearch] = useState<string>();
+  const [viewImage, setViewImage] = useState<string | null>(null);
+  const [page, setPage] = useState<PageParams>({
+    current: 1,
+    max: 1,
+  });
+  const [receiver, setReveiver] = useState<Partial<IUser>>();
+  const { user, socket, token } = useContext(AuthContext)!;
+
+  const { getMessages, getChat } = useChat();
+  const { createMessage } = useMessage();
+  const { getUser } = useUser();
+  const { getBooks } = useBook();
+
+  const sendMutation = useMutation({
+    mutationFn: createMessage,
+    mutationKey: "create-message",
+  });
+
+  const { width, height } = Dimensions.get("window");
+  const navigation = useNavigation();
   const [refFilter, handleOpenFilter, handleCloseFilter] = useBottomSheet();
-  const [refImageView, handleOpenImage, handleCloseImage] = useBottomSheet();
+  const [refImageView, handleOpenImage] = useBottomSheet();
+  const debounceBookSearch = useDebounceCallback((value: string) => setBookSearch(value));
+  const { openNotification } = useNotifier();
+  const params = useLocalSearchParams<{ id: string }>();
+
   const { control, watch, handleSubmit, reset, resetField, setValue } = useForm<IMessageForm>({
     resolver: zodResolver(validations),
     defaultValues: {
@@ -49,47 +76,27 @@ function Messages() {
     },
   });
   const [message_field, image] = watch(["message", "image"]);
-  const { user, socket, token } = useContext(AuthContext)!;
-  const { getMessages, getChat } = useChat();
-  const { createMessage } = useMessage();
-  const {getUser} = useUser()
-  const { getBooks } = useBook();
-  const [chat, setChat] = useState<Partial<IChat> | null>(null);
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [bookSToSend, setBooksToSend] = useState<IBook[]>([]);
-  const [bookSearch, setBookSearch] = useState<string>();
-  const [viewImage, setViewImage] = useState<string | null>(null);
-  const [page, setPage] = useState<{ current: number; max: number }>({
-    current: 1,
-    max: 1,
-  });
-  const [receiver,setReveiver] = useState<Partial<IUser>>()
-  const debounceBookSearch = useDebounceCallback((value: string) => setBookSearch(value));
-  const sendMutation = useMutation({
-    mutationFn: createMessage,
-    mutationKey: "create-message",
-  });
 
   useQuery({
     queryFn: () => getChat({ id: params?.id }),
     queryKey: ["get-chat", params?.id],
     onSuccess(data) {
-      setReveiver(data.users?.find((chatUser) => chatUser.id !== user?.id))
+      setReveiver(data.users?.find((chatUser) => chatUser.id !== user?.id));
       setChat(data);
     },
-    onError(){
-      setReveiver({id: params?.id})
-    }
+    onError() {
+      setReveiver({ id: params?.id });
+    },
   });
 
   useQuery({
     queryFn: () => getUser(receiver?.id!),
-    queryKey: ['get-user'],
-    onSuccess(data){
-      setReveiver(data)      
+    queryKey: ["get-user"],
+    onSuccess(data) {
+      setReveiver(data);
     },
-    enabled: !!receiver
-  })
+    enabled: !!receiver,
+  });
 
   const { isFetching } = useQuery({
     queryFn: () => getMessages(chat?.id!, { page: page.current, limit: 5 }),
@@ -119,7 +126,7 @@ function Messages() {
         chat_id: chat?.id!,
         content: message,
         photo: image,
-        receiver_id: receiver?.id || params.id,
+        receiver_id: receiver?.id!,
         sender_id: user?.id as string,
         books: books,
       },
@@ -141,6 +148,22 @@ function Messages() {
     );
   });
 
+  const sendBooks = () => {
+    if (!bookSToSend.length) return;
+    setValue(
+      "books",
+      bookSToSend.map((book) => book.id),
+    );
+    sendMessage();
+  };
+
+  function hanldeAddBook(book: IBook) {
+    setBooksToSend((curr) => [...curr, book]);
+  }
+  function hanldeRemoveBook(book: IBook) {
+    setBooksToSend((curr) => curr.filter((item) => item.id !== book.id));
+  }
+
   useEffect(() => {
     socket?.emit("enter-in-chat", chat?.id);
   }, [chat]);
@@ -160,30 +183,13 @@ function Messages() {
     }
 
     return () => {
-      socket?.off(`receive-message-${chat?.id}-${user?.id}`);
-      socket?.off(`deleted-message-${chat?.id}-${user?.id}`);
+      if (chat?.id) {
+        socket?.off(`receive-message-${chat?.id}-${user?.id}`);
+        socket?.off(`deleted-message-${chat?.id}-${user?.id}`);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat]);
-
-  const sendBooks = () => {
-    if (!bookSToSend.length) return;
-    setValue(
-      "books",
-      bookSToSend.map((book) => book.id),
-    );
-    sendMessage();
-  };
-
-  function hanldeAddBook(book: IBook) {
-    setBooksToSend((curr) => [...curr, book]);
-  }
-  function hanldeRemoveBook(book: IBook) {
-    setBooksToSend((curr) => curr.filter((item) => item.id !== book.id));
-  }
-
-  const { width, height } = Dimensions.get("window");
-  const navigation = useNavigation();
 
   useLayoutEffect(() => {
     if (chat?.name || receiver?.name) {
@@ -191,7 +197,7 @@ function Messages() {
         title: chat?.name || receiver?.name,
       });
     }
-  }, [chat,receiver]);
+  }, [chat, receiver]);
 
   return (
     <Styled.Container>
@@ -203,19 +209,18 @@ function Messages() {
         }}
         onClose={() => setViewImage(null)}
       >
-        <View style={{ width, height }}>
-          <ImageBackground
+        <Styled.ImagePreviewContainer width={width} height={height}>
+          <Styled.ImagePreview
             source={{ uri: viewImage! }}
-            style={{ width: "100%", height: "100%" }}
             resizeMode="contain"
           />
-        </View>
+        </Styled.ImagePreviewContainer>
       </BottomSheet>
       <BottomSheet
         ref={refFilter}
         snapPoints={["75%"]}
         scrollViewProps={{
-          contentContainerStyle: { padding: 20, gap: 20 },
+          contentContainerStyle: { padding: 16, gap: 20 },
         }}
         onClose={() => setBooksToSend([])}
       >
@@ -245,7 +250,7 @@ function Messages() {
           return (
             <Styled.BookListItem
               onPress={() => (added ? hanldeRemoveBook(item) : hanldeAddBook(item))}
-              key={index}
+              key={`${item.id}-index`}
               active={added}
             >
               <Styled.BookTitle>{item.name}</Styled.BookTitle>

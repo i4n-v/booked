@@ -30,53 +30,52 @@ import { Divider } from "../../(tabs)/home/styles";
 import { z } from "zod";
 import { UserPhoto } from "@/components/Cards/UserCard/styles";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PageParams } from "./types";
 
 const validations = z
   .object({
     users: z.array(z.object({ id: z.string() })).min(3),
-    name: z.string().min(1,"Informe um nome para o chat em grupo.")
+    name: z.string().min(1, "Informe um nome para o chat em grupo."),
   })
-  .required().refine((data) => data.users.length >= 3, {
-    message: "Um grupo deve conter o minimo de 3 participantes.", 
-    path: ["name"], 
-  });;
+  .required()
+  .refine((data) => data.users.length >= 3, {
+    message: "Um grupo deve conter o minimo de 3 participantes.",
+    path: ["name"],
+  });
 
 type IGroupForm = z.infer<typeof validations>;
 function Chat() {
-  const {openNotification} = useNotifier()
+  const { openNotification } = useNotifier();
+  const theme = useTheme();
+  const navigation = useNavigation();
+
+  const [userGroup, setUsersGroup] = useState<boolean>(false);
   const [filterBy, setFilterBy] = useState<"chats" | "users">("chats");
   const [chats, setChats] = useState<IChat[]>([]);
   const [userList, setUserList] = useState<IUser[]>([]);
-  const [page, setPage] = useState<{ max: number; current: number }>({
+  const [page, setPage] = useState<PageParams>({
     max: 1,
     current: 1,
   });
   const [filter, setFilter] = useState<string>();
-  const debounceFilter = useDebounceCallback((value: string) => {
-    setFilter(value);
-    setPage({ current: 1, max: 1 });
-  });
-  const theme = useTheme();
-  const { getChats,createGroup } = useChat();
-  const { getUsers } = useUser();
-  function toggleFilterType() {
-    setFilterBy((filterBy) => (filterBy === "chats" ? "users" : "chats"));
-  }
   const { user: userData, socket } = useContext(AuthContext)!;
   const [refFilter, handleOpenFilter, handleCloseFilter] = useBottomSheet();
-  const [refCreateGroup, handleOpenCreateGroup,handleCloseCreateGroup] = useBottomSheet();
-  const [userGroup, setUsersGroup] = useState<boolean>(false);
+  const [refCreateGroup, handleOpenCreateGroup, handleCloseCreateGroup] = useBottomSheet();
+
+  const { getChats, createGroup } = useChat();
+  const { getUsers } = useUser();
+
   const createMutation = useMutation({
     mutationKey: ["createGroup"],
     mutationFn: createGroup,
   });
 
-  const { control, watch, setValue,handleSubmit } = useForm<IGroupForm>({
+  const { control, watch, setValue, handleSubmit } = useForm<IGroupForm>({
     defaultValues: {
       users: [],
-      name: ''
+      name: "",
     },
-    resolver: zodResolver(validations)
+    resolver: zodResolver(validations),
   });
 
   const [groupUsers] = watch(["users"]);
@@ -110,6 +109,35 @@ function Chat() {
     },
   });
 
+  useEffect(() => {
+    if (userData?.id) {
+      socket?.on(`receive-chat-${userData?.id}`, (arg: IChat) => {
+        setChats((curr) => [arg, ...curr.filter((item) => item.id !== arg.id)]);
+      });
+    }
+    return () => {
+      if (userData?.id) {
+        socket?.off(`receive-chat-${userData?.id}`);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Mensagens",
+      handleMorePress: handleOpenFilter,
+    });
+  }, [navigation]);
+
+  const debounceFilter = useDebounceCallback((value: string) => {
+    setFilter(value);
+    setPage({ current: 1, max: 1 });
+  });
+  function toggleFilterType() {
+    setFilterBy((filterBy) => (filterBy === "chats" ? "users" : "chats"));
+  }
+
   function hanldeAddGroupUser(user: IUser) {
     setValue("users", [...groupUsers, user]);
   }
@@ -120,25 +148,23 @@ function Chat() {
     );
   }
 
-  useEffect(() => {
-    socket?.on(`receive-chat-${userData?.id}`, (arg: IChat) => {
-      setChats((curr) => [arg, ...curr.filter((item) => item.id !== arg.id)]);
-    });
-
-    return () => {
-      socket?.off(`receive-chat-${userData?.id}`);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData]);
-
-  const navigation = useNavigation();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: "Mensagens",
-      handleMorePress: handleOpenFilter,
-    });
-  }, [navigation]);
+  const handleCreateGroup = handleSubmit(({ name, users }) => {
+    createMutation.mutate(
+      {
+        name: name,
+        users: users.map((user) => user.id as string),
+      },
+      {
+        onSuccess(data) {
+          openNotification({ message: data.message, status: "success" });
+          handleCloseCreateGroup();
+        },
+        onError(data: any) {
+          openNotification({ message: data.message, status: "error" });
+        },
+      },
+    );
+  });
 
   const flatListProps = {
     loading: isFetching,
@@ -150,24 +176,6 @@ function Chat() {
       }
     },
   };
-
-  const handleCreateGroup = handleSubmit(({name,users}) => {
-    createMutation.mutate(
-      {
-        name: name,
-        users: users.map((user) => user.id as string),
-      },
-      {
-        onSuccess(data) {
-          openNotification({message: data.message,status: "success"});
-          handleCloseCreateGroup();
-        },
-        onError(data: any) {
-          openNotification({message: data.message,status: "error"});
-        },
-      }
-    );
-  })
 
   return (
     <View>
@@ -197,10 +205,10 @@ function Chat() {
         <TextField control={control} name="name" label="Nome do Grupo" />
         <Divider />
         {!!groupUsers.length && (
-          <View style={{flexDirection: "row", flexWrap: "wrap",gap: 4}}>
-            {groupUsers.map((item: any,index: number) => (
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+            {groupUsers.map((item: any, index: number) => (
               <TouchableHighlight key={index} onPress={() => hanldeRemoveGroupUser(item)}>
-                <View style={{width: 55}}>
+                <View style={{ width: 55 }}>
                   {item.photo_url ? (
                     <UserPhoto source={{ uri: item.photo_url }} resizeMode="cover" />
                   ) : (
@@ -220,21 +228,11 @@ function Chat() {
         {userList?.map((item, index) => {
           const added = groupUsers.some((added) => added.id === item.id);
           return (
-            <TouchableHighlight
-              key={index}
-              onPress={() => (added ? hanldeRemoveGroupUser(item) : hanldeAddGroupUser(item))}
-            >
-              <UserListItem.Container active={added}>
-                {item.photo_url ? (
-                  <UserPhoto source={{ uri: item.photo_url }} resizeMode="cover" />
-                ) : (
-                  <Account width={42} height={42} />
-                )}
-                <UserListItem.Center>
-                  <UserListItem.Username numberOfLines={1}>{item.name}</UserListItem.Username>
-                </UserListItem.Center>
-              </UserListItem.Container>
-            </TouchableHighlight>
+            <UserItem
+              active={added}
+              customOnPress={() => (added ? hanldeRemoveGroupUser(item) : hanldeAddGroupUser(item))}
+              {...item}
+            />
           );
         })}
       </BottomSheet>

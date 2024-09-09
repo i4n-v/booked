@@ -1,6 +1,7 @@
 import { MainButton } from "@/components/Buttons";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
+import { BookListItemProps, ImagePreviewContainerProps } from "./types";
 
 const Container = styled.View`
     height: 100%;
@@ -42,7 +43,7 @@ const SelectedBookItem = styled(TouchableOpacity)`
     align-items: center;
     background-color:${({ theme }) => theme.colors.primary?.[300]};
 `;
-const BookListItem = styled(TouchableOpacity)<{ active?: boolean }>`
+const BookListItem = styled(TouchableOpacity)<BookListItemProps>`
     height: 42px;
     background-color: ${({ theme, active }) => (active ? theme.colors.primary?.[0] : theme.colors.secondary?.[50])};
     border-radius: 10px ;
@@ -60,6 +61,16 @@ const BookListItemTitle = styled.Text`
 const BookTitle = styled.Text`
     color: ${({ theme }) => theme.colors.secondary?.[1000]};
 `;
+
+const ImagePreview = styled.ImageBackground`
+    width: 100%;
+    height: 100%;
+`;
+
+const ImagePreviewContainer = styled.View<ImagePreviewContainerProps>`
+    width: ${({ width }) => width}px;
+    height: ${({ height }) => height}px;
+`;
 export default {
   Container,
   SendSession,
@@ -70,4 +81,6 @@ export default {
   SelectedBooksSession,
   SelectedBookItem,
   BookListItemTitle,
+  ImagePreview,
+  ImagePreviewContainer,
 };

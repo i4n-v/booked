@@ -4,7 +4,6 @@ import { Text, TouchableHighlight } from "react-native";
 import Badge from "@/components/Badge";
 import { useTheme } from "styled-components/native";
 import { useContext } from "react";
-import Swipeable from "@/components/Swipeable";
 import { IChat } from "@/types/Chat";
 import { TimePast } from "@/helpers";
 import { AuthContext } from "@/contexts/AuthContext";

@@ -1,7 +1,8 @@
 import { Text, View } from "react-native";
 import styled from "styled-components/native";
+import { ContainerProps } from "./types";
 
-const Container = styled(View)<{active?: boolean}>`
+const Container = styled(View)<ContainerProps>`
     display: flex;
     flex-direction: row;
     padding: 20px;

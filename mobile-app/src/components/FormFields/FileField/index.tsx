@@ -1,5 +1,4 @@
 import React from "react";
-import { Button, Text, View } from "react-native";
 import { Controller } from "react-hook-form";
 import * as DocumentPicker from "expo-document-picker";
 import { Container, FileButton } from "./style";

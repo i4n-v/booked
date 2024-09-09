@@ -49,7 +49,7 @@ export default function AppLayout() {
           listeners={() => ({
             tabPress: (e) => {
               e.preventDefault()
-              router.push("/(app)/(stack)/chat") /// your screen without Tab bar
+              router.push("/(app)/(stack)/chat")
             },
           })}
         />

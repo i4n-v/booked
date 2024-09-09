@@ -18,15 +18,9 @@ class ChatController {
       const {
         query,
         auth,
-        params: { id },
       } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
-      if (id) {
-        const chats = await ChatRepository.findById(id);
-
-        return response.json(chats);
-      }
 
       const loggedUserChatsLiteral = `(
         SELECT
@@ -115,7 +109,7 @@ class ChatController {
       } = request;
       const { name, users }: IChatBody = body;
 
-      const chat = await ChatRepository.findById(id);
+      const chat = await ChatRepository.findById(id,auth.id);
 
       if (!chat) {
         return response.status(404).json({ message: 'O grupo não foi encontrado.' });
@@ -171,6 +165,27 @@ class ChatController {
 
         return response.json({ message: messages.update('Grupo') });
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const {
+        auth,
+        params: { id },
+      } = request;
+
+      const chat = await ChatRepository.findById(id, auth.id);
+
+      if (!chat) {
+        return response.status(400).json({
+          message: messages.unknown('Usuário'),
+        });
+      }
+
+      return response.json(chat);
     } catch (error) {
       next(error);
     }
