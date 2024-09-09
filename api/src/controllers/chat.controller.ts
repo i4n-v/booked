@@ -15,10 +15,7 @@ interface IChatBody extends ChatCreateDto {
 class ChatController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const {
-        query,
-        auth,
-      } = request;
+      const { query, auth } = request;
       const page = query.page ? parseInt(query.page as unknown as string) : 1;
       const limit = query.limit ? parseInt(query.limit as unknown as string) : 75;
 
@@ -109,7 +106,7 @@ class ChatController {
       } = request;
       const { name, users }: IChatBody = body;
 
-      const chat = await ChatRepository.findById(id,auth.id);
+      const chat = await ChatRepository.findById(id);
 
       if (!chat) {
         return response.status(404).json({ message: 'O grupo não foi encontrado.' });
@@ -173,11 +170,10 @@ class ChatController {
   async show(request: Request, response: Response, next: NextFunction) {
     try {
       const {
-        auth,
         params: { id },
       } = request;
 
-      const chat = await ChatRepository.findById(id, auth.id);
+      const chat = await ChatRepository.findById(id);
 
       if (!chat) {
         return response.status(400).json({
