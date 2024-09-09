@@ -43,7 +43,7 @@ const AnimatedForm = Animated.createAnimatedComponent(Form);
 export default function SignIn() {
   const theme = useTheme();
   const { openNotification } = useNotifier();
-  const { setUser, setToken } = useContext(AuthContext)!;
+  const { setUser, setToken,connectSocket } = useContext(AuthContext)!;
 
   const { login } = useAuth();
   const loginMutation = useMutation(login);
@@ -61,6 +61,7 @@ export default function SignIn() {
       onSuccess({ token, ...user }) {
         setToken(token);
         setUser(user);
+        connectSocket(token)
         router.navigate("/home");
         openNotification({ status: "success", message: "Autenticado com sucesso!" });
       },

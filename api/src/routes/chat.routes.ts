@@ -62,6 +62,8 @@ import authMidleware from '../midlewares/auth.midleware';
  */
 router.get('/chats', authMidleware, ChatController.index);
 
+router.get('/chats/:id', authMidleware, ChatController.show);
+
 /**
  * @openapi
  * /chats/{id}/messages:

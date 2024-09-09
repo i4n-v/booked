@@ -46,6 +46,12 @@ export default function AppLayout() {
             title: "Mensagens",
             tabBarIcon: () => <Chat />,
           }}
+          listeners={() => ({
+            tabPress: (e) => {
+              e.preventDefault()
+              router.push("/(app)/(stack)/chat")
+            },
+          })}
         />
         <Tabs.Screen
           name="profile/[userId]"

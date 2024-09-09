@@ -166,6 +166,26 @@ class ChatController {
       next(error);
     }
   }
+
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const {
+        params: { id },
+      } = request;
+
+      const chat = await ChatRepository.findById(id);
+
+      if (!chat) {
+        return response.status(400).json({
+          message: messages.unknown('Usuário'),
+        });
+      }
+
+      return response.json(chat);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new ChatController();
