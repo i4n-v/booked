@@ -1,29 +1,26 @@
 import React from "react";
-import { ClipPath, Defs, G, LinearGradient, Path, Stop, Svg, SvgProps } from "react-native-svg";
+import {
+  ClipPath,
+  Defs,
+  G,
+  Path,
+  Rect,
+  Svg,
+  SvgProps,
+} from "react-native-svg";
 
-export default function User({ color, ...props }: SvgProps) {
+export default function Send(props: SvgProps) {
   return (
-    <Svg width={32} height={32} viewBox="0 0 32 32" fill="none" {...props}>
-      <G clipPath="url(#clip0_892_2986)">
+    <Svg width="22" height="22" viewBox="0 0 22 22" fill="none" {...props}>
+      <G clip-path="url(#clip0_1748_10597)">
         <Path
-          d="M4.533 27.2L27.8 17.227c1.08-.467 1.08-1.987 0-2.454L4.533 4.8A1.323 1.323 0 002.68 6.013l-.013 6.147c0 .667.493 1.24 1.16 1.32L22.667 16l-18.84 2.507a1.349 1.349 0 00-1.16 1.333l.013 6.147c0 .946.973 1.6 1.853 1.213z"
-          fill="url(#paint0_linear_892_2986)"
+          d="M3.11634 18.7L19.1122 11.8433C19.8547 11.5225 19.8547 10.4775 19.1122 10.1566L3.11634 3.29997C2.51134 3.03414 1.84217 3.48331 1.84217 4.13414L1.83301 8.35997C1.83301 8.81831 2.17217 9.21247 2.63051 9.26747L15.583 11L2.63051 12.7233C2.17217 12.7875 1.83301 13.1816 1.83301 13.64L1.84217 17.8658C1.84217 18.5166 2.51134 18.9658 3.11634 18.7Z"
+          fill="white"
         />
       </G>
       <Defs>
-        <LinearGradient
-          id="paint0_linear_892_2986"
-          x1={15.6384}
-          y1={4.68683}
-          x2={15.6384}
-          y2={27.3132}
-          gradientUnits="userSpaceOnUse"
-        >
-          <Stop stopColor={color ?? "#9B51E0"} />
-          <Stop offset={1} stopColor={color ?? "#720ECF"} />
-        </LinearGradient>
-        <ClipPath id="clip0_892_2986">
-          <Path fill="#fff" d="M0 0H32V32H0z" />
+        <ClipPath id="clip0_1748_10597">
+          <Rect width="22" height="22" fill="white" />
         </ClipPath>
       </Defs>
     </Svg>

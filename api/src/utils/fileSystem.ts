@@ -16,7 +16,7 @@ class FileSystem {
   }
 
   filePathToUpload(path: string) {
-    const url = path.replace(/.*\/public/, '/public');
+    const url = path.replace(/.*[\/\\]?public/, '/public');
     return url;
   }
 

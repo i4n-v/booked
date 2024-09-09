@@ -1,7 +1,7 @@
 import { Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import { QueryClientProvider } from "react-query";
-import { AuthProvider } from "@/contexts/AuthContext";
+import {  AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components";
 import { GlobalContextProvider } from "@/contexts/GlobalContext";
 import { ThemeContextProvider } from "@/contexts/ThemeContext";
@@ -19,7 +19,6 @@ export default function RootLayout() {
     "Montserrat-Regular": require("../../assets/fonts/Montserrat-Regular.ttf"),
     "Montserrat-Medium": require("../../assets/fonts/Montserrat-Medium.ttf"),
   });
-
   if (!fontLoaded) return null;
 
   return (
