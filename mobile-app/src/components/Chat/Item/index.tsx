@@ -5,11 +5,11 @@ import Badge from "@/components/Badge";
 import { useTheme } from "styled-components/native";
 import { useContext } from "react";
 import { IChat } from "@/types/Chat";
-import { TimePast } from "@/helpers";
 import { AuthContext } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import { UserPhoto } from "@/components/Cards/UserCard/styles";
 import Group from "@/components/Icons/Group";
+import TimePast from "@/utils/TimePast";
 
 export default function Item(chat: IChat) {
   const theme = useTheme();
