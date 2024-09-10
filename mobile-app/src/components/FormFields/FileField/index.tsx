@@ -16,33 +16,30 @@ type InputFileProps = {
 const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFile }) => {
   const pickDocument = async (onChange: (file: any) => void) => {
     try {
-      
       const result = await DocumentPicker.getDocumentAsync({
         type: types,
         multiple: false,
-        copyToCacheDirectory: false
-      })
+        copyToCacheDirectory: false,
+      });
 
       if (!result.canceled) {
-        
-        let {  name,size, uri ,mimeType} = result.assets[0];
-        const imageUri = documentDirectory + name
+        let { name, size, uri, mimeType } = result.assets[0];
+        const imageUri = documentDirectory + name;
         await copyAsync({
           from: uri,
-          to: imageUri
-        })
+          to: imageUri,
+        });
         var fileToUpload = {
           name: name,
           size: size,
           uri: uri,
-          type:mimeType ,
+          type: mimeType,
         };
         onChange(fileToUpload);
         if (onSelectFile instanceof Function) onSelectFile(fileToUpload);
       }
     } catch (error) {
       console.log(error);
-      
     }
   };
   const theme = useTheme();
@@ -55,6 +52,7 @@ const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFil
           <FileButton
             variant={value ? "contained" : "outlined"}
             hasValue={!!value}
+            colorScheme="primary"
             onPress={() => pickDocument(onChange)}
           >
             <Picture fill={value ? "white" : theme.colors.primary?.[300]} />

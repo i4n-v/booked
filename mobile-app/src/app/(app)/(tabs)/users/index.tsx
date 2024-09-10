@@ -101,7 +101,9 @@ export default function Users() {
             userName={item.user_name}
             isFollowing={item.followed}
             image={item.photo_url}
-            onPress={() => router.navigate(`/profile/${item.id}`)}
+            onPress={() =>
+              router.navigate({ pathname: "/profile/[userId]", params: { userId: item.id } })
+            }
             onFollow={() => toggleFollowUser(item, index)}
           />
         )}

@@ -14,6 +14,7 @@ interface IMainButtonProps<L extends ExpoVectorIcon, R extends ExpoVectorIcon = 
   leftIcon?: IButtonIcon<L>;
   rightIcon?: IButtonIcon<R>;
   textStyle?: StyleProp<TextStyle>;
+  gradientStyle?: StyleProp<TextStyle>;
   variant?: "outlined" | "contained";
 }
 

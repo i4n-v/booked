@@ -1,129 +1,77 @@
 import styled from "styled-components/native";
 
-const Container = styled.View`
-  flex: 1;
-  padding: 12px;
-  background-color: #f5f5f5;
+const ProfileContainer = styled.View`
+  padding: 20px 16px;
+  margin-top: 2px;
+  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
+  margin: 2px -16px 0px -16px;
+  ${({ theme }) => theme.shadows[0] as any}
 `;
 
-const Text = styled.Text`
-  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
-  color: ${({ theme }) => theme.colors.text?.[1000]};
-`;
-
-const IdentityInfo = styled.View`
-  margin-top: 20px;
-  flex-direction: row;
-  align-items: center;
-  font-sixe: 14px;
-`;
-
-const Name = styled(Text)`
-  color: #000;
-`;
-
-const Dot = styled.Text`
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: #9b51e0;
-  margin-horizontal: 8px;
-  text-align: center;
-  line-height: 8px;
-`;
-
-const Username = styled(Text)`
-  color: #595959;
-`;
-
-const FollowContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-const Button = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  border-radius: 5px;
-  margin-right: 5px;
-  border-color: #9b51e0;
-  border-width: 1px;
-`;
-
-const ButtonFollowing = styled(Button)`
-  background-color: #9B51E0;
-`;
-
-
-const ButtonText = styled.Text`
-  color: #9b51e0;
-  margin-left: 2px;
-  font-size: 14px;
-  font-size: 12px;
-`;
-
-const FollowButton = styled(Button)`
-  width: 90px;
-  height: 30px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const StatsContainer = styled.View`
+const UserContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-vertical: 5px;
-  flex: 1;
-  backgroundColor: '#fff',
 `;
 
-const StatBox = styled.View`
+const PhotoContainer = styled.View`
+  flex-direction: row;
   align-items: center;
-  flex: 1;
+  gap: 12px;
 `;
 
-const StatValue = styled(Text)`
-  color: #9b51e0;
-  font-size: 12px;
-  font-weight: 600;
+const UserPhoto = styled.Image`
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
 `;
 
-const StatLabel = styled(Text)`
-  color: #595959;
-  font-size: 12px;
+const Insights = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+`;
+
+const Insight = styled.View`
+  align-items: center;
+  gap: 1px;
+`;
+
+const InsightData = styled.Text`
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
+  color: ${({ theme }) => theme.colors.primary?.[200]};
+`;
+
+const InsightTitle = styled.Text`
+  font-family: ${({ theme }) => theme.typography.fonts.primary.normal};
+  font-size: ${({ theme }) => theme.typography.size.xxs + "px"};
+  color: ${({ theme }) => theme.colors.secondary?.[1000]};
 `;
 
 const Divider = styled.View`
-  height: 1px;
+  width: 2px;
+  height: 32px;
   background-color: ${({ theme }) => theme.colors.secondary?.[300]};
-  margin: 16px -16px;
 `;
 
-const DividerVertical = styled.View`
-  height: 35px;
-  background-color: #dedede;
-  width: 1px;
-  margin-vertical: 16px;
+const FilterTitle = styled.Text`
+  font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
+  font-size: ${({ theme }) => theme.typography.size.xs + "px"};
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.text?.[1000]};
+  margin-bottom: 8px;
 `;
 
 export {
-  Container,
-  Text,
-  IdentityInfo,
-  Name,
-  Dot,
-  Username,
-  FollowContainer,
-  Button,
-  ButtonFollowing,
-  ButtonText,
-  FollowButton,
-  StatsContainer,
-  StatBox,
-  StatValue,
-  StatLabel,
+  ProfileContainer,
+  UserContainer,
+  PhotoContainer,
+  UserPhoto,
+  Insights,
+  Insight,
+  InsightData,
+  InsightTitle,
   Divider,
-  DividerVertical,
+  FilterTitle,
 };

@@ -1,17 +1,11 @@
 import { IconButton } from "@/components/Buttons";
 import { TextField } from "@/components/FormFields";
-import { Account, ArrowBack, Search, User } from "@/components/Icons";
+import { Account, Search, User } from "@/components/Icons";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Text, TouchableHighlight, View } from "react-native";
+import { Text, TouchableHighlight, View } from "react-native";
 import { useTheme } from "styled-components/native";
-import {
-  BottomSheetButton,
-  BottomSheetHeader,
-  BottomSheetListItem,
-  BottomSheetTitle,
-  ChatList,
-} from "./styles";
+import { BottomSheetButton, BottomSheetHeader, BottomSheetTitle, ChatList } from "./styles";
 import { useMutation, useQuery } from "react-query";
 import { useChat, useUser } from "@/services";
 import ChatItem from "../../../../components/Chat/Item";
@@ -24,7 +18,6 @@ import UserItem from "@/components/Chat/Users";
 import { useBottomSheet, useDebounceCallback, useNotifier } from "@/hooks";
 import { useNavigation } from "expo-router";
 import { BottomSheet, BottomSheetMenu } from "@/components/BottomSheets";
-import UserListItem from "@/components/Chat/Users/styles";
 import Group from "@/components/Icons/Group";
 import { Divider } from "../../(tabs)/home/styles";
 import { z } from "zod";
@@ -169,7 +162,7 @@ function Chat() {
   const flatListProps = {
     loading: isFetching,
     ListFooterComponent: <Skeleton template="chat" quantity={3} />,
-    contentContainerStyle: { rowGap: 10 },
+    contentContainerStyle: { rowGap: 1 },
     onEndReached: () => {
       if (page.current < page.max && !isFetching && !userGroup) {
         setPage((curr) => ({ current: curr.current + 1, max: curr.max }));
@@ -178,7 +171,7 @@ function Chat() {
   };
 
   return (
-    <View>
+    <>
       <BottomSheet
         ref={refCreateGroup}
         snapPoints={["90%"]}
@@ -262,7 +255,7 @@ function Chat() {
           containerProps={{ style: { width: "85%" } }}
           onChangeText={(e) => debounceFilter(e)}
           rightIcon={{
-            icon: <Search width={24} height={24} />,
+            icon: <Search />,
           }}
         />
         <IconButton<any>
@@ -287,7 +280,7 @@ function Chat() {
           />
         )}
       </ChatList>
-    </View>
+    </>
   );
 }
 

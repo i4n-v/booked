@@ -83,7 +83,7 @@ export default function SearchHeader() {
             name="filter"
             placeholder="Buscar..."
             rightIcon={{
-              icon: <Search width={24} height={24} />,
+              icon: <Search />,
               onPress: () => {},
             }}
             required
@@ -103,6 +103,9 @@ export default function SearchHeader() {
         </AnimatedWraper>
       ) : (
         <AnimatedWraper layout={layoutAnimation}>
+          {/* {router.canGoBack() && (
+            <IconButton<any> icon={<ArrowBack />} isFocused onPress={() => router.back()} />
+          )} */}
           <Image source={logo} />
           <IconButton<any> icon={<Search />} onPress={toggleSearch} />
         </AnimatedWraper>

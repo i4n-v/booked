@@ -1,216 +1,396 @@
-import React, { useState, useRef } from "react";
-import { useUser, useFollow, useBook } from "@/services";
-import { useQuery, useMutation } from "react-query";
-import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
-import Config from "@/components/Icons/Config";
-import Follow from "@/components/Icons/Follow";
+import { useState, useContext, Fragment } from "react";
+import { useUser, useFollow, useBook, useCategory } from "@/services";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { router, useLocalSearchParams } from "expo-router";
 import User from "@/components/Icons/User";
-import BottomSheetMenu from "@/components/BottomSheets/BottomSheetMenu";
-import Logout from "@/components/Icons/Logout";
 import {
-  Container,
-  Text as StyledText,
-  IdentityInfo,
-  Name,
-  Dot,
-  Username,
-  FollowContainer,
-  ButtonFollowing,
-  ButtonText,
-  FollowButton,
-  StatsContainer,
-  StatBox,
-  StatValue,
-  StatLabel,
+  InsightData,
+  Insight,
+  InsightTitle,
+  Insights,
+  ProfileContainer,
+  UserContainer,
+  UserPhoto,
   Divider,
-  DividerVertical,
+  PhotoContainer,
+  FilterTitle,
 } from "./styles";
-import { FlatList, Image } from "react-native";
-import { BookCard } from "@/components/Cards";
 import Security from "@/components/Icons/Security";
-import { ReadMore } from "@/components";
-import { useAuth } from "@/services";
+import { Account, Follow, Logout } from "@/components/Icons";
+import { AuthContext } from "@/contexts/AuthContext";
+import { UserHeader } from "@/components/Navigation/Headers";
+import { MainButton } from "@/components/Buttons";
+import { useTheme } from "styled-components/native";
+import { ReadMore, RefreshControl } from "@/components";
+import { BookCard } from "@/components/Cards";
+import { FlatList } from "@/components/Lists";
+import IBook from "@/types/Book";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+import { useBottomSheet, useDebounce, useNotifier, useRefetchOnFocus } from "@/hooks";
+import { format } from "date-fns";
+import { cleanUpMask } from "@/utils/mask";
+import { Skeleton } from "@/components/Loading";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import FilterButton from "@/components/Buttons/FilterButton";
+import { BottomSheet, BottomSheetMenu } from "@/components/BottomSheets";
+import {
+  DateField,
+  PaginatedAutocompleteField,
+  SwitchField,
+  TextField,
+} from "@/components/FormFields";
+import { fieldsRegex } from "@/config/regex";
+
+const validations = z.object({
+  min_date: z.date().nullable(),
+  max_date: z.date().nullable(),
+  free: z.boolean(),
+  min_price: z.string().nullable(),
+  max_price: z.string().nullable(),
+  categories: z.array(z.string()),
+});
+
+type IBookFilters = z.infer<typeof validations>;
 
 const Profile = () => {
+  const theme = useTheme();
+  const { openNotification } = useNotifier();
   const { userId } = useLocalSearchParams();
-  const { getUser } = useUser();
-  const { getBooks } = useBook();
-  const { followUser, unfollowUser } = useFollow();
-  const { logout } = useAuth();
-  const [page] = useState(1);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const bottomSheetRef = useRef(null);
+  const { loading } = useContext(GlobalContext)!;
+  const { handleLogout, user } = useContext(AuthContext)!;
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [books, setBooks] = useState<IBook[]>([]);
+  const [refFilter, handleOpenFilter] = useBottomSheet();
+  const [refSettings, handleOpenSettings] = useBottomSheet();
 
-  const {
-    data: user,
-    isLoading,
-    error,
-  } = useQuery(["getUser", userId], () => getUser(userId as string), {
-    enabled: !!userId,
-    retry: false,
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      setIsFollowing(data?.followed || false);
+  const filterForm = useForm<IBookFilters>({
+    defaultValues: {
+      min_date: null,
+      max_date: null,
+      free: false,
+      min_price: null,
+      max_price: null,
+      categories: [],
     },
   });
 
-  const { data: books } = useQuery(
-    ["getUserBooks", { page }],
-    () => getBooks({ user_id: userId as string, page, limit: 12 }),
+  const filters = useWatch({ control: filterForm.control });
+  const debouncedFilters = useDebounce(filters);
+
+  const queryClient = useQueryClient();
+  const { getUser } = useUser();
+  const { getBooks } = useBook();
+  const { getCategories } = useCategory();
+  const { followUser, unfollowUser } = useFollow();
+
+  const followMutation = useMutation(followUser);
+  const unfollowMutation = useMutation(unfollowUser);
+
+  const userQueryKey = ["user", userId];
+
+  const { data: userData, ...userQuery } = useQuery(
+    userQueryKey,
+    () => {
+      loading({ isLoading: true });
+      return getUser(userId as string);
+    },
     {
       enabled: !!userId,
-      refetchOnWindowFocus: false,
-      onError: (error) => {
-        console.error("Error fetching books:", error);
+      onError(error: any) {
+        router.back();
+        openNotification({ status: "error", message: error.message });
+      },
+      onSettled() {
+        loading({ isLoading: false });
       },
     },
   );
 
-  const followMutation = useMutation(followUser, {
-    onSuccess: () => setIsFollowing(true),
-    onError: (error) => console.error("Error following user:", error),
-  });
-
-  const unfollowMutation = useMutation(unfollowUser, {
-    onSuccess: () => setIsFollowing(false),
-    onError: (error) => console.error("Error unfollowing user:", error),
-  });
-
-  const handleFollowToggle = async () => {
-    if (isFollowing) {
-      unfollowMutation.mutate(userId as string);
-    } else {
-      followMutation.mutate(userId as string);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.replace("/sigin");
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-    }
-  };
-
-  const openBottomSheet = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.present();
-    }
-  };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        if (bottomSheetRef.current) {
-          bottomSheetRef.current.dismiss();
-        }
+  const booksQuery = useQuery(
+    ["books", userId, page, debouncedFilters],
+    () => {
+      let params = {
+        page,
+        limit: 10,
+        user_id: userId,
+        min_date: debouncedFilters.min_date
+          ? format(debouncedFilters.min_date, "yyyy-MM-dd")
+          : null,
+        max_date: debouncedFilters.max_date
+          ? format(debouncedFilters.max_date, "yyyy-MM-dd")
+          : null,
+        free: debouncedFilters.free,
+        min_price: debouncedFilters.min_price
+          ? Number(cleanUpMask(debouncedFilters.min_price, "", ["R$", " "]).replace(",", "."))
+          : null,
+        max_price: debouncedFilters.max_price
+          ? Number(cleanUpMask(debouncedFilters.max_price, "", ["R$", " "]).replace(",", "."))
+          : null,
+        categories: debouncedFilters.categories,
       };
-    }, []),
+
+      return getBooks(params);
+    },
+    {
+      enabled: !!userId,
+      onSuccess(response) {
+        if (page === 1) {
+          setTotalPages(response.totalPages);
+        }
+
+        setBooks((books) => (page === 1 ? response.items : [...books, ...response.items]));
+      },
+    },
   );
 
-  if (isLoading) {
-    return (
-      <Container>
-        <StyledText>Carregando usuário...</StyledText>
-      </Container>
-    );
+  function toggleFollowUser() {
+    if (!userData) return;
+
+    if (userData.followed) {
+      unfollowMutation.mutate(userData.id, {
+        onSuccess() {
+          const newUser = {
+            ...userData,
+            followed: false,
+          };
+          queryClient.setQueryData(userQueryKey, newUser);
+        },
+        onError(error: any) {
+          openNotification({ status: "error", message: error.message });
+        },
+      });
+    } else {
+      followMutation.mutate(userData.id, {
+        onSuccess() {
+          const newUser = {
+            ...userData,
+            followed: true,
+          };
+          queryClient.setQueryData(userQueryKey, newUser);
+        },
+        onError(error: any) {
+          openNotification({ status: "error", message: error.message });
+        },
+      });
+    }
   }
 
-  if (error) {
-    return (
-      <Container>
-        <StyledText>Erro ao carregar dados do usuário</StyledText>
-      </Container>
-    );
-  }
+  useRefetchOnFocus(() => {
+    userQuery.refetch();
 
-  const bottomSheetItems = [
-    { text: "Conta", icon: User, onPress: () => router.navigate("/profile/account") },
-    { text: "Segurança", icon: Security, onPress: () => router.navigate("/profile/security") },
-    { text: "Sair", icon: Logout, onPress: handleLogout },
+    if (page !== 1) {
+      setPage(1);
+    } else {
+      booksQuery.refetch();
+    }
+  });
+
+  if (!userData) return null;
+
+  const settings = [
+    {
+      text: "Conta",
+      icon: (
+        <User
+          style={{
+            marginLeft: -5,
+            marginRight: 5,
+          }}
+        />
+      ),
+      onPress: () => router.navigate("/profile/account"),
+    },
+    { text: "Segurança", icon: <Security />, onPress: () => router.navigate("/profile/security") },
+    { text: "Sair", icon: <Logout />, onPress: handleLogout },
+  ];
+
+  const insights = [
+    {
+      title: "Seguidores",
+      data: userData.total_followers,
+    },
+    {
+      title: "Livros",
+      data: userData.total_books,
+    },
+    {
+      title: "Biblioteca",
+      data: userData.total_acquitions,
+    },
   ];
 
   return (
-    <Container>
-      {user ? (
-        <>
-          <IdentityInfo>
-            <Config style={{ position: "absolute", right: 10 }} onPress={openBottomSheet} />
-            <Name>{user.name}</Name>
-            <Dot>•</Dot>
-            <Username>@{user.user_name}</Username>
-          </IdentityInfo>
-          <Divider />
+    <>
+      <UserHeader data={userData} onPress={handleOpenSettings} />
+      <BottomSheet
+        ref={refFilter}
+        snapPoints={["75%"]}
+        scrollViewProps={{
+          contentContainerStyle: { padding: 16, gap: 20 },
+        }}
+      >
+        <FilterTitle>Filtrar livros</FilterTitle>
+        <DateField label="Data mínima da publicação" name="min_date" control={filterForm.control} />
+        <DateField label="Data máxima da publicação" name="max_date" control={filterForm.control} />
+        <SwitchField
+          label="Gratuíto"
+          name="free"
+          control={filterForm.control}
+          customOnChange={() => {
+            filterForm.setValue("min_price", null);
+            filterForm.setValue("max_price", null);
+          }}
+        />
+        <TextField
+          label="Preço mínimo"
+          name="min_price"
+          control={filterForm.control}
+          mask={fieldsRegex.price}
+          disabled={filters.free}
+          inputProps={{
+            keyboardType: "numeric",
+          }}
+        />
+        <TextField
+          label="Preço máximo"
+          name="max_price"
+          control={filterForm.control}
+          mask={fieldsRegex.price}
+          disabled={filters.free}
+          inputProps={{
+            keyboardType: "numeric",
+          }}
+        />
+        <PaginatedAutocompleteField
+          label="Categorias"
+          name="categories"
+          control={filterForm.control}
+          multiple
+          optionCompareKey="id"
+          optionLabelKey="name"
+          optionValueKey="id"
+          filterKey="name"
+          queryKey="categories"
+          service={(params) => getCategories(params)}
+        />
+      </BottomSheet>
+      <BottomSheetMenu<any> ref={refSettings} items={settings} />
+      <FilterButton onPress={handleOpenFilter} />
+      <FlatList
+        data={books}
+        loading={booksQuery.isFetching}
+        numColumns={2}
+        ListHeaderComponent={() => {
+          return (
+            <ProfileContainer>
+              <UserContainer>
+                <PhotoContainer>
+                  {userData.photo_url ? (
+                    <UserPhoto source={{ uri: userData.photo_url }} />
+                  ) : (
+                    <Account width={60} height={60} />
+                  )}
+                  {userData.id !== user?.id && (
+                    <MainButton<any>
+                      rightIcon={{
+                        icon: (
+                          <Follow
+                            width={18}
+                            height={18}
+                            color={userData.followed ? theme.colors.secondary?.[0] : ""}
+                          />
+                        ),
+                      }}
+                      variant={userData.followed ? "contained" : "outlined"}
+                      colorScheme={userData.followed ? undefined : "primary"}
+                      style={{
+                        width: userData.followed ? 110 : 84,
+                        height: 32,
+                      }}
+                      textStyle={{ textTransform: "none" }}
+                      gradientStyle={{
+                        gap: 2,
+                      }}
+                      onPress={toggleFollowUser}
+                    >
+                      {userData.followed ? "Seguindo" : "Seguir"}
+                    </MainButton>
+                  )}
+                </PhotoContainer>
+                <Insights>
+                  {insights.map((insight, index, array) => {
+                    const isLastIndex = index === array.length - 1;
 
-          <FollowContainer>
-            {user.photo_url ? (
-              <Image
-                source={{ uri: user.photo_url }}
-                style={{ width: 60, height: 60, borderRadius: 25 }}
-              />
-            ) : (
-              <User width={60} height={60} />
-            )}
-            <FollowButton style={isFollowing ? ButtonFollowing : ""} onPress={handleFollowToggle}>
-              <ButtonText>{isFollowing ? "Seguindo" : "Seguir"}</ButtonText>
-              <Follow style={{ left: 2 }} width={24} height={24} />
-            </FollowButton>
-
-            <StatsContainer>
-              <StatBox>
-                <StatValue>{user.total_followers}</StatValue>
-                <StatLabel>Seguidores</StatLabel>
-              </StatBox>
-              <DividerVertical />
-              <StatBox>
-                <StatValue>{user.total_books}</StatValue>
-                <StatLabel>Livros</StatLabel>
-              </StatBox>
-              <DividerVertical />
-              <StatBox>
-                <StatValue>{user.total_acquitions}</StatValue>
-                <StatLabel>Bibliotecas</StatLabel>
-              </StatBox>
-            </StatsContainer>
-          </FollowContainer>
-
-          <ReadMore>{user.description}</ReadMore>
-          <Divider />
-
-          <FlatList
-            data={books?.items}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <BookCard
-                style={{ marginHorizontal: 8 }}
-                title={item.name}
-                author={item.user?.name}
-                rating={item.rating}
-                price={item.price}
-                image={item.photo_url}
-                ratingQuantity={item.total_users_rating}
-                onPress={() =>
-                  router.navigate({
-                    pathname: "/books/[id]",
-                    params: { id: item.id },
-                  })
-                }
-              />
-            )}
-            numColumns={2}
-            columnWrapperStyle={{
-              justifyContent: "space-between",
-              marginBottom: 16,
+                    return (
+                      <Fragment key={insight.title}>
+                        <Insight>
+                          <InsightData>{insight.data}</InsightData>
+                          <InsightTitle>{insight.title}</InsightTitle>
+                        </Insight>
+                        {!isLastIndex && <Divider />}
+                      </Fragment>
+                    );
+                  })}
+                </Insights>
+              </UserContainer>
+              <ReadMore numberOfLines={3}>{userData.description}</ReadMore>
+            </ProfileContainer>
+          );
+        }}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <BookCard
+            title={item.name}
+            author={item.user.name}
+            image={item.photo_url}
+            wished={item.wished}
+            price={item.price}
+            rating={item.rating}
+            ratingQuantity={item.total_users_rating}
+            onPress={() => {
+              router.navigate({ pathname: "/books/[id]", params: { id: item.id } });
             }}
-            ListEmptyComponent={<StyledText>Não há livros publicados.</StyledText>}
           />
-        </>
-      ) : (
-        <StyledText>No user data found</StyledText>
-      )}
-      <BottomSheetMenu ref={bottomSheetRef} items={bottomSheetItems} />
-    </Container>
+        )}
+        emptyMessage="Nenhum livro publicado."
+        ListFooterComponent={<Skeleton template="book-card" quantity={10} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={booksQuery.isRefetching}
+            onRefresh={() => {
+              if (page !== 1) {
+                setPage(1);
+              } else {
+                booksQuery.refetch();
+              }
+            }}
+          />
+        }
+        onEndReached={() => {
+          const hasPagesToLoad = totalPages > page;
+
+          if (hasPagesToLoad && !booksQuery.isFetching && !booksQuery.error) {
+            setPage((page) => page + 1);
+          }
+        }}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+        }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: 96,
+          rowGap: 16,
+        }}
+        ListFooterComponentStyle={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          rowGap: 16,
+        }}
+      />
+    </>
   );
 };
 

@@ -13,5 +13,7 @@ export default function IconComponent<T extends ExpoVectorIcon>({
 
   if (!icon) return null;
 
+  if (icon && !name) return icon as unknown as React.ReactElement;
+
   return <Icon name={name} color={color} size={size} style={style} />;
 }
