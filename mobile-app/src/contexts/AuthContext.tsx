@@ -1,17 +1,21 @@
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/services";
 import IUser from "@/types/User";
 import { useAsyncStorage, useNotifier } from "@/hooks/";
 import { router } from "expo-router";
+import { io, Socket } from "socket.io-client";
+import { API_URL } from "../../env";
 
 interface IAuthContextProps {
   user: IUser | null;
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  socket: Socket | null;
   handleLogout(): void;
+  connectSocket(token: string): void;
 }
 
 interface IAuthContextProviderProps {
@@ -24,6 +28,7 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
   const { openNotification } = useNotifier();
   const [user, setUser] = useAsyncStorage<IUser | null>("user", null);
   const [token, setToken] = useAsyncStorage<string | null>("token", null);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const { loading } = useContext(GlobalContext)!;
 
   const { verify, logout } = useAuth();
@@ -52,8 +57,10 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
       if (!response.valid) {
         return handleLogout();
       }
-
-      router.navigate("/home");
+      if(!socket?.connected){
+        connectSocket(token!)
+      }
+      router.navigate("/(app)/home");
     },
     onError() {
       handleLogout();
@@ -65,6 +72,23 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
     },
   });
 
+  async function connectSocket(token: string) {
+    try {
+      if (token) {
+        const socketInstance = io(API_URL as string, {
+          extraHeaders: {
+            "x-access-token": token as string,
+          },
+        }).connect();
+        setSocket(socketInstance);
+      } else {
+        console.log("No token found");
+      }
+    } catch (error) {
+      console.error("Error initializing socket:", error);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -73,6 +97,8 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
         token,
         setToken,
         handleLogout,
+        socket,
+        connectSocket,
       }}
     >
       {children}

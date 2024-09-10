@@ -6,12 +6,11 @@ export default function useMessage() {
   async function createMessage(message: IMessage<"SEND">) {
     try {
       const formData = new FormData();
-
       Object.entries(message).forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {
             value.forEach((obj, index) => {
-              formData.append(`${key}[]`, obj.id);
+              formData.append(`${key}[]`, obj);
             });
             return;
           }
