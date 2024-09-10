@@ -17,6 +17,7 @@ export const TabList = styled.View`
 `;
 
 export const Text = styled.Text`
+
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
   font-size: ${({ theme }) => theme.typography.size.xs + "px"};
   color: ${({ theme }) => theme.colors.text?.[1000]};
@@ -29,4 +30,11 @@ export const Selection = styled.View`
   width: 100px;
   background-color: ${({ theme }) => theme.colors.primary?.[200]};
   border-radius: 5px;
+`;
+
+export const Dot = styled.View`
+  width: 5px;
+  height: 5px;
+  background-color: ${({ theme }) => theme.colors.primary?.[200]};
+  border-radius: 50px;
 `;

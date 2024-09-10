@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { Container, TabList, Selection, Text } from "./styles";
+import { Container, TabList, Selection, Text, Dot } from "./styles";
 import { useTheme } from "styled-components/native";
 
 const AnimatedSelection = Animated.createAnimatedComponent(Selection);
@@ -47,7 +47,9 @@ export default function TabNavigation({ selectedTab, onSelectTab, tabs }: TabNav
                 }
               }}
             >
-              <Text>{tab.charAt(0).toUpperCase() + tab.slice(1)}</Text>
+              <Text>
+                {tab.charAt(0).toUpperCase() + tab.slice(1)} {isFocused && <Dot />}
+              </Text>
             </TouchableOpacity>
           );
         })}

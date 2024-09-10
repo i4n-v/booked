@@ -149,7 +149,7 @@ export default function Solicitations() {
       <TabNavigation
         selectedTab={selectedTab}
         onSelectTab={handleSelectTab}
-        tabs={["recebidas", "enviadas"]}
+        tabs={["RECEBIDAS", "ENVIADAS"]}
       />
 
       <ListCounter
