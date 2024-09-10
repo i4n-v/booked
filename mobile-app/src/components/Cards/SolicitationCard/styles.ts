@@ -13,6 +13,13 @@ const InfoContainer = styled.TouchableOpacity`
  flex: 1;
 `;
 
+const OptionButton = styled.TouchableOpacity<{ isSelected: boolean }>`
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+  background-color: ${({ isSelected, theme }) => (isSelected ? theme.colors.primary : "white")};
+`;
+
 const Text = styled.Text`
  font-size: 14px;
  margin-bottom: 4px;
@@ -30,4 +37,4 @@ const PositionSolicitationBadge = styled(SolicitationBadge)`
   right: 0;
 `;
 
-export { CardContainer, InfoContainer, Text, StatusText, PositionSolicitationBadge };
+export { CardContainer, InfoContainer, Text, StatusText, PositionSolicitationBadge, OptionButton };

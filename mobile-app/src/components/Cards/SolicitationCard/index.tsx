@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import {
   CardContainer,
@@ -6,6 +6,7 @@ import {
   Text,
   StatusText,
   PositionSolicitationBadge,
+  OptionButton,
 } from "./styles";
 import { ISolicitationStatus } from "@/types/Solicitation";
 import { SolicitationCardProps } from "./types";
@@ -13,7 +14,17 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { BottomSheetList } from "@/components/BottomSheets";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function SolicitationCard({ book, id, status, user }: SolicitationCardProps) {
+export default function SolicitationCard({
+  book,
+  id,
+  status,
+  user,
+  updateStatus,
+}: SolicitationCardProps) {
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [options, setOptions] = useState<any[]>([]);
+  const bottomSheetRef = useRef<any>(null);
+
   const colors: Record<ISolicitationStatus, string> = {
     pending: "#9B51E0",
     accepted: "#009306",
@@ -23,32 +34,51 @@ export default function SolicitationCard({ book, id, status, user }: Solicitatio
 
   const badgeColor = colors[status];
 
-  const options: { id: string; name: string; icon: "check" | "close"; onPress: () => void }[] = [
-    {
-      id: "1",
-      name: "Aceitar",
-      icon: "check",
-      onPress: () => console.log("Aceitar pressionado"),
-    },
-    {
-      id: "2",
-      name: "Recusar",
-      icon: "close",
-      onPress: () => console.log("Recusar pressionado"),
-    },
-  ];
+  useEffect(() => {
+    const newOptions = [];
 
-  const bottomSheetRef = useRef<any>(null);
+    if (user?.id && user.id === book?.user?.id && status === "pending") {
+      newOptions.push({
+        id: "3",
+        name: "Cancelar",
+        icon: "close",
+        onPress: () => updateStatus(id, "canceled"),
+      });
+    }
+
+    if (book?.user?.id && book.user.id === user?.id && status === "pending") {
+      newOptions.push(
+        {
+          id: "1",
+          name: "Aceitar",
+          icon: "check",
+          onPress: () => updateStatus(id, "accepted"),
+        },
+        {
+          id: "2",
+          name: "Recusar",
+          icon: "close",
+          onPress: () => updateStatus(id, "refused"),
+        },
+      );
+    }
+
+    setOptions(newOptions);
+
+    return () => {
+      setOptions([]);
+    };
+  }, [status, user, book, id, updateStatus]);
 
   const handleOpenBottomSheet = () => {
     bottomSheetRef.current?.present();
   };
 
   const handleSelectItem = (item: any) => {
-    console.log("Item selecionado:", item);
+    setSelectedItem(item.id);
+    item.onPress();
     bottomSheetRef.current?.dismiss();
   };
-
   return (
     <View>
       <CardContainer>
@@ -58,12 +88,9 @@ export default function SolicitationCard({ book, id, status, user }: Solicitatio
           flatListProps={{
             data: options,
             renderItem: ({ item }) => {
-              console.log("Rendering item:", item); // Verifique se o item está sendo passado corretamente
+              const isSelected = selectedItem === item.id;
               return (
-                <TouchableOpacity
-                  style={{ padding: 20, flexDirection: "row", alignItems: "center" }}
-                  onPress={() => handleSelectItem(item)}
-                >
+                <OptionButton isSelected={isSelected} onPress={() => handleSelectItem(item)}>
                   <MaterialIcons
                     name={item.icon}
                     size={24}
@@ -71,14 +98,12 @@ export default function SolicitationCard({ book, id, status, user }: Solicitatio
                     style={{ marginRight: 10 }}
                   />
                   <Text>{item.name}</Text>
-                </TouchableOpacity>
+                </OptionButton>
               );
             },
             keyExtractor: (item) => item.id,
             ListEmptyComponent: <Text>Nenhum item encontrado</Text>,
           }}
-          onOpen={() => console.log("BottomSheet aberto")}
-          onClose={() => console.log("BottomSheet fechado")}
         />
 
         <InfoContainer

@@ -7,12 +7,12 @@ import { FlatList } from "react-native-gesture-handler";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useBottomSheet, useDebounce } from "@/hooks";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { format } from "date-fns";
 import { BottomSheet } from "@/components/BottomSheets";
 import { DateField, PaginatedAutocompleteField } from "@/components/FormFields";
 import FilterButton from "@/components/Buttons/FilterButton";
-import { SolicitationStatus } from "@/types/Solicitation";
+import { ISolicitationStatus, SolicitationStatus } from "@/types/Solicitation";
 import { Text } from "./styles";
 import TabNavigation from "@/components/Navigation/TabNavigation";
 
@@ -49,13 +49,11 @@ export default function Solicitations() {
     setPage(1);
   };
 
-  /* console.log("Filtros usados na requisição:", debouncedFilters);
-   */
   useEffect(() => {
     setPage(1);
   }, [debouncedFilters]);
 
-  const { getSolicitations } = useSolicitation();
+  const { getSolicitations, cancelSolicitation } = useSolicitation();
 
   const statusOptions = Object.keys(SolicitationStatus).map((key) => ({
     id: key,
@@ -70,6 +68,19 @@ export default function Solicitations() {
     items: statusOptions,
   };
 
+  const cancelMutation = useMutation(cancelSolicitation, {
+    onSuccess: (data) => {
+      solicitationsQuery.refetch();
+      console.log(data.message);
+    },
+    onError: (error: any) => {
+      console.error(error.message);
+    },
+  });
+
+  const updateStatus = (id: string, status: ISolicitationStatus) => {
+    cancelMutation.mutate({ id, status });
+  };
   const solicitationsQuery = useQuery(
     ["solicitations", page, debouncedFilters],
     () => {
@@ -151,7 +162,13 @@ export default function Solicitations() {
           data={solicitations}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <SolicitationCard id={item.id} status={item.status} book={item.book} user={item.user} />
+            <SolicitationCard
+              id={item.id}
+              status={item.status}
+              book={item.book}
+              user={item.user}
+              updateStatus={updateStatus}
+            />
           )}
           ListEmptyComponent={<Text>Nenhuma solicitação encontrada.</Text>}
           onEndReachedThreshold={0.1}

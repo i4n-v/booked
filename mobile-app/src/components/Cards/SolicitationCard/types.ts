@@ -16,6 +16,7 @@ type SolicitationCardProps = {
   status: ISolicitationStatus;
   book: Book;
   user: User;
+  updateStatus: (id: string, status: ISolicitationStatus) => void;
 };
 
 export { SolicitationCardProps };
