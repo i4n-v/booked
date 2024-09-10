@@ -17,4 +17,10 @@ const Wrapper = styled(View)`
   gap: 8px;
 `;
 
-export { HeaderContainer, Wrapper };
+const LogoContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+`;
+
+export { HeaderContainer, Wrapper, LogoContainer };

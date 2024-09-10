@@ -63,7 +63,7 @@ const Profile = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [books, setBooks] = useState<IBook[]>([]);
   const [refFilter, handleOpenFilter] = useBottomSheet();
-  const [refSettings, handleOpenSettings] = useBottomSheet();
+  const [refSettings, handleOpenSettings, handleCloseSettings] = useBottomSheet();
 
   const filterForm = useForm<IBookFilters>({
     defaultValues: {
@@ -200,10 +200,27 @@ const Profile = () => {
           }}
         />
       ),
-      onPress: () => router.navigate("/profile/account"),
+      onPress: () => {
+        handleCloseSettings();
+        router.navigate("/settings/account");
+      },
     },
-    { text: "Segurança", icon: <Security />, onPress: () => router.navigate("/profile/security") },
-    { text: "Sair", icon: <Logout />, onPress: handleLogout },
+    {
+      text: "Segurança",
+      icon: <Security />,
+      onPress: () => {
+        handleCloseSettings();
+        router.navigate("/settings/security");
+      },
+    },
+    {
+      text: "Sair",
+      icon: <Logout />,
+      onPress: () => {
+        handleCloseSettings();
+        handleLogout();
+      },
+    },
   ];
 
   const insights = [

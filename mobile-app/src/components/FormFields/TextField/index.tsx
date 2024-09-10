@@ -132,7 +132,7 @@ function TextField<L extends ExpoVectorIcon, R extends ExpoVectorIcon = L>({
           name={leftIcon.name}
           icon={leftIcon.icon}
           color={leftIcon.color ?? theme.colors.primary?.[200]}
-          size={24}
+          size={32}
           activeOpacity={leftIcon.onPress ? 0.7 : 1}
           onPress={leftIcon.onPress}
         />
@@ -144,7 +144,7 @@ function TextField<L extends ExpoVectorIcon, R extends ExpoVectorIcon = L>({
           name={password ? visibility : rightIcon!.name}
           icon={password ? (MaterialIcons as any) : rightIcon!.icon}
           color={rightIcon?.color ?? theme.colors.primary?.[200]}
-          size={24}
+          size={32}
           activeOpacity={rightIcon?.onPress ? 0.7 : 1}
           onPress={password ? toggleVisibility : rightIcon!.onPress}
         />

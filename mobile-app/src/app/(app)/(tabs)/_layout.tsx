@@ -63,7 +63,6 @@ export default function AppLayout() {
         />
         <Tabs.Screen
           name="profile/[userId]"
-          initialParams={{ userId: user?.id }}
           options={{
             tabBarIcon: () => {
               if (user?.photo_url) {
@@ -73,6 +72,15 @@ export default function AppLayout() {
               return <Account />;
             },
           }}
+          listeners={() => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              router.navigate({
+                pathname: "/profile/[userId]",
+                params: { userId: user!.id },
+              });
+            },
+          })}
         />
       </Tabs>
     </>

@@ -154,7 +154,7 @@ class UserController {
         });
       }
 
-      const user = await UserRepository.findById(id, null);
+      const user = await UserRepository.findByIdWithHash(id);
 
       if (!user) {
         return response.status(404).json({
