@@ -4,7 +4,6 @@ import * as DocumentPicker from "expo-document-picker";
 import { Container, FileButton } from "./style";
 import Picture from "@/components/Icons/Picture";
 import { useTheme } from "styled-components/native";
-import { copyAsync, documentDirectory } from "expo-file-system";
 
 type InputFileProps = {
   name: string;
@@ -14,38 +13,32 @@ type InputFileProps = {
 };
 
 const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFile }) => {
+  const theme = useTheme();
+
   const pickDocument = async (onChange: (file: any) => void) => {
     try {
-      
       const result = await DocumentPicker.getDocumentAsync({
         type: types,
         multiple: false,
-        copyToCacheDirectory: false
-      })
+        copyToCacheDirectory: false,
+      });
 
       if (!result.canceled) {
-        
-        let {  name,size, uri ,mimeType} = result.assets[0];
-        const imageUri = documentDirectory + name
-        await copyAsync({
-          from: uri,
-          to: imageUri
-        })
-        var fileToUpload = {
-          name: name,
-          size: size,
-          uri: uri,
-          type:mimeType ,
+        const { mimeType, ...file } = result.assets[0];
+
+        const fileToUpload = {
+          ...file,
+          type: mimeType,
         };
+
         onChange(fileToUpload);
         if (onSelectFile instanceof Function) onSelectFile(fileToUpload);
       }
     } catch (error) {
       console.log(error);
-      
     }
   };
-  const theme = useTheme();
+
   return (
     <Controller
       control={control}
@@ -55,6 +48,7 @@ const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFil
           <FileButton
             variant={value ? "contained" : "outlined"}
             hasValue={!!value}
+            colorScheme="primary"
             onPress={() => pickDocument(onChange)}
           >
             <Picture fill={value ? "white" : theme.colors.primary?.[300]} />

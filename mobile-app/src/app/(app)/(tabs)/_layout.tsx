@@ -5,19 +5,27 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ProfileIcon } from "./styles";
 import { SearchHeader } from "@/components/Navigation/Headers";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 
 export default function AppLayout() {
   const { user } = useContext(AuthContext)!;
+  const route = usePathname();
+
+  function matchProfile() {
+    const regex =
+      /^\/profile\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+    return regex.test(route);
+  }
 
   return (
     <>
-      <SearchHeader />
+      {!matchProfile() && <SearchHeader />}
       <Tabs
         tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
           headerShown: false,
         }}
+        backBehavior="history"
       >
         <Tabs.Screen
           name="home/index"
@@ -43,20 +51,19 @@ export default function AppLayout() {
         <Tabs.Screen
           name="chat/index"
           options={{
-            title: "Menssagens/index",
+            title: "Mensagens",
             tabBarIcon: () => <Chat />,
           }}
           listeners={() => ({
             tabPress: (e) => {
-              e.preventDefault()
-              router.push("/(app)/(stack)/chat")
+              e.preventDefault();
+              router.navigate("/(app)/(stack)/chat");
             },
           })}
         />
         <Tabs.Screen
-          name="profile/index"
+          name="profile/[userId]"
           options={{
-            title: "Perfil",
             tabBarIcon: () => {
               if (user?.photo_url) {
                 return <ProfileIcon source={{ uri: user?.photo_url }} />;
@@ -65,6 +72,15 @@ export default function AppLayout() {
               return <Account />;
             },
           }}
+          listeners={() => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              router.navigate({
+                pathname: "/profile/[userId]",
+                params: { userId: user!.id },
+              });
+            },
+          })}
         />
       </Tabs>
     </>

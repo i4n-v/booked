@@ -19,7 +19,6 @@ const styles = () => {
     },
     iconButton: {
       color: theme.colors.primary[200],
-      size: 24,
     },
     itemText: {
       fontSize: theme.typography.size.xs,

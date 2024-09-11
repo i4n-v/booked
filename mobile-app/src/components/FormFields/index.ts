@@ -8,6 +8,7 @@ import SelectField from "./SelectField";
 import SwitchField from "./SwitchField";
 import SliderField from "./SliderField";
 import RatingField from "./RatingField";
+import PhotoField from "./PhotoField";
 
 export {
   TextField,
@@ -20,4 +21,5 @@ export {
   PaginatedAutocompleteField,
   SliderField,
   RatingField,
+  PhotoField,
 };

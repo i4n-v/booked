@@ -83,7 +83,7 @@ class UserController {
     try {
       const { params, body, file, auth } = request;
       const id = params.id;
-      const { name, email, user_name, birth_date, description, photo }: UserUpdateDto = body;
+      const { name, email, user_name, birth_date, description }: UserUpdateDto = body;
       let photo_url;
       let emailToUpdate;
 
@@ -94,8 +94,6 @@ class UserController {
           message: messages.unauthorized(),
         });
       }
-
-      if (!photo) photo_url = null;
 
       const user = await UserRepository.findById(id, null);
 
@@ -154,7 +152,7 @@ class UserController {
         });
       }
 
-      const user = await UserRepository.findById(id, null);
+      const user = await UserRepository.findByIdWithHash(id);
 
       if (!user) {
         return response.status(404).json({

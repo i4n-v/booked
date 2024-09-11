@@ -18,6 +18,10 @@ import ArrowDown from "./ArrowDown";
 import ArrowUp from "./ArrowUp";
 import FavoriteOutlined from "./FavoriteOutlined";
 import Send from "./Send";
+import Logout from "./Logout";
+import Config from "./Config";
+import More from "./More";
+import Add from "./Add";
 
 export {
   Transfer,
@@ -40,4 +44,8 @@ export {
   ArrowUp,
   FavoriteOutlined,
   Send,
+  Logout,
+  Config,
+  More,
+  Add,
 };

@@ -9,7 +9,7 @@ const HeaderContainer = styled(View)`
   padding: 0px 16px;
   height: 64px;
   margin-top: 50px;
-  background-color: ${({ theme }) => theme.colors.secondary?.[50]};
+  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   ${({ theme }) => theme.shadows[0] as any};
 `;
 
