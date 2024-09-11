@@ -17,7 +17,7 @@ export default function Item(chat: IChat) {
 
   const receiver = chat.users.find((user) => user.id !== userData?.id);
   function _onPressButton() {
-    router.navigate({ pathname: "/(app)/(stack)/chat/[id]", params: { id: chat?.id! } });
+    router.push({ pathname: "/(app)/(stack)/chat/[id]", params: { id: chat?.id! } });
   }
   return (
       <TouchableHighlight onPress={_onPressButton}>

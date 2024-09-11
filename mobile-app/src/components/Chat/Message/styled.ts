@@ -10,6 +10,11 @@ const Container = styled.View<MessageContentProps>`
     padding: 0px 20px;
 `
 
+const BooksContainer = styled.View`
+    flex-direction: column;
+    row-gap: 10px;
+`
+
 const MessageImageContainer = styled(TouchableOpacity)`
   width: 191px;
   height: 140px;
@@ -27,4 +32,4 @@ const Content = styled.Text<MessageContentProps>`
     border-radius: 10px;
     padding: 10px;
 `
-export default {Container,Content,MessageImage,MessageImageContainer} 
+export default {Container,Content,MessageImage,MessageImageContainer,BooksContainer} 
