@@ -1,7 +1,6 @@
 import TabNavigation from "@/components/Navigation/TabNavigation";
-import { useEffect, useMemo, useState } from "react";
-import { Text, View } from "react-native";
-import { useQueries, useQuery } from "react-query";
+import { useMemo, useState } from "react";
+import { useQueries } from "react-query";
 import { useAcquisitions, useWishe } from "@/services";
 import IBook from "@/types/Book";
 import { IWrapper } from "@/types/Wrapper";
@@ -10,7 +9,7 @@ import { FlatList } from "@/components/Lists";
 import { BookCard } from "@/components/Cards";
 import { router } from "expo-router";
 import { Skeleton } from "@/components/Loading";
-import { RefreshControl } from "@/components";
+import { ListCounter, RefreshControl } from "@/components";
 import BooksFilter from "@/components/Book/BooksFilter";
 import { useBottomSheet, useDebounce } from "@/hooks";
 import { useForm, useWatch } from "react-hook-form";
@@ -31,7 +30,7 @@ const validations = z.object({
 type IBookFilters = z.infer<typeof validations>;
 
 function Library() {
-  const [type, setType] = useState<keyof typeof LibraryTypes>();
+  const [type, setType] = useState<keyof typeof LibraryTypes>("acquisition");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [books, setBooks] = useState<IBook[]>([]);
@@ -58,12 +57,8 @@ function Library() {
     let params = {
       page,
       limit: 10,
-      min_date: debouncedFilters.min_date
-        ? format(debouncedFilters.min_date, "yyyy-MM-dd")
-        : null,
-      max_date: debouncedFilters.max_date
-        ? format(debouncedFilters.max_date, "yyyy-MM-dd")
-        : null,
+      min_date: debouncedFilters.min_date ? format(debouncedFilters.min_date, "yyyy-MM-dd") : null,
+      max_date: debouncedFilters.max_date ? format(debouncedFilters.max_date, "yyyy-MM-dd") : null,
       free: debouncedFilters.free,
       min_price: debouncedFilters.min_price
         ? Number(cleanUpMask(debouncedFilters.min_price, "", ["R$", " "]).replace(",", "."))
@@ -74,17 +69,17 @@ function Library() {
       categories: debouncedFilters.categories,
     };
 
-    return params
-  }
+    return params;
+  };
 
   const booksQueries = useQueries([
     {
-      queryKey: ["get-wishes-books", debouncedFilters,page],
+      queryKey: ["get-wishes-books", debouncedFilters, page],
       queryFn: () => getWishes(mountParams()),
       enabled: type === "wishes",
       onSuccess: (data: IWrapper<IBook>) => {
         console.log(data);
-        
+
         if (page === 1) {
           setTotalPages(data.totalPages);
         }
@@ -111,14 +106,14 @@ function Library() {
       tab === LibraryTypes.acquisition ? "acquisition" : "wishes";
     setBooks([]);
     setType(type);
-    setPage(1)
-    filterForm.reset()
+    setPage(1);
+    filterForm.reset();
   };
 
   const queryIndex = useMemo(() => {
     return type === "wishes" ? 0 : 1;
   }, [type]);
-  
+
   return (
     <>
       <TabNavigation
@@ -133,6 +128,10 @@ function Library() {
         filterFormControl={filterForm.control}
         setValue={filterForm.setValue}
         removePriceFilter={type === "acquisition"}
+      />
+      <ListCounter
+        count={books.length}
+        total={!booksQueries[queryIndex].isFetching ? booksQueries[queryIndex].data?.totalItems! : 0}
       />
 
       <FlatList
