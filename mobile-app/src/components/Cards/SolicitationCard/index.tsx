@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import {
   CardContainer,
@@ -8,11 +8,17 @@ import {
   PositionSolicitationBadge,
   OptionButton,
 } from "./styles";
-import { ISolicitationStatus } from "@/types/Solicitation";
-import { SolicitationCardProps } from "./types";
+import { ISolicitationStatus, SolicitationStatus } from "@/types/Solicitation";
+import { SolicitationAlert, SolicitationCardProps } from "./types";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { BottomSheetList } from "@/components/BottomSheets";
+import { BottomSheetList, BottomSheetMenu } from "@/components/BottomSheets";
 import { MaterialIcons } from "@expo/vector-icons";
+import { AuthContext } from "@/contexts/AuthContext";
+import Close from "@/components/Icons/Close";
+import { useBottomSheet } from "@/hooks";
+import { Check } from "@/components/Icons";
+import { Alert } from "@/components/Dialogs";
+import { IMenuItem } from "@/components/BottomSheets/BottomSheetMenu/types";
 
 export default function SolicitationCard({
   book,
@@ -21,9 +27,12 @@ export default function SolicitationCard({
   user,
   updateStatus,
 }: SolicitationCardProps) {
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
-  const [options, setOptions] = useState<any[]>([]);
-  const bottomSheetRef = useRef<any>(null);
+  const [options, setOptions] = useState<IMenuItem<any>[]>([]);
+  const [refActions, handleOpenActions, handleCloseActions] = useBottomSheet();
+  const { user: userData } = useContext(AuthContext)!;
+  const [alert, setAlert] = useState<SolicitationAlert>({
+    open: false,
+  });
 
   const colors: Record<ISolicitationStatus, string> = {
     pending: "#9B51E0",
@@ -36,33 +45,42 @@ export default function SolicitationCard({
 
   useEffect(() => {
     const newOptions = [];
-
-    if (user?.id && user.id === book?.user?.id && status === "pending") {
+    if (user?.id && userData?.id === user?.id && status === "pending") {
       newOptions.push({
-        id: "3",
-        name: "Cancelar",
-        icon: "close",
-        onPress: () => updateStatus(id, "canceled"),
+        text: "Cancelar Solicitação",
+        icon: Close,
+        onPress: () =>
+          setAlert({
+            open: true,
+            onConfirm: () => updateStatus(id, "canceled"),
+            message: "Cancelar Solicitação ?",
+          }),
       });
     }
-
-    if (book?.user?.id && book.user.id === user?.id && status === "pending") {
+    if (book?.user?.id && book.user.id === userData?.id && status === "pending") {
       newOptions.push(
         {
-          id: "1",
-          name: "Aceitar",
-          icon: "check",
-          onPress: () => updateStatus(id, "accepted"),
+          text: "Aceitar Solicitação",
+          icon: Check,
+          onPress: () =>
+            setAlert({
+              open: true,
+              onConfirm: () => updateStatus(id, "accepted"),
+              message: "Aceitar Solicitação ?",
+            }),
         },
         {
-          id: "2",
-          name: "Recusar",
-          icon: "close",
-          onPress: () => updateStatus(id, "refused"),
+          text: "Recusar Solicitação",
+          icon: Close,
+          onPress: () =>
+            setAlert({
+              open: true,
+              onConfirm: () => updateStatus(id, "refused"),
+              message: "Recusar Solicitação ?",
+            }),
         },
       );
     }
-
     setOptions(newOptions);
 
     return () => {
@@ -71,40 +89,26 @@ export default function SolicitationCard({
   }, [status, user, book, id, updateStatus]);
 
   const handleOpenBottomSheet = () => {
-    bottomSheetRef.current?.present();
+    handleOpenActions();
   };
 
-  const handleSelectItem = (item: any) => {
-    setSelectedItem(item.id);
-    item.onPress();
-    bottomSheetRef.current?.dismiss();
-  };
   return (
     <View>
       <CardContainer>
-        <BottomSheetList
-          ref={bottomSheetRef}
-          snapPoints={["20%"]}
-          flatListProps={{
-            data: options,
-            renderItem: ({ item }) => {
-              const isSelected = selectedItem === item.id;
-              return (
-                <OptionButton isSelected={isSelected} onPress={() => handleSelectItem(item)}>
-                  <MaterialIcons
-                    name={item.icon}
-                    size={24}
-                    color="#9B51E0"
-                    style={{ marginRight: 10 }}
-                  />
-                  <Text>{item.name}</Text>
-                </OptionButton>
-              );
-            },
-            keyExtractor: (item) => item.id,
-            ListEmptyComponent: <Text>Nenhum item encontrado</Text>,
+        <Alert
+          open={alert.open}
+          onClose={() => {
+            setAlert({ open: false });
+            handleCloseActions();
           }}
+          onConfirm={alert.onConfirm}
+          title="Solicitação"
+          status={"warning"}
+          message={alert.message!}
+          hasActions={true}
         />
+
+        <BottomSheetMenu<any> items={options} ref={refActions} />
 
         <InfoContainer
           onPress={() => {
@@ -114,7 +118,7 @@ export default function SolicitationCard({
           }}
         >
           <Text>
-            Status: <StatusText>{status}</StatusText>
+            Status: <StatusText>{SolicitationStatus[status]}</StatusText>
           </Text>
           <Text>
             Livro Solicitado: <StatusText>{book?.name}</StatusText>

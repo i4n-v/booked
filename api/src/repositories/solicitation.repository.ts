@@ -44,7 +44,7 @@ class SolicitationRepository {
         {
           model: sequelizeConnection.model('Book'),
           as: 'book',
-          attributes: ['id'],
+          attributes: ['id',"name"],
           include: [
             {
               model: sequelizeConnection.model('User'),

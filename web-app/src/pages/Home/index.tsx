@@ -26,7 +26,7 @@ export default function Home() {
   const { data: books } = useQuery(
     "getBooks",
     () => getBooks({ page: 1, limit: 10 }),
-    { retry: false.valueOf, refetchOnWindowFocus: false }
+    { retry: false, refetchOnWindowFocus: false }
   );
 
   const methods = useForm({

@@ -19,4 +19,6 @@ type SolicitationCardProps = {
   updateStatus: (id: string, status: ISolicitationStatus) => void;
 };
 
-export { SolicitationCardProps };
+interface SolicitationAlert {open:boolean,onConfirm?: () => void,message?: string}
+
+export { SolicitationCardProps,SolicitationAlert };

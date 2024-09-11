@@ -5,7 +5,7 @@ const CardContainer = styled.View`
  flex-direction: row;
  padding: 16px;
  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
- border-radius: 8px; ${({ theme }) => theme.shadows[0] as any}
+ border-radius: 8px;
  margin-bottom: 14px;
 `;
 
@@ -23,12 +23,11 @@ const OptionButton = styled.TouchableOpacity<{ isSelected: boolean }>`
 const Text = styled.Text`
  font-size: 14px;
  margin-bottom: 4px;
- font-weight: bold;
+ color: ${({ theme }) => theme.colors.secondary?.[1100]};
 `;
 
 const StatusText = styled.Text`
- font-weight: normal;
-   color: ${({ theme }) => theme.colors.text?.[1000]};
+  color: ${({ theme }) => theme.colors.secondary?.[900]};
 `;
 
 const PositionSolicitationBadge = styled(SolicitationBadge)`

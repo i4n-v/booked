@@ -95,7 +95,7 @@ class SolicitationController {
 
       if (status) {
         whereStatement['status'] = {
-          [Op.in]: status,
+          [Op.in]: Array.isArray(status) ? status : [status],
         };
       }
 

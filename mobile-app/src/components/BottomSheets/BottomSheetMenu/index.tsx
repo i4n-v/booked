@@ -16,8 +16,7 @@ function BottomSheetMenuComponent<T extends ExpoVectorIcon>(
 
   const maxHeight = useMemo(() => Dimensions.get("window").height * 0.967, []);
   const isHeightBreak = useMemo(() => items.length * 60 > maxHeight, [items]);
-  const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
-    useBottomSheetDynamicSnapPoints(["CONTENT_HEIGHT"]);
+
 
   return (
     <BottomSheetList
@@ -25,14 +24,12 @@ function BottomSheetMenuComponent<T extends ExpoVectorIcon>(
       index={0}
       waitFor={anything}
       simultaneousHandlers={anything}
-      snapPoints={animatedSnapPoints as any}
-      handleHeight={animatedHandleHeight}
-      contentHeight={animatedContentHeight}
+      enableDynamicSizing
+      snapPoints={[]}
       onOpen={onOpen}
       onClose={onClose}
       flatListProps={{
         style: [isHeightBreak ? { maxHeight } : undefined],
-        onLayout: handleContentLayout,
         ItemSeparatorComponent: () => {
           return <View style={bottomSheetMenuStyles.itemSeparator} />;
         },

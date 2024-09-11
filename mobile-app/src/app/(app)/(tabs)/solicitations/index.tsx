@@ -3,18 +3,25 @@ import { SafeAreaView } from "react-native";
 import { SolicitationCard } from "@/components/Cards";
 import { useSolicitation } from "@/services";
 import { ListCounter } from "@/components";
-import { FlatList } from "react-native-gesture-handler";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
-import { useBottomSheet, useDebounce } from "@/hooks";
+import { useBottomSheet, useDebounce, useDebounceCallback } from "@/hooks";
 import { useMutation, useQuery } from "react-query";
 import { format } from "date-fns";
 import { BottomSheet } from "@/components/BottomSheets";
 import { DateField, PaginatedAutocompleteField } from "@/components/FormFields";
 import FilterButton from "@/components/Buttons/FilterButton";
-import { ISolicitationStatus, SolicitationStatus } from "@/types/Solicitation";
+import {
+  ISolicitationsFilters,
+  ISolicitationStatus,
+  ISolicitationsType,
+  SolicitationStatus,
+} from "@/types/Solicitation";
 import { Text } from "./styles";
 import TabNavigation from "@/components/Navigation/TabNavigation";
+import { FlatList } from "@/components/Lists";
+import AutoCompleteField from "@/components/FormFields/AutocompleteField";
+import { BottomSheetHeader, BottomSheetTitle } from "../../(stack)/chat/styles";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -25,12 +32,15 @@ const validations = z.object({
 type ISolicitationFilters = z.infer<typeof validations>;
 
 export default function Solicitations() {
-  const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [solicitations, setSolicitations] = useState<any[]>([]);
   const [refFilter, handleOpenFilter, handleCloseFilter] = useBottomSheet();
+  const [filters, setFilters] = useState<ISolicitationsFilters>({
+    type: "received",
+    page: 1,
+  });
 
-  const filterForm = useForm<ISolicitationFilters>({
+  const { control,reset } = useForm<ISolicitationFilters>({
     defaultValues: {
       min_date: null,
       max_date: null,
@@ -38,35 +48,9 @@ export default function Solicitations() {
     },
   });
 
-  const filters = useWatch({ control: filterForm.control });
-
-  const [selectedTab, setSelectedTab] = useState<string>("recebidas");
-
-  const debouncedFilters = useDebounce({ ...filters, type: selectedTab });
-
-  const handleSelectTab = (tab: string) => {
-    setSelectedTab(tab);
-    setPage(1);
-  };
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedFilters]);
-
+  const formValues = useWatch({ control: control });
+  const debouncedFilters = useDebounce(formValues);
   const { getSolicitations, cancelSolicitation } = useSolicitation();
-
-  const statusOptions = Object.keys(SolicitationStatus).map((key) => ({
-    id: key,
-    name: SolicitationStatus[key as keyof typeof SolicitationStatus],
-  }));
-
-  const wrappedStatusOptions = {
-    totalPages: 1,
-    totalItems: statusOptions.length,
-    current: 1,
-    limit: statusOptions.length,
-    items: statusOptions,
-  };
 
   const cancelMutation = useMutation(cancelSolicitation, {
     onSuccess: (data) => {
@@ -82,10 +66,10 @@ export default function Solicitations() {
     cancelMutation.mutate({ id, status });
   };
   const solicitationsQuery = useQuery(
-    ["solicitations", page, debouncedFilters],
+    ["solicitations", filters,debouncedFilters],
     () => {
       let params = {
-        page,
+        page: filters.page,
         limit: 10,
         min_date: debouncedFilters.min_date
           ? format(debouncedFilters.min_date, "yyyy-MM-dd")
@@ -94,22 +78,33 @@ export default function Solicitations() {
           ? format(debouncedFilters.max_date, "yyyy-MM-dd")
           : null,
         status: debouncedFilters.status,
-        type: debouncedFilters.type,
-      };
-
+        type: filters.type,
+      };      
       return getSolicitations(params);
     },
     {
       onSuccess(response) {
-        if (page === 1) {
+        
+        if (filters.page === 1) {
           setTotalPages(response.totalPages);
         }
         setSolicitations((solicitations) =>
-          page === 1 ? response.items : [...solicitations, ...response.items],
+          filters.page === 1 ? response.items : [...solicitations, ...response.items],
         );
       },
     },
   );
+
+  const statusOptions = Object.keys(SolicitationStatus).map((key) => ({
+    id: key,
+    name: SolicitationStatus[key as keyof typeof SolicitationStatus],
+  }));
+  const handleSelectTab = (tab: string) => {
+    const type: keyof typeof ISolicitationsType =
+    tab === ISolicitationsType.received ? "received" : "sended";
+    setFilters({ type, page: 1 });
+    reset()
+  };
 
   return (
     <>
@@ -120,36 +115,30 @@ export default function Solicitations() {
           contentContainerStyle: { padding: 20, gap: 20 },
         }}
       >
-        <DateField
-          label="Data mínima da solicitação"
-          name="min_date"
-          control={filterForm.control}
-        />
-        <DateField
-          label="Data máxima da solicitação"
-          name="max_date"
-          control={filterForm.control}
-        />
-        <PaginatedAutocompleteField
+        <BottomSheetHeader>
+          <BottomSheetTitle>FILTRAR LIVROS</BottomSheetTitle>
+        </BottomSheetHeader>
+        <DateField label="Data mínima da solicitação" name="min_date" control={control} />
+        <DateField label="Data máxima da solicitação" name="max_date" control={control} />
+        <AutoCompleteField
           label="Status da Solicitação"
           name="status"
-          control={filterForm.control}
+          control={control}
           multiple
           optionCompareKey="id"
           optionLabelKey="name"
           optionValueKey="id"
-          filterKey="name"
-          queryKey="status"
-          service={() => Promise.resolve(wrappedStatusOptions)}
+          options={statusOptions}
         />
       </BottomSheet>
 
       <FilterButton onPress={handleOpenFilter} />
 
       <TabNavigation
-        selectedTab={selectedTab}
-        onSelectTab={handleSelectTab}
-        tabs={["RECEBIDAS", "ENVIADAS"]}
+        selectedTab={filters.type}
+        uppercase
+        onSelectTab={(value) => handleSelectTab(value)}
+        tabs={Object.values(ISolicitationsType)}
       />
 
       <ListCounter
@@ -170,7 +159,14 @@ export default function Solicitations() {
               updateStatus={updateStatus}
             />
           )}
-          ListEmptyComponent={<Text>Nenhuma solicitação encontrada.</Text>}
+          onEndReached={() => {
+            const hasPagesToLoad = totalPages > filters.page;
+
+            if (hasPagesToLoad && !solicitationsQuery.isFetching && !solicitationsQuery.error) {
+              setFilters(({ page, ...curr }) => ({ ...curr, page: page + 1}));
+            }
+          }}
+          emptyMessage={"Nenhuma solicitação encontrada."}
           onEndReachedThreshold={0.1}
           contentContainerStyle={{
             paddingHorizontal: 16,

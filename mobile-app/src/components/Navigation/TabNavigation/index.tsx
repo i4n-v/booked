@@ -9,10 +9,11 @@ const AnimatedSelection = Animated.createAnimatedComponent(Selection);
 interface TabNavigationProps {
   selectedTab: string;
   onSelectTab: (tab: string) => void;
-  tabs: string[];
+  tabs: any[];
+  uppercase: boolean;
 }
 
-export default function TabNavigation({ selectedTab, onSelectTab, tabs }: TabNavigationProps) {
+export default function TabNavigation({ selectedTab, onSelectTab, tabs,uppercase }: TabNavigationProps) {
   const theme = useTheme();
   const elementsXaxis = useRef<number[]>([]);
   const xAxis = useSharedValue(0);
@@ -30,9 +31,9 @@ export default function TabNavigation({ selectedTab, onSelectTab, tabs }: TabNav
   return (
     <Container>
       <TabList>
-        {tabs.map((tab, index) => {
+        {tabs.map((tab, index, all) => {
           const isFocused = selectedTab === tab;
-
+          const isLast = index === all.length - 1;
           return (
             <TouchableOpacity
               key={tab}
@@ -47,9 +48,10 @@ export default function TabNavigation({ selectedTab, onSelectTab, tabs }: TabNav
                 }
               }}
             >
-              <Text>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)} {isFocused && <Dot />}
-              </Text>
+              <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
+                <Text>{ uppercase ? tab.toUpperCase() : tab.charAt(0).toUpperCase() + tab.slice(1)}</Text>
+                {!isLast && <Dot />}
+              </View>
             </TouchableOpacity>
           );
         })}

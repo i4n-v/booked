@@ -18,6 +18,7 @@ import ArrowDown from "./ArrowDown";
 import ArrowUp from "./ArrowUp";
 import FavoriteOutlined from "./FavoriteOutlined";
 import Send from "./Send";
+import Check from "./Check"
 
 export {
   Transfer,
@@ -40,4 +41,5 @@ export {
   ArrowUp,
   FavoriteOutlined,
   Send,
+  Check
 };
