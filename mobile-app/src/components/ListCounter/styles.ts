@@ -20,6 +20,7 @@ const Description = styled.Text`
 const Detail = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
   color: ${({ theme }) => theme.colors.primary?.[200]};
+  font-weight: bold;
 `;
 
 export { CounterContainer, Title, Description, Detail };
