@@ -4,7 +4,6 @@ import * as DocumentPicker from "expo-document-picker";
 import { Container, FileButton } from "./style";
 import Picture from "@/components/Icons/Picture";
 import { useTheme } from "styled-components/native";
-import { copyAsync, documentDirectory } from "expo-file-system";
 
 type InputFileProps = {
   name: string;
@@ -14,6 +13,8 @@ type InputFileProps = {
 };
 
 const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFile }) => {
+  const theme = useTheme();
+
   const pickDocument = async (onChange: (file: any) => void) => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -23,18 +24,13 @@ const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFil
       });
 
       if (!result.canceled) {
-        let { name, size, uri, mimeType } = result.assets[0];
-        const imageUri = documentDirectory + name;
-        await copyAsync({
-          from: uri,
-          to: imageUri,
-        });
-        var fileToUpload = {
-          name: name,
-          size: size,
-          uri: uri,
+        const { mimeType, ...file } = result.assets[0];
+
+        const fileToUpload = {
+          ...file,
           type: mimeType,
         };
+
         onChange(fileToUpload);
         if (onSelectFile instanceof Function) onSelectFile(fileToUpload);
       }
@@ -42,7 +38,7 @@ const InputFile: React.FC<InputFileProps> = ({ name, control, types, onSelectFil
       console.log(error);
     }
   };
-  const theme = useTheme();
+
   return (
     <Controller
       control={control}

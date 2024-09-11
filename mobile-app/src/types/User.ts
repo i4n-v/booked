@@ -30,8 +30,8 @@ interface User extends UserCommom {
   followed: boolean;
 }
 
-interface UserUpdate extends User {
-  photo: File;
+interface UserUpdate extends Omit<User, "followed"> {
+  photo?: File;
 }
 
 enum UserTypes {

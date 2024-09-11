@@ -21,6 +21,7 @@ import Send from "./Send";
 import Logout from "./Logout";
 import Config from "./Config";
 import More from "./More";
+import Add from "./Add";
 
 export {
   Transfer,
@@ -46,4 +47,5 @@ export {
   Logout,
   Config,
   More,
+  Add,
 };

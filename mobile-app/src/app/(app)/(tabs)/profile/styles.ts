@@ -3,6 +3,7 @@ import styled from "styled-components/native";
 const ProfileContainer = styled.View`
   padding: 20px 16px;
   margin-top: 2px;
+  gap: 12px;
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   margin: 2px -16px 0px -16px;
   ${({ theme }) => theme.shadows[0] as any}
@@ -24,6 +25,8 @@ const UserPhoto = styled.Image`
   width: 60px;
   height: 60px;
   border-radius: 60px;
+  border-color: ${({ theme }) => theme.colors.secondary?.[100]};
+  ${({ theme }) => theme.shadows[0] as any}
 `;
 
 const Insights = styled.View`
