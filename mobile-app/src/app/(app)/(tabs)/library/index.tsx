@@ -78,8 +78,6 @@ function Library() {
       queryFn: () => getWishes(mountParams()),
       enabled: type === "wishes",
       onSuccess: (data: IWrapper<IBook>) => {
-        console.log(data);
-
         if (page === 1) {
           setTotalPages(data.totalPages);
         }
