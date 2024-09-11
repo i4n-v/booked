@@ -101,7 +101,7 @@ export default function Books() {
 
   useRefetchOnFocus(() => {
     if (page !== 1) {
-      setPage(2);
+      setPage(1);
     } else {
       booksQuery.refetch();
     }

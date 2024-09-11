@@ -1,22 +1,12 @@
 import api from "@/config/api";
 import { IMessage } from "@/types/Message";
+import createFormData from "@/utils/createFormData";
 const DPath = "/messages";
 
 export default function useMessage() {
   async function createMessage(message: IMessage<"SEND">) {
     try {
-      const formData = new FormData();
-      Object.entries(message).forEach(([key, value]) => {
-        if (value) {
-          if (Array.isArray(value)) {
-            value.forEach((obj, index) => {
-              formData.append(`${key}[]`, obj);
-            });
-            return;
-          }
-          formData.append(key, value);
-        }
-      });
+      const formData = createFormData(message);
 
       const response = await api.post(DPath, formData, {
         headers: {

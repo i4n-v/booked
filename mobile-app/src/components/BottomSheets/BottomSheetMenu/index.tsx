@@ -51,7 +51,7 @@ function BottomSheetMenuComponent<T extends ExpoVectorIcon>(
               icon={item.icon}
               name={item.name}
               color={bottomSheetMenuStyles.iconButton.color}
-              size={bottomSheetMenuStyles.iconButton.size}
+              size={24}
             />
             <Text style={bottomSheetMenuStyles.itemText}>{item.text}</Text>
           </TouchableOpacity>

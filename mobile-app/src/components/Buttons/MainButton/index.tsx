@@ -16,6 +16,7 @@ function MainButton<L extends ExpoVectorIcon, R extends ExpoVectorIcon = L>({
   leftIcon,
   rightIcon,
   style,
+  gradientStyle,
   textStyle,
   variant,
   ...props
@@ -53,7 +54,7 @@ function MainButton<L extends ExpoVectorIcon, R extends ExpoVectorIcon = L>({
       style={style}
       {...props}
     >
-      <ButtonGradient colors={gradientColors}>
+      <ButtonGradient colors={gradientColors} style={gradientStyle}>
         {!loading && leftIcon && (
           <Icon
             name={leftIcon.name}

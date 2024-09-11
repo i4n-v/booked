@@ -17,7 +17,7 @@ const TabList = styled(View)`
   height: 60px;
   width: 100%;
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
-  background-color: ${({ theme }) => theme.colors.secondary?.[50]};
+  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   ${({ theme }) => theme.shadows[0] as any}
 `;
 

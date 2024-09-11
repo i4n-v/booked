@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/Loading";
 import FileField from "@/components/FormFields/FileField";
 import { BottomSheet } from "@/components/BottomSheets";
 import { useBottomSheet, useDebounceCallback, useNotifier } from "@/hooks";
-import { Dimensions, ImageBackground, View } from "react-native";
+import { Dimensions } from "react-native";
 import { Search } from "@/components/Icons";
 import IBook from "@/types/Book";
 import Close from "@/components/Icons/Close";
@@ -47,7 +47,7 @@ function Messages() {
     max: 1,
   });
   const [receiver, setReveiver] = useState<Partial<IUser>>();
-  const { user, socket, token } = useContext(AuthContext)!;
+  const { user, socket } = useContext(AuthContext)!;
 
   const { getMessages, getChat } = useChat();
   const { createMessage } = useMessage();
@@ -210,10 +210,7 @@ function Messages() {
         onClose={() => setViewImage(null)}
       >
         <Styled.ImagePreviewContainer width={width} height={height}>
-          <Styled.ImagePreview
-            source={{ uri: viewImage! }}
-            resizeMode="contain"
-          />
+          <Styled.ImagePreview source={{ uri: viewImage! }} resizeMode="contain" />
         </Styled.ImagePreviewContainer>
       </BottomSheet>
       <BottomSheet
@@ -272,7 +269,11 @@ function Messages() {
           </Styled.Button>
         ) : (
           <>
-            <Styled.Button onPress={() => handleOpenFilter()} variant="outlined">
+            <Styled.Button
+              onPress={() => handleOpenFilter()}
+              variant="outlined"
+              colorScheme="primary"
+            >
               <Book />
             </Styled.Button>
             <FileField

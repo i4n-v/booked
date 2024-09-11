@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { HeaderContainer, Wrapper } from "./styles";
+import { HeaderContainer, LogoContainer, Wrapper } from "./styles";
 import { Dimensions, Image } from "react-native";
 import { IconButton } from "@/components/Buttons";
 import { ArrowBack, Search, User } from "@/components/Icons";
@@ -11,7 +11,7 @@ import Animated, { EntryExitTransition, FadeIn, FadeOut } from "react-native-rea
 import { z } from "zod";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useDebounceCallback } from "@/hooks";
-import { router } from "expo-router";
+import { router, useSegments } from "expo-router";
 
 const logo = require("@/../assets/images/logo-dark.png");
 const windowWidth = Dimensions.get("window").width - 128 - 16;
@@ -29,6 +29,7 @@ export default function SearchHeader() {
   const [filterBy, setFilterBy] = useState<IFilterBy>("books");
   const { setSearchFilter, searchFilter } = useContext(GlobalContext)!;
   const layoutAnimation = EntryExitTransition.entering(FadeIn).exiting(FadeOut);
+  const segments = useSegments();
 
   const { control, reset } = useForm<ISearchFilter>({
     defaultValues: {
@@ -68,6 +69,13 @@ export default function SearchHeader() {
     setSearchFilter(value);
   });
 
+  function isNotTabRouter() {
+    const tabPaths = ["/library", "/solicitations", "/home"];
+    const completedPath = segments.join("/").replace("(app)/(tabs)", "");
+
+    return !tabPaths.includes(completedPath);
+  }
+
   return (
     <HeaderContainer>
       {search ? (
@@ -83,7 +91,7 @@ export default function SearchHeader() {
             name="filter"
             placeholder="Buscar..."
             rightIcon={{
-              icon: <Search width={24} height={24} />,
+              icon: <Search />,
               onPress: () => {},
             }}
             required
@@ -103,7 +111,12 @@ export default function SearchHeader() {
         </AnimatedWraper>
       ) : (
         <AnimatedWraper layout={layoutAnimation}>
-          <Image source={logo} />
+          <LogoContainer>
+            {isNotTabRouter() && (
+              <IconButton<any> icon={<ArrowBack />} isFocused onPress={() => router.back()} />
+            )}
+            <Image source={logo} />
+          </LogoContainer>
           <IconButton<any> icon={<Search />} onPress={toggleSearch} />
         </AnimatedWraper>
       )}

@@ -11,7 +11,7 @@ export default function ReadMore({ children, numberOfLines = 5 }: IReadMoreProps
   const [showMore, setShoreMore] = useState(false);
 
   function verifyIfHasMoreToShow(event: NativeSyntheticEvent<TextLayoutEventData>) {
-    const hasMoreToShow = event.nativeEvent.lines.length > 5;
+    const hasMoreToShow = event.nativeEvent.lines.length > numberOfLines;
     setHasMoreToShow(hasMoreToShow);
   }
 

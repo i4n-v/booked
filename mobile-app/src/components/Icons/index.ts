@@ -19,6 +19,10 @@ import ArrowUp from "./ArrowUp";
 import FavoriteOutlined from "./FavoriteOutlined";
 import Send from "./Send";
 import Check from "./Check"
+import Logout from "./Logout";
+import Config from "./Config";
+import More from "./More";
+import Add from "./Add";
 
 export {
   Transfer,
@@ -41,5 +45,9 @@ export {
   ArrowUp,
   FavoriteOutlined,
   Send,
-  Check
+  Check,
+  Logout,
+  Config,
+  More,
+  Add,
 };

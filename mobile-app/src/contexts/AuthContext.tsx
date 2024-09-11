@@ -37,7 +37,7 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
   async function handleLogout() {
     logoutMutation.mutate(undefined, {
       onSettled(response, error: any) {
-        if (response || error.message === "Conexão não autorizada.") {
+        if (response || ["Conexão não autorizada.", "Token inválido."].includes(error.message)) {
           setToken(null);
           setUser(null);
           router.navigate("/sigin");
@@ -57,10 +57,12 @@ function AuthProvider({ children }: IAuthContextProviderProps) {
       if (!response.valid) {
         return handleLogout();
       }
-      if(!socket?.connected){
-        connectSocket(token!)
+
+      if (!socket?.connected) {
+        connectSocket(token!);
       }
-      router.navigate("/(app)/home");
+
+      router.navigate("/home");
     },
     onError() {
       handleLogout();

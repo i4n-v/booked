@@ -179,10 +179,16 @@ class UserRepository {
 
     return await this.repository.findByPk(id, {
       attributes: {
-        exclude: ['password', 'salt', 'updatedAt'],
+        exclude: ['password', 'updatedAt'],
         include: includeAttributes as any,
       },
       ...options,
+    });
+  }
+
+  async findByIdWithHash(id: string) {
+    return await this.repository.findByPk(id, {
+      attributes: ['id', 'password'],
     });
   }
 

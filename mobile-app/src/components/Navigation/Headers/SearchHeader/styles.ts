@@ -6,9 +6,9 @@ const HeaderContainer = styled(View)`
   padding: 0px 16px;
   height: 64px;
   margin-top: 50px;
-  background-color: ${({ theme }) => theme.colors.secondary?.[50]};
+  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   ${({ theme }) => theme.shadows[0] as any};
-  `;
+`;
 
 const Wrapper = styled(View)`
   flex-direction: row;
@@ -17,4 +17,10 @@ const Wrapper = styled(View)`
   gap: 8px;
 `;
 
-export { HeaderContainer, Wrapper };
+const LogoContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+`;
+
+export { HeaderContainer, Wrapper, LogoContainer };

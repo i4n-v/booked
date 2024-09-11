@@ -24,6 +24,8 @@ const UserPhoto = styled.Image`
   width: 42px;
   height: 42px;
   border-radius: 42px;
+  border-color: ${({ theme }) => theme.colors.secondary?.[100]};
+  ${({ theme }) => theme.shadows[0] as any}
 `;
 
 const DescriptionStyles = css`

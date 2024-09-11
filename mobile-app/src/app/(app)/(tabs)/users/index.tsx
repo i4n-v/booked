@@ -8,6 +8,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import IUser from "@/types/User";
 import { UserCard } from "@/components/Cards";
 import { useNotifier, useRefetchOnFocus } from "@/hooks";
+import { router } from "expo-router";
 
 export default function Users() {
   const { openNotification } = useNotifier();
@@ -100,7 +101,9 @@ export default function Users() {
             userName={item.user_name}
             isFollowing={item.followed}
             image={item.photo_url}
-            onPress={() => {}}
+            onPress={() =>
+              router.navigate({ pathname: "/profile/[userId]", params: { userId: item.id } })
+            }
             onFollow={() => toggleFollowUser(item, index)}
           />
         )}

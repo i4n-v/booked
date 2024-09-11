@@ -4,6 +4,7 @@ import { Params } from "@/types/Params";
 import { ResponseMessage } from "@/types/ResponseMessage";
 import api from "@/config/api";
 import { PasswordChange } from "@/types/PasswordChange";
+import createFormData from "@/utils/createFormData";
 
 export default function useUser() {
   const DPath = "users";
@@ -37,15 +38,12 @@ export default function useUser() {
     }
   }
 
-  async function updateUser(data: IUser<"UPDATE">): Promise<ResponseMessage> {
+  async function updateUser({ id, ...data }: IUser<"UPDATE">): Promise<ResponseMessage> {
     try {
-      const formData = new FormData();
-      formData.append("photo", data.photo);
-      Object.entries(data).forEach(([key, value]) => {
-        if (["id", "photo"].includes(key)) return;
-        formData.append(key, value);
-      });
-      const response = await api.patch(`${DPath}/${data.id}`, formData, {
+      console.log(data);
+      const formData = createFormData(data);
+
+      const response = await api.patch(`${DPath}/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
