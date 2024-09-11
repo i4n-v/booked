@@ -1,28 +1,19 @@
 import { BookCard } from "@/components/Cards";
 import { FlatList } from "@/components/Lists";
-import { useBook, useCategory } from "@/services";
+import { useBook } from "@/services";
 import { useQuery } from "react-query";
 import { Skeleton } from "@/components/Loading";
 import { useContext, useEffect, useState } from "react";
 import { ListCounter, RefreshControl } from "@/components";
 import IBook from "@/types/Book";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import FilterButton from "@/components/Buttons/FilterButton";
-import { BottomSheet } from "@/components/BottomSheets";
 import { useBottomSheet, useDebounce, useRefetchOnFocus } from "@/hooks";
-import {
-  DateField,
-  PaginatedAutocompleteField,
-  SwitchField,
-  TextField,
-} from "@/components/FormFields";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { fieldsRegex } from "@/config/regex";
 import { format } from "date-fns";
 import { cleanUpMask } from "@/utils/mask";
 import { router } from "expo-router";
-import { FilterTitle } from "./styles";
+import BooksFilter from "@/components/Book/BooksFilter";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -61,7 +52,6 @@ export default function Books() {
   }, [debouncedFilters, searchFilter]);
 
   const { getBooks } = useBook();
-  const { getCategories } = useCategory();
 
   const booksQuery = useQuery(
     ["books", page, searchFilter, debouncedFilters],
@@ -109,59 +99,12 @@ export default function Books() {
 
   return (
     <>
-      <BottomSheet
-        ref={refFilter}
-        snapPoints={["75%"]}
-        scrollViewProps={{
-          contentContainerStyle: { padding: 16, gap: 20 },
-        }}
-      >
-        <FilterTitle>Filtrar livros</FilterTitle>
-        <DateField label="Data mínima da publicação" name="min_date" control={filterForm.control} />
-        <DateField label="Data máxima da publicação" name="max_date" control={filterForm.control} />
-        <SwitchField
-          label="Gratuíto"
-          name="free"
-          control={filterForm.control}
-          customOnChange={() => {
-            filterForm.setValue("min_price", null);
-            filterForm.setValue("max_price", null);
-          }}
-        />
-        <TextField
-          label="Preço mínimo"
-          name="min_price"
-          control={filterForm.control}
-          mask={fieldsRegex.price}
-          disabled={filters.free}
-          inputProps={{
-            keyboardType: "numeric",
-          }}
-        />
-        <TextField
-          label="Preço máximo"
-          name="max_price"
-          control={filterForm.control}
-          mask={fieldsRegex.price}
-          disabled={filters.free}
-          inputProps={{
-            keyboardType: "numeric",
-          }}
-        />
-        <PaginatedAutocompleteField
-          label="Categorias"
-          name="categories"
-          control={filterForm.control}
-          multiple
-          optionCompareKey="id"
-          optionLabelKey="name"
-          optionValueKey="id"
-          filterKey="name"
-          queryKey="categories"
-          service={(params) => getCategories(params)}
-        />
-      </BottomSheet>
-      <FilterButton onPress={handleOpenFilter} />
+      <BooksFilter
+        refFilter={refFilter}
+        filterFormControl={filterForm.control}
+        setValue={filterForm.setValue}
+        handleOpenFilter={handleOpenFilter}
+      />
       <ListCounter
         title="Livros encontrados..."
         count={books.length}

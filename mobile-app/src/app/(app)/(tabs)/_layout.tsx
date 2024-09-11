@@ -57,7 +57,7 @@ export default function AppLayout() {
           listeners={() => ({
             tabPress: (e) => {
               e.preventDefault();
-              router.navigate("/(app)/(stack)/chat");
+              router.push("/(app)/(stack)/chat");
             },
           })}
         />

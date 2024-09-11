@@ -41,6 +41,7 @@ import {
   TextField,
 } from "@/components/FormFields";
 import { fieldsRegex } from "@/config/regex";
+import BooksFilter from "@/components/Book/BooksFilter";
 
 const validations = z.object({
   min_date: z.date().nullable(),
@@ -241,60 +242,13 @@ const Profile = () => {
   return (
     <>
       <UserHeader data={userData} onPress={handleOpenSettings} />
-      <BottomSheet
-        ref={refFilter}
-        snapPoints={["75%"]}
-        scrollViewProps={{
-          contentContainerStyle: { padding: 16, gap: 20 },
-        }}
-      >
-        <FilterTitle>Filtrar livros</FilterTitle>
-        <DateField label="Data mínima da publicação" name="min_date" control={filterForm.control} />
-        <DateField label="Data máxima da publicação" name="max_date" control={filterForm.control} />
-        <SwitchField
-          label="Gratuíto"
-          name="free"
-          control={filterForm.control}
-          customOnChange={() => {
-            filterForm.setValue("min_price", null);
-            filterForm.setValue("max_price", null);
-          }}
-        />
-        <TextField
-          label="Preço mínimo"
-          name="min_price"
-          control={filterForm.control}
-          mask={fieldsRegex.price}
-          disabled={filters.free}
-          inputProps={{
-            keyboardType: "numeric",
-          }}
-        />
-        <TextField
-          label="Preço máximo"
-          name="max_price"
-          control={filterForm.control}
-          mask={fieldsRegex.price}
-          disabled={filters.free}
-          inputProps={{
-            keyboardType: "numeric",
-          }}
-        />
-        <PaginatedAutocompleteField
-          label="Categorias"
-          name="categories"
-          control={filterForm.control}
-          multiple
-          optionCompareKey="id"
-          optionLabelKey="name"
-          optionValueKey="id"
-          filterKey="name"
-          queryKey="categories"
-          service={(params) => getCategories(params)}
-        />
-      </BottomSheet>
+      <BooksFilter
+        refFilter={refFilter}
+        filterFormControl={filterForm.control}
+        setValue={filterForm.setValue}
+        handleOpenFilter={handleOpenFilter}
+      />
       <BottomSheetMenu<any> ref={refSettings} items={settings} />
-      <FilterButton onPress={handleOpenFilter} />
       <FlatList
         data={books}
         loading={booksQuery.isFetching}

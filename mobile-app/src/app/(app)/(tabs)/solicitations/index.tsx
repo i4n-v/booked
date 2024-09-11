@@ -116,7 +116,7 @@ export default function Solicitations() {
         }}
       >
         <BottomSheetHeader>
-          <BottomSheetTitle>FILTRAR LIVROS</BottomSheetTitle>
+          <BottomSheetTitle>FILTRAR SOLICITAÇÔES</BottomSheetTitle>
         </BottomSheetHeader>
         <DateField label="Data mínima da solicitação" name="min_date" control={control} />
         <DateField label="Data máxima da solicitação" name="max_date" control={control} />

@@ -177,7 +177,7 @@ class ChatController {
 
       if (!chat) {
         return response.status(400).json({
-          message: messages.unknown('Usuário'),
+          message: messages.unknown('Chat'),
         });
       }
 

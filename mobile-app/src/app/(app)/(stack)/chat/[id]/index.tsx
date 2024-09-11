@@ -81,8 +81,13 @@ function Messages() {
     queryFn: () => getChat({ id: params?.id }),
     queryKey: ["get-chat", params?.id],
     onSuccess(data) {
-      setReveiver(data.users?.find((chatUser) => chatUser.id !== user?.id));
-      setChat(data);
+      const receiver = data.users?.find((chatUser) => chatUser.id !== user?.id)
+      if(receiver){
+        setReveiver(receiver);
+        setChat(data);
+      }else{
+        setReveiver({id: params.id})
+      }
     },
     onError() {
       setReveiver({ id: params?.id });
@@ -91,7 +96,7 @@ function Messages() {
 
   useQuery({
     queryFn: () => getUser(receiver?.id!),
-    queryKey: ["get-user"],
+    queryKey: ["get-user",receiver?.id],
     onSuccess(data) {
       setReveiver(data);
     },
