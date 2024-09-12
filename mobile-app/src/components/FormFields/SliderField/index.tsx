@@ -56,11 +56,22 @@ export default function SliderField({
   const maxWidth = useSharedValue(0);
   const changedBy = useSharedValue("external");
 
-  const calculateX = useCallback((value: number, maxWidth: number) => {
-    const relativeValue = (value - min) / (max - min);
-    const initialSlideXAxis = relativeValue * maxWidth;
-    return initialSlideXAxis;
-  }, []);
+  const calculateX = useCallback(
+    (value: number, maxWidth: number) => {
+      let relativeValue = (value - min) / (max - min);
+      const isNotValid = isNaN(relativeValue) || !isFinite(relativeValue);
+
+      if (isNotValid) {
+        relativeValue = 0;
+      } else {
+        relativeValue = Number(relativeValue.toFixed(3));
+      }
+
+      const initialSlideXAxis = relativeValue * maxWidth;
+      return initialSlideXAxis;
+    },
+    [max, min],
+  );
 
   useEffect(() => {
     if (fieldValue && changedBy.value === "external" && maxWidth.value) {
@@ -68,7 +79,7 @@ export default function SliderField({
     }
 
     changedBy.value = "external";
-  }, [fieldValue]);
+  }, [fieldValue, min, max]);
 
   const fillTrackAnimatedStyles = useAnimatedStyle(() => ({
     width: slideXAxis.value,

@@ -2,8 +2,7 @@ import styled from "styled-components/native";
 
 export const Container = styled.View`
   width: 100%;
-  /* padding: 10px 0; */
-  background-color: ${({ theme }) => theme.colors.secondary?.[50]};
+  background-color: ${({ theme }) => theme.colors.secondary?.[0]};
 `;
 
 export const TabList = styled.View`
@@ -12,8 +11,7 @@ export const TabList = styled.View`
   align-items: center;
   gap: 25px;
   position: relative;
-  padding: 10px;
- /*  background-color: ${({ theme }) => theme.colors.secondary?.[500]}; */
+  padding: 16px;
 `;
 
 export const Text = styled.Text`

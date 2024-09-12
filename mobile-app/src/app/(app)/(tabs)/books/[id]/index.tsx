@@ -410,8 +410,8 @@ export default function BookView() {
           onPress={toggleWish}
         />
       </WishContainer>
-      {!book.photo_url ? (
-        <BookImage source={{ uri: book.photo_url }} />
+      {book.photo_url ? (
+        <BookImage source={{ uri: book.photo_url }} resizeMode="contain" />
       ) : (
         <BookImage source={unknownPhoto} />
       )}

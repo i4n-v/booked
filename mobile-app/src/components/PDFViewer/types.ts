@@ -1,5 +1,5 @@
 interface IPDFViewerProps {
-  url: string;
+  url?: string;
   initialPage?: number;
   maxPages?: number;
   markedPage?: number;

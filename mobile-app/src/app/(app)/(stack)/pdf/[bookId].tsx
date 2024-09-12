@@ -44,7 +44,7 @@ export default function PDF() {
 
     updateAcquisitionMutation.mutate(
       {
-        id: bookId as string,
+        id: book?.acquisition_id!,
         data: {
           marked_page: newPage,
         },
@@ -72,7 +72,7 @@ export default function PDF() {
 
   return (
     <PDFViewer
-      url={book.file_url}
+      url={book.file_url ?? undefined}
       maxPages={isAcquired ? undefined : 10}
       initialPage={book.marked_page ?? 1}
       markedPage={book.marked_page}

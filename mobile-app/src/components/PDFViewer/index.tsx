@@ -45,7 +45,7 @@ export default function PDFViewer({
 
   const page = watch("page");
   const backIsDisabled = page === 1;
-  const nextIsDisabled = page === totalPages || !!(maxPages && page <= maxPages);
+  const nextIsDisabled = page === totalPages || !!(maxPages && page === maxPages);
 
   function nextPage() {
     setValue("page", page + 1);
@@ -106,6 +106,7 @@ export default function PDFViewer({
           width,
           height,
           backgroundColor: theme.colors.secondary?.[0],
+          pointerEvents: nextIsDisabled ? "none" : "auto",
         }}
       />
       {showTools && (

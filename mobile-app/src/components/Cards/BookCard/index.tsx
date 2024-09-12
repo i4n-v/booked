@@ -37,7 +37,11 @@ export default function BookCard({
 
   return (
     <CardContainer onPress={onPress} activeOpacity={theme.shape.opacity}>
-      {image ? <BookImage source={{ uri: image }} /> : <BookImage source={unknownPhoto} />}
+      {image ? (
+        <BookImage source={{ uri: image }} resizeMode="contain" />
+      ) : (
+        <BookImage source={unknownPhoto} />
+      )}
       <InfoContainer>
         <Title numberOfLines={1} ellipsizeMode="tail">
           {title}
