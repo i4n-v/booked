@@ -52,7 +52,7 @@ export default function BookViewContent() {
   const { bookId } = useParams();
   const { getBook } = useBook();
   const { updateAcquisition } = useAcquisitions();
-  const createUserMutation = useMutation({
+  const updateAcquisitionMutation = useMutation({
     mutationFn: updateAcquisition,
     mutationKey: "UpdateAcquisition",
   });
@@ -125,7 +125,7 @@ export default function BookViewContent() {
   };
 
   function markPage(page: number) {
-    createUserMutation.mutate(
+    updateAcquisitionMutation.mutate(
       {
         id: book?.acquisition_id as string,
         data: { marked_page: page },
