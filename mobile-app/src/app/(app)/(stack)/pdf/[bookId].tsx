@@ -74,7 +74,8 @@ export default function PDF() {
     <PDFViewer
       url={book.file_url}
       maxPages={isAcquired ? undefined : 10}
-      initialPage={book.marked_page}
+      initialPage={book.marked_page ?? 1}
+      markedPage={book.marked_page}
       onMarkPage={handleMarkPage}
       showMarkPage={isAcquired}
     />

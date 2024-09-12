@@ -17,6 +17,7 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { IPDFViewerProps } from "./types";
 import LottieView from "lottie-react-native";
 import bookLoading from "../../animations/book-loading.json";
+import BookMarkOutlined from "../Icons/BookMarkOutlined";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +29,7 @@ export default function PDFViewer({
   initialPage = 1,
   maxPages,
   showMarkPage = true,
+  markedPage,
   onMarkPage,
   onLoad,
 }: IPDFViewerProps) {
@@ -65,7 +67,7 @@ export default function PDFViewer({
             }
           }}
         >
-          <BookMark />
+          {page === markedPage ? <BookMark /> : <BookMarkOutlined />}
         </AnimatedBookMarkContainer>
       )}
       <Pdf
