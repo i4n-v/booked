@@ -119,8 +119,12 @@ class BookController {
       let photo_url;
 
       async function removeFiles() {
-        if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
-        if (files?.file) await fileSystem.removeFile(files.file[0].path);
+        try {
+          if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
+          if (files?.file) await fileSystem.removeFile(files.file[0].path);
+        } catch (error) {
+          console.log(error);
+        }
       }
 
       const book = await BookRepository.findById(id);
