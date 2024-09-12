@@ -300,6 +300,15 @@ export default function BookView() {
     setComments([]);
   }
 
+  function navigateToRead() {
+    router.navigate({
+      pathname: "/pdf/[bookId]",
+      params: {
+        bookId: book!.id,
+      },
+    });
+  }
+
   if (!book) return null;
 
   const statusTypes = {
@@ -419,7 +428,7 @@ export default function BookView() {
       </RatingContainer>
       <ButtonContainer>
         {book.acquisition_id || book.user.id === user?.id ? (
-          <MainButton>Começar leitura</MainButton>
+          <MainButton onPress={navigateToRead}>Começar leitura</MainButton>
         ) : (
           <>
             <MainButton disabled={!!book.solicitation_id} onPress={() => setStatus("error")}>
@@ -430,7 +439,7 @@ export default function BookView() {
                   : `Comprar por R$ ${toBRL(book.price)}`}
             </MainButton>
             {!book.free && (
-              <MainButton variant="outlined" colorScheme="primary">
+              <MainButton variant="outlined" colorScheme="primary" onPress={navigateToRead}>
                 Ler amostra gratuíta
               </MainButton>
             )}

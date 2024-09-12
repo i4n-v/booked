@@ -12,7 +12,9 @@ export default function StackHeader({ navigation, options }: IStackHeaderProps) 
       {canGoBack && (
         <IconButton<any> icon={<ArrowBack />} isFocused onPress={() => navigation.goBack()} />
       )}
-      <Title>{options.title}</Title>
+      <Title numberOfLines={1} ellipsizeMode="tail">
+        {options.title}
+      </Title>
 
       {options.handleMorePress && (
         <IconButton<any>

@@ -1,3 +1,3 @@
-const API_URL = "http://192.168.1.8:5001/";
+const API_URL = "https://booked-api.onrender.com/";
 
 export { API_URL };

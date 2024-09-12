@@ -17,8 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.template.app",
-      "buildNumber": 1,
+      "bundleIdentifier": "com.booked.app",
+      "buildNumber": "1",
       "config": {}
     },
     "android": {
@@ -26,9 +26,16 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#9B51E0",
         "config": {},
-        "package": "com.template.app",
+        "package": "com.booked.app",
         "versionCode": 1
-      }
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
+      "package": "com.booked.app"
     },
     "web": {
       "bundler": "metro",
@@ -40,7 +47,23 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
-    ]
+      "expo-font",
+      "@config-plugins/react-native-pdf",
+      "@config-plugins/react-native-blob-util"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6e5ff272-0db3-439f-8d82-ef267851ecca"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6e5ff272-0db3-439f-8d82-ef267851ecca"
+    }
   }
 }

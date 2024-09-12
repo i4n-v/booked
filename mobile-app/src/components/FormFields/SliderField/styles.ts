@@ -1,22 +1,41 @@
 import styled from "styled-components/native";
+import { ISlideSizes } from "./types";
+
+interface ISizeTrack {
+  size: ISlideSizes;
+}
+
+const sizes = {
+  xs: {
+    slideTrack: "4px",
+    fillTrack: "4px",
+    slideTop: "-4px",
+    slide: "12px",
+  },
+  sm: {
+    slideTrack: "8px",
+    fillTrack: "8px",
+    slideTop: "-6px",
+    slide: "20px",
+  },
+};
 
 const SliderContainer = styled.View`
   row-gap: 10px;
-  padding: 0 8px;
 `;
 
-const SlideTrack = styled.View`
+const SlideTrack = styled.View<ISizeTrack>`
   position: relative;
-  height: 8px;
+  height: ${({ size }) => sizes[size].slideTrack};
   border-radius: 100px;
   background-color: ${({ theme }) => theme.colors.secondary?.[200]};
 `;
 
-const FillTrack = styled.View`
+const FillTrack = styled.View<ISizeTrack>`
   position: absolute;
   top: 0;
   left: 0;
-  height: 8px;
+  height: ${({ size }) => sizes[size].fillTrack};
   border-radius: 100px;
   background-color: ${({ theme }) => theme.colors.primary?.[200]};
 `;
@@ -37,11 +56,11 @@ const SliderLabel = styled.TextInput`
   color: ${({ theme }) => theme.colors.text?.[700]};
 `;
 
-const Slide = styled.View`
+const Slide = styled.View<ISizeTrack>`
   position: absolute;
-  top: -6px;
-  width: 20px;
-  height: 20px;
+  top: ${({ size }) => sizes[size].slideTop};
+  width: ${({ size }) => sizes[size].slide};
+  height: ${({ size }) => sizes[size].slide};
   border-radius: 100px;
   background-color: ${({ theme }) => theme.colors.primary?.[200]};
 `;

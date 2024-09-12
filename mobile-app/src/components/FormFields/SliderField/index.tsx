@@ -26,6 +26,7 @@ export default function SliderField({
   min = 0,
   max = 100,
   step = 1,
+  size = "sm",
   disabled,
   required,
   customOnChange,
@@ -119,20 +120,21 @@ export default function SliderField({
         {label}
       </Label>
       <SlideTrack
+        size={size}
         onLayout={function (event) {
           const { width } = event.nativeEvent.layout;
           maxWidth.value = width;
           slideXAxis.value = withTiming(calculateX(fieldValue, width));
         }}
       >
-        <AnimatedFillTrack style={fillTrackAnimatedStyles} />
+        <AnimatedFillTrack style={fillTrackAnimatedStyles} size={size} />
         <AnimatedSliderLabel
           editable={false}
           style={sliderLabelAnimatedStyles}
           animatedProps={animatedSliderLabelProps}
         />
-        <PanGestureHandler onGestureEvent={slideGesture}>
-          <AnimatedSlide style={slideAnimatedStyles} />
+        <PanGestureHandler onGestureEvent={disabled ? undefined : slideGesture}>
+          <AnimatedSlide style={slideAnimatedStyles} size={size} />
         </PanGestureHandler>
       </SlideTrack>
       <ErrorMessage>{error}</ErrorMessage>

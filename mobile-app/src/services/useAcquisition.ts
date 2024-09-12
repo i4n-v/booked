@@ -31,7 +31,7 @@ export default function useAcquisitions() {
     data,
   }: {
     id: string;
-    data: { marked_page: number };
+    data: { marked_page: number | null };
   }): Promise<ResponseMessage> {
     try {
       const response = await api.put(`${DPath}/${id}`, data);

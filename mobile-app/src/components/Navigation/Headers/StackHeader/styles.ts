@@ -18,6 +18,7 @@ const Title = styled.Text`
   font-family: ${({ theme }) => theme.typography.fonts.primary.medium};
   font-size: ${({ theme }) => theme.typography.size.md + "px"};
   color: ${({ theme }) => theme.colors.text?.[1000]};
+  max-width: 100%;
 `;
 
 export { HeaderContainer, Title };
