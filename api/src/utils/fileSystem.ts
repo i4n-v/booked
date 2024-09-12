@@ -30,7 +30,7 @@ class FileSystem {
         });
       });
     } catch (error: any) {
-      throw new Error(error.message);
+      console.log(error);
     }
   }
 }

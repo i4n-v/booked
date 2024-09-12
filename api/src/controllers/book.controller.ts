@@ -119,12 +119,8 @@ class BookController {
       let photo_url;
 
       async function removeFiles() {
-        try {
-          if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
-          if (files?.file) await fileSystem.removeFile(files.file[0].path);
-        } catch (error) {
-          console.log(error);
-        }
+        if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
+        if (files?.file) await fileSystem.removeFile(files.file[0].path);
       }
 
       const book = await BookRepository.findById(id);
@@ -144,21 +140,13 @@ class BookController {
       }
 
       if (files?.['photo']) {
-        try {
-          if (book.photo_url) fileSystem.removeFile(relativePath + book.photo_url);
-        } catch (error) {
-          console.log(error);
-        }
+        if (book.photo_url) fileSystem.removeFile(relativePath + book.photo_url);
 
         photo_url = fileSystem.filePathToUpload(files.photo[0].path);
       }
 
       if (files?.['file']) {
-        try {
-          if (book.file_url) fileSystem.removeFile(relativePath + book.file_url);
-        } catch (error) {
-          console.log(error);
-        }
+        if (book.file_url) fileSystem.removeFile(relativePath + book.file_url);
 
         file_url = fileSystem.filePathToUpload(files.file[0].path);
       }
