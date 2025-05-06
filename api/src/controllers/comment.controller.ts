@@ -22,12 +22,7 @@ class CommentController {
         whereStatement['refered_by'] = comment_id;
       }
 
-      const comments = await CommentRepository.findAndCountAll(
-        page,
-        limit,
-        request,
-        whereStatement
-      );
+      const comments = await CommentRepository.findAndCountAll(page, limit, whereStatement);
 
       const wrappedComments = paginationWrapper(comments, page, limit);
 

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { fileSystem } from '../utils';
 import messages from '../config/messages.config';
 import BookRepository from '../repositories/book.repository';
 import BookCreateDto from '../dto/book/bookCreate.dto';
@@ -10,13 +9,12 @@ import { sequelizeConnection } from '../config/sequelizeConnection.config';
 import BookCategoryRepository from '../repositories/bookCategory.repository';
 import BookCategoryCreateDto from '../dto/bookCategory/bookCategoryCreate.dto';
 import { endOfDay, parseISO, startOfDay } from 'date-fns';
+import { del, put } from '@vercel/blob';
 
 interface MulterUploadedFiles {
   photo?: Express.Multer.File[];
   file?: Express.Multer.File[];
 }
-
-const relativePath = __dirname + '/../..';
 
 class BookController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -27,34 +25,39 @@ class BookController {
       let file_url;
       let photo_url;
 
-      async function removeFiles() {
-        if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
-        if (files?.file) await fileSystem.removeFile(files.file[0].path);
-      }
-
       if (user_id !== auth.id) {
-        await removeFiles();
-
         return response.status(401).json({
           message: messages.unauthorized(),
         });
       }
 
-      if (files?.['photo']) photo_url = fileSystem.filePathToUpload(files.photo[0].path);
+      if (files?.photo) {
+        const photo = files.photo[0];
+        const path = `users/${user_id}/images/${photo.originalname}`;
 
-      if (files?.['file']) {
-        file_url = fileSystem.filePathToUpload(files.file[0].path);
+        const blob = await put(path, photo.buffer, {
+          access: 'public',
+        });
+
+        photo_url = blob.url;
+      }
+
+      if (files?.file) {
+        const file = files.file[0];
+        const path = `users/${user_id}/files/${file.originalname}`;
+
+        const blob = await put(path, file.buffer, {
+          access: 'public',
+        });
+
+        file_url = blob.url;
       } else {
-        await removeFiles();
-
         return response.status(400).json({
           message: 'O arquivo do livro é obrigatório.',
         });
       }
 
       if (!categories) {
-        await removeFiles();
-
         return response.status(400).json({
           message: 'Ao menos uma categoria deve ser informada.',
         });
@@ -95,8 +98,6 @@ class BookController {
           message: messages.create('Livro'),
         });
       } catch (error: any) {
-        await removeFiles();
-
         await transaction.rollback();
 
         throw new Error(error.message);
@@ -118,37 +119,46 @@ class BookController {
       let file_url;
       let photo_url;
 
-      async function removeFiles() {
-        if (files?.photo) await fileSystem.removeFile(files.photo[0].path);
-        if (files?.file) await fileSystem.removeFile(files.file[0].path);
-      }
-
       const book = await BookRepository.findById(id);
 
       if (!book) {
-        await removeFiles();
-
         return response.status(404).json({ message: messages.unknown('Livro') });
       }
 
       if (book.user.id !== auth.id) {
-        await removeFiles();
-
         return response.status(401).json({
           message: messages.unauthorized(),
         });
       }
 
-      if (files?.['photo']) {
-        if (book.photo_url) fileSystem.removeFile(relativePath + book.photo_url);
+      if (files?.photo) {
+        if (book.photo_url) {
+          await del(book.photo_url);
+        }
 
-        photo_url = fileSystem.filePathToUpload(files.photo[0].path);
+        const photo = files.photo[0];
+        const path = `users/${auth.id}/images/${photo.originalname}`;
+
+        const blob = await put(path, photo.buffer, {
+          access: 'public',
+        });
+
+        photo_url = blob.url;
       }
 
-      if (files?.['file']) {
-        if (book.file_url) fileSystem.removeFile(relativePath + book.file_url);
+      if (files?.file) {
+        if (book.file_url) {
+          await del(book.file_url);
+        }
 
-        file_url = fileSystem.filePathToUpload(files.file[0].path);
+        const file = files.file[0];
+        const path = `users/${auth.id}/files/${file.originalname}`;
+
+        const blob = await put(path, file.buffer, {
+          access: 'public',
+        });
+
+        file_url = blob.url;
       }
 
       if (categories) {
@@ -197,8 +207,6 @@ class BookController {
             message: messages.update('Livro'),
           });
         } catch (error: any) {
-          await removeFiles();
-
           await transaction.rollback();
 
           throw new Error(error.message);
@@ -273,7 +281,7 @@ class BookController {
         )`);
       }
 
-      const books = await BookRepository.findAndCountAll(page, limit, request, whereStatement, {
+      const books = await BookRepository.findAndCountAll(page, limit, whereStatement, {
         categories,
       });
 
@@ -292,13 +300,9 @@ class BookController {
         params: { id },
       } = request;
 
-      const book = await BookRepository.findById(id, auth?.id);
+      const book = await BookRepository.findById(id, auth.id);
 
       if (!book) return response.status(404).json({ message: messages.unknown('Livro') });
-
-      if (book.photo_url) book.photo_url = fileSystem.uploadedFilePath(request, book.photo_url);
-
-      if (book.file_url) book.file_url = fileSystem.uploadedFilePath(request, book.file_url);
 
       return response.json(book);
     } catch (error) {
@@ -327,9 +331,13 @@ class BookController {
         return response.status(400).json({ message: 'Não foi possível excluir o livro.' });
       }
 
-      if (book.photo_url) fileSystem.removeFile(relativePath + book.photo_url);
+      if (book.photo_url) {
+        await del(book.photo_url);
+      }
 
-      if (book.file_url) fileSystem.removeFile(relativePath + book.file_url);
+      if (book.file_url) {
+        await del(book.file_url);
+      }
 
       return response.json({ message: messages.delete('Livro') });
     } catch (error) {

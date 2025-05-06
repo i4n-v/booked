@@ -19,7 +19,7 @@ class AuthenticationController {
 
       if (!userData.password) return response.status(400).json({ messages: 'Senha requerida.' });
 
-      const user = await UserRepository.findByCredentials(userData.user_login || null, request);
+      const user = await UserRepository.findByCredentials(userData.user_login || null);
 
       if (!user) return response.status(404).json({ message: messages.unknown('Usuário') });
 

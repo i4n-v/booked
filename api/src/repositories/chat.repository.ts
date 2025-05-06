@@ -4,7 +4,6 @@ import Chat from '../database/models/chat.model';
 import ChatCreateDto from '../dto/chat/chatCreate.dto';
 import { Transaction, WhereOptions } from 'sequelize';
 import ChatDto from '../dto/chat/chat.dto';
-import { Request } from 'express';
 import { Op } from 'sequelize';
 
 class ChatRepository {
@@ -27,18 +26,7 @@ class ChatRepository {
     });
   }
 
-  async findByIdWithUsers(
-    id: string,
-    sender_id: string,
-    request: Request,
-    transaction?: Transaction
-  ) {
-    const {
-      headers: { host },
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
+  async findByIdWithUsers(id: string, sender_id: string, transaction?: Transaction) {
     return await this.repository.findByPk(id, {
       attributes: {
         exclude: ['first_user_id', 'second_user_id'],
@@ -64,22 +52,7 @@ class ChatRepository {
         {
           model: sequelizeConnection.model('User'),
           as: 'users',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN users.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', users.photo_url)
-                ELSE users.photo_url
-              END
-          `),
-              'photo_url',
-            ],
-          ],
+          attributes: ['id', 'name', 'user_name', 'photo_url'],
           required: true,
           through: { attributes: [] },
         },
@@ -91,17 +64,7 @@ class ChatRepository {
             'sender_id',
             'content',
             'createdAt',
-            [
-              sequelizeConnection.literal(`
-                CASE
-                  WHEN "Message".photo_url IS NOT NULL THEN CONCAT('${
-                    protocol + '://' + host
-                  }', "Message".photo_url)
-                  ELSE "Message".photo_url
-                END
-            `),
-              'photo_url',
-            ],
+            'photo_url',
             [
               sequelizeConnection.literal(`
                 EXISTS (
@@ -159,18 +122,11 @@ class ChatRepository {
   }
 
   async findAndCountAll(
+    userId: string,
     page: number,
     limit: number,
-    request: Request,
     options?: WhereOptions<ChatDto>
   ) {
-    const {
-      headers: { host },
-      auth,
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
     return await this.repository.findAndCountAll({
       limit,
       distinct: true,
@@ -197,7 +153,7 @@ class ChatRepository {
                   ON "Messages".id = "ReadedMessages".message_id
                 WHERE
                   "Messages".chat_id = "Chat".id
-                  AND "Messages".sender_id <> '${auth.id}'
+                  AND "Messages".sender_id <> '${userId}'
                   AND "ReadedMessages".user_id IS NULL
               )`
             ),
@@ -210,22 +166,7 @@ class ChatRepository {
         {
           model: sequelizeConnection.model('User'),
           as: 'users',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN users.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', users.photo_url)
-                ELSE users.photo_url
-              END
-          `),
-              'photo_url',
-            ],
-          ],
+          attributes: ['id', 'name', 'user_name', 'photo_url'],
           required: true,
           through: { attributes: [] },
         },
@@ -241,7 +182,7 @@ class ChatRepository {
               sequelizeConnection.literal(`
               EXISTS (
                 SELECT id FROM "ReadedMessages"
-                WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id <> '${auth.id}'
+                WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id <> '${userId}'
               )
           `),
               'read',

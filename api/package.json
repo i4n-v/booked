@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
+    "@vercel/blob": "^1.0.1",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "date-fns": "^2.29.3",

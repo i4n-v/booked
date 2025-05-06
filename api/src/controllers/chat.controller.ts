@@ -42,7 +42,7 @@ class ChatController {
         },
       };
 
-      const chats = await ChatRepository.findAndCountAll(page, limit, request, whereStatement);
+      const chats = await ChatRepository.findAndCountAll(auth.id, page, limit, whereStatement);
 
       const wrappedChats = paginationWrapper(chats, page, limit);
 
@@ -83,7 +83,6 @@ class ChatController {
           const receiveChatWithLastMessage = await ChatRepository.findByIdWithUsers(
             chat.id,
             userId,
-            request,
             transaction
           );
 
@@ -152,7 +151,6 @@ class ChatController {
             const receiveChatWithLastMessage = await ChatRepository.findByIdWithUsers(
               chat.id,
               userId,
-              request,
               transaction
             );
 

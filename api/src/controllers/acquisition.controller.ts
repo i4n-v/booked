@@ -116,7 +116,7 @@ class AcquisitionController {
         };
       }
 
-      const books = await BookRepository.findAndCountAll(page, limit, request, whereStatement);
+      const books = await BookRepository.findAndCountAll(page, limit, whereStatement);
 
       const wrappedBooks = paginationWrapper(books, page, limit);
 

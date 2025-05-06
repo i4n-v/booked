@@ -106,4 +106,7 @@ const options: Options = {
 export default function swagger(app: Express) {
   const swaggerConfig = swaggerJSDoc(options);
   app.use('/api-docs', serve, setup(swaggerConfig, customSwagger));
+  app.get('/swagger.json', (req, res) => {
+    res.json(swaggerConfig);
+  });
 }

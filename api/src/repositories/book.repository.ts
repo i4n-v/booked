@@ -5,7 +5,6 @@ import BookCreateDto from '../dto/book/bookCreate.dto';
 import BookUpdateDto from '../dto/book/bookUpdate.dto';
 import { BindOrReplacements, CreateOptions, Transaction, WhereOptions } from 'sequelize';
 import BookDto from '../dto/book/book.dto';
-import { Request } from 'express';
 import 'dotenv/config';
 
 class BookRepository {
@@ -119,16 +118,9 @@ class BookRepository {
   async findAndCountAll(
     page: number,
     limit: number,
-    request: Request,
     options?: WhereOptions<BookDto>,
     replacements?: BindOrReplacements
   ) {
-    const {
-      headers: { host },
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
@@ -143,17 +135,6 @@ class BookRepository {
       attributes: {
         exclude: ['user_id', 'file_url'],
         include: [
-          [
-            sequelizeConnection.literal(`
-              CASE
-                WHEN "Book".photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', "Book".photo_url)
-                ELSE "Book".photo_url
-              END
-          `),
-            'photo_url',
-          ],
           [
             sequelizeConnection.literal(
               `(

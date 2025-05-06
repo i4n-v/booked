@@ -6,7 +6,6 @@ import { Repository } from 'sequelize-typescript';
 import { FindOptions, Op, WhereOptions } from 'sequelize';
 import userUpdatePasswordDto from '../dto/user/userUpdatePassword.dto';
 import UserDto from '../dto/user/user.dto';
-import { Request } from 'express';
 
 class UserRepository {
   private repository: Repository<User>;
@@ -44,18 +43,11 @@ class UserRepository {
   }
 
   async findAndCountAll(
+    userId: string,
     page: number,
     limit: number,
-    request: Request,
     options?: WhereOptions<UserDto>
   ) {
-    const {
-      headers: { host },
-      auth,
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
@@ -65,23 +57,12 @@ class UserRepository {
         include: [
           [
             sequelizeConnection.literal(`
-              CASE
-                WHEN "User".photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', "User".photo_url)
-                ELSE "User".photo_url
-              END
-          `),
-            'photo_url',
-          ],
-          [
-            sequelizeConnection.literal(`
               EXISTS (
                 SELECT "Followers".id
                 FROM "Followers"
                 WHERE
                   "Followers".followed_id = "User".id
-                  AND "Followers".follower_id = '${auth.id}'
+                  AND "Followers".follower_id = '${userId}'
               )
             `),
             'followed',
@@ -111,7 +92,7 @@ class UserRepository {
                   [Op.in]: sequelizeConnection.literal(`(
                     SELECT "UserChats".chat_id
                     FROM "UserChats"
-                    WHERE "UserChats".user_id = '${auth.id}'
+                    WHERE "UserChats".user_id = '${userId}'
                   )`),
                 },
               ],
@@ -192,30 +173,8 @@ class UserRepository {
     });
   }
 
-  async findByCredentials(userLogin: string, request: Request) {
-    const {
-      headers: { host },
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
+  async findByCredentials(userLogin: string) {
     return await this.repository.findOne({
-      attributes: {
-        exclude: ['photo_url'],
-        include: [
-          [
-            sequelizeConnection.literal(`
-              CASE
-                WHEN "User".photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', "User".photo_url)
-                ELSE "User".photo_url
-              END
-          `),
-            'photo_url',
-          ],
-        ],
-      },
       where: {
         [Op.or]: [{ user_name: userLogin }, { email: userLogin }],
       },

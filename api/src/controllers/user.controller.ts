@@ -3,10 +3,11 @@ import UserRepository from '../repositories/user.repository';
 import UserCreateDto from '../dto/user/userCreate.dto';
 import UserUpdateDto from '../dto/user/userUpdate.dto';
 import messages from '../config/messages.config';
-import { encrypt, fileSystem } from '../utils';
+import { encrypt } from '../utils';
 import userUpdatePasswordDto from '../dto/user/userUpdatePassword.dto';
 import paginationWrapper from '../utils/paginationWrapper';
 import { Op } from 'sequelize';
+import { del, put } from '@vercel/blob';
 
 class UserController {
   async store(request: Request, response: Response, next: NextFunction) {
@@ -46,7 +47,7 @@ class UserController {
         };
       }
 
-      const users = await UserRepository.findAndCountAll(page, limit, request, whereStatement);
+      const users = await UserRepository.findAndCountAll(auth.id, page, limit, whereStatement);
 
       const wrappedUsers = paginationWrapper(users, page, limit);
 
@@ -71,8 +72,6 @@ class UserController {
         });
       }
 
-      if (user.photo_url) user.photo_url = fileSystem.uploadedFilePath(request, user.photo_url);
-
       return response.json(user);
     } catch (error) {
       next(error);
@@ -88,8 +87,6 @@ class UserController {
       let emailToUpdate;
 
       if (id !== auth.id) {
-        if (file) await fileSystem.removeFile(file.path);
-
         return response.status(401).json({
           message: messages.unauthorized(),
         });
@@ -104,9 +101,17 @@ class UserController {
       }
 
       if (file) {
-        if (user.photo_url) fileSystem.removeFile(__dirname + '/../..' + user.photo_url);
+        if (user.photo_url) {
+          await del(user.photo_url);
+        }
 
-        photo_url = fileSystem.filePathToUpload(file.path);
+        const path = `users/${id}/images/${file.originalname}`;
+
+        const blob = await put(path, file.buffer, {
+          access: 'public',
+        });
+
+        photo_url = blob.url;
       }
 
       if (user.email === email) emailToUpdate = email;

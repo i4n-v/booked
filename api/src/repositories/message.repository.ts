@@ -4,7 +4,6 @@ import Message from '../database/models/message.model';
 import MessageCreateDto from '../dto/message/messageCreate.dto';
 import { FindOptions, Transaction, WhereOptions } from 'sequelize';
 import MessageDto from '../dto/message/message.dto';
-import { Request } from 'express';
 
 class MessageRepository {
   private repository: Repository<Message>;
@@ -13,51 +12,17 @@ class MessageRepository {
     this.repository = sequelizeConnection.getRepository(Message);
   }
 
-  async findByIdWithUsers(id: string, request: Request, transaction?: Transaction) {
-    const {
-      headers: { host },
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
+  async findByIdWithUsers(id: string, transaction?: Transaction) {
     return await this.repository.findByPk(id, {
       attributes: {
         exclude: ['sender_id'],
-        include: [
-          [
-            sequelizeConnection.literal(`
-              CASE
-                WHEN "Message".photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', "Message".photo_url)
-                ELSE "Message".photo_url
-              END
-          `),
-            'photo_url',
-          ],
-        ],
       },
       transaction,
       include: [
         {
           model: sequelizeConnection.model('User'),
           as: 'sender',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN sender.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', sender.photo_url)
-                ELSE sender.photo_url
-              END
-          `),
-              'photo_url',
-            ],
-          ],
+          attributes: ['id', 'name', 'user_name', 'photo_url'],
         },
         {
           model: sequelizeConnection.model('Book'),
@@ -66,17 +31,6 @@ class MessageRepository {
           attributes: {
             exclude: ['user_id', 'file_url'],
             include: [
-              [
-                sequelizeConnection.literal(`
-                  CASE
-                    WHEN "books".photo_url IS NOT NULL THEN CONCAT('${
-                      protocol + '://' + host
-                    }', "books".photo_url)
-                    ELSE "books".photo_url
-                  END
-              `),
-                'photo_url',
-              ],
               [
                 sequelizeConnection.literal(
                   `(
@@ -124,18 +78,11 @@ class MessageRepository {
   }
 
   async findAndCountAll(
+    userId: string,
     page: number,
     limit: number,
-    request: Request,
     options?: WhereOptions<MessageDto>
   ) {
-    const {
-      headers: { host },
-      auth,
-    } = request;
-
-    const protocol = process.env.NODE_ENV !== 'development' ? 'https' : 'http';
-
     return await this.repository.findAndCountAll({
       limit,
       offset: (page - 1) * limit,
@@ -147,21 +94,10 @@ class MessageRepository {
             sequelizeConnection.literal(`
               EXISTS (
                 SELECT id FROM "ReadedMessages"
-                WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id = '${auth.id}'
+                WHERE "ReadedMessages".message_id = "Message".id AND "ReadedMessages".user_id = '${userId}'
               )
           `),
             'read',
-          ],
-          [
-            sequelizeConnection.literal(`
-              CASE
-                WHEN "Message".photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', "Message".photo_url)
-                ELSE "Message".photo_url
-              END
-          `),
-            'photo_url',
           ],
         ],
       },
@@ -170,22 +106,7 @@ class MessageRepository {
         {
           model: sequelizeConnection.model('User'),
           as: 'sender',
-          attributes: [
-            'id',
-            'name',
-            'user_name',
-            [
-              sequelizeConnection.literal(`
-              CASE
-                WHEN sender.photo_url IS NOT NULL THEN CONCAT('${
-                  protocol + '://' + host
-                }', sender.photo_url)
-                ELSE sender.photo_url
-              END
-          `),
-              'photo_url',
-            ],
-          ],
+          attributes: ['id', 'name', 'user_name', 'photo_url'],
         },
         {
           model: sequelizeConnection.model('Book'),
@@ -194,17 +115,6 @@ class MessageRepository {
           attributes: {
             exclude: ['user_id', 'file_url'],
             include: [
-              [
-                sequelizeConnection.literal(`
-                  CASE
-                    WHEN "books".photo_url IS NOT NULL THEN CONCAT('${
-                      protocol + '://' + host
-                    }', "books".photo_url)
-                    ELSE "books".photo_url
-                  END
-              `),
-                'photo_url',
-              ],
               [
                 sequelizeConnection.literal(
                   `(

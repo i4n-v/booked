@@ -6,9 +6,9 @@ import messages from '../config/messages.config';
 import MessageCreateDto from '../dto/message/messageCreate.dto';
 import { io } from '../setup';
 import { sequelizeConnection } from '../config/sequelizeConnection.config';
-import { fileSystem } from '../utils';
 import UserChatRepository from '../repositories/userChat.repository';
 import MessageBookRepository from '../repositories/messageBook.repository';
+import { put } from '@vercel/blob';
 
 interface ICreateMessageBody extends MessageCreateDto {
   receiver_id: string;
@@ -40,9 +40,9 @@ class MessageController {
       }
 
       const chatMessages = await MessageRepository.findAndCountAll(
+        auth.id,
         page,
         limit,
-        request,
         whereStatement
       );
 
@@ -67,7 +67,13 @@ class MessageController {
       }
 
       if (file) {
-        photo_url = fileSystem.filePathToUpload(file.path);
+        const path = `users/${auth.id}/images/${file.originalname}`;
+
+        const blob = await put(path, file.buffer, {
+          access: 'public',
+        });
+
+        photo_url = blob.url;
       }
 
       let chat = await ChatRepository.findById(chat_id);
@@ -111,18 +117,13 @@ class MessageController {
             await MessageBookRepository.bulkCreate(booksToCreate, { transaction });
           }
 
-          const message = await MessageRepository.findByIdWithUsers(
-            createdMessage.id,
-            request,
-            transaction
-          );
+          const message = await MessageRepository.findByIdWithUsers(createdMessage.id, transaction);
 
           for (const user of chat.users) {
             if (user.id === auth.id) {
               const senderChatWithLastMessage = await ChatRepository.findByIdWithUsers(
                 chat.id,
                 auth.id,
-                request,
                 transaction
               );
 
@@ -136,7 +137,6 @@ class MessageController {
               const receiveChatWithLastMessage = await ChatRepository.findByIdWithUsers(
                 chat.id,
                 receiver_id,
-                request,
                 transaction
               );
 
