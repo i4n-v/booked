@@ -1,11 +1,12 @@
 import { View } from "react-native";
 import styled from "styled-components/native";
+import Constants from "expo-constants";
 
 const HeaderContainer = styled(View)`
   justify-content: center;
   padding: 0px 16px;
   height: 64px;
-  margin-top: 50px;
+  margin-top: ${Constants.statusBarHeight};
   background-color: ${({ theme }) => theme.colors.secondary?.[0]};
   ${({ theme }) => theme.shadows[0] as any};
 `;

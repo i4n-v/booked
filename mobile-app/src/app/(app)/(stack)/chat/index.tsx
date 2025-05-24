@@ -222,6 +222,7 @@ function Chat() {
           const added = groupUsers.some((added) => added.id === item.id);
           return (
             <UserItem
+              key={item.id}
               active={added}
               customOnPress={() => (added ? hanldeRemoveGroupUser(item) : hanldeAddGroupUser(item))}
               {...item}

@@ -119,7 +119,7 @@ export default function SignUp() {
         </Button>
         <DescriptionWrapper>
           <Description>Já possui uma conta?</Description>
-          <Link href="/">
+          <Link href="/sigin">
             <TouchableOpacity activeOpacity={theme.shape.opacity}>
               <DescriptionDetail>Entre agora.</DescriptionDetail>
             </TouchableOpacity>
